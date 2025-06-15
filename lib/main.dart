@@ -69,7 +69,7 @@ class MyHomePage extends ConsumerWidget {
             icon: const Icon(Icons.language),
             onPressed: () {
               if (locale == const Locale('en')) {
-                ref.read(localeProvider.notifier).state = const Locale('pt');
+                ref.read(localeProvider.notifier).state = null;
               } else {
                 ref.read(localeProvider.notifier).state = const Locale('en');
               }
