@@ -27,3 +27,12 @@ samples, guidance on mobile development, and a full API reference.
 6. Para gerar um APK de release use `flutter build apk`. Outras plataformas podem ser construídas com comandos equivalentes.
 
 Os arquivos `.arb` que definem as traduções ficam em `lib/l10n` e o arquivo `l10n.yaml` configura a geração automática do código de localização.
+
+## Configuração do Google Sign-In no Android
+
+Este projeto utiliza o pacote [`google_sign_in`](https://pub.dev/packages/google_sign_in).
+
+1. Registre seu aplicativo seguindo o guia do [Firebase para Android](https://firebase.google.com/docs/android/setup).
+2. Habilite as APIs OAuth necessárias no [Google Cloud Platform API Manager](https://console.developers.google.com/), como a [Google People API](https://developers.google.com/people/).
+3. Preencha todos os campos obrigatórios da [tela de consentimento OAuth](https://console.developers.google.com/apis/credentials/consent) no console do Google Cloud para evitar erros `APIException`.
+4. Inclua o arquivo `google-services.json` em `android/app` caso utilize serviços do Google que o exijam.
