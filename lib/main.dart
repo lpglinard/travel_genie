@@ -6,6 +6,8 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'user_providers.dart';
+import 'firestore_service.dart';
 
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
@@ -35,7 +37,6 @@ Future<void> main() async {
 }
 
 final counterProvider = StateProvider<int>((ref) => 0);
-final localeProvider = StateProvider<Locale?>((ref) => null);
 final authStateChangesProvider =
     StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
@@ -46,6 +47,18 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    ref.listen<UserData?>(userDataProvider, (_, next) {
+      if (next != null && next.locale != null) {
+        ref.read(localeProvider.notifier).state = Locale(next.locale!);
+      }
+    });
+    ref.listen<User?>(authStateChangesProvider, (_, next) {
+      if (next != null && !next.isAnonymous) {
+        ref
+            .read(firestoreServiceProvider)
+            .upsertUser(next, ref.read(localeProvider));
+      }
+    });
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       locale: locale,

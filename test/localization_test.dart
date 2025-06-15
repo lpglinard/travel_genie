@@ -5,6 +5,7 @@ import 'package:riverpod/riverpod.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
 
 import 'package:travel_genie/main.dart';
+import 'package:travel_genie/user_providers.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_core_platform_interface/test.dart';
 import 'package:travel_genie/firebase_options.dart';

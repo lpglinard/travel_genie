@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'l10n/app_localizations.dart';
-import 'main.dart';
+import 'user_providers.dart';
+import 'firestore_service.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -12,6 +13,8 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
     final locale = ref.watch(localeProvider);
+    final userData = ref.watch(userDataProvider).valueOrNull;
+    final service = ref.read(firestoreServiceProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.profileTitle),
@@ -21,17 +24,24 @@ class ProfileScreen extends ConsumerWidget {
           if (user != null && !user.isAnonymous)
             ListTile(
               leading: const Icon(Icons.person),
-              title: Text(user.displayName ?? user.email ?? 'User'),
+              title: Text(userData?.name ?? user.displayName ?? user.email ?? 'User'),
+              subtitle: userData?.email != null ? Text(userData!.email!) : null,
             ),
           ListTile(
             leading: const Icon(Icons.language),
             title: Text(AppLocalizations.of(context)!.changeLanguage),
             trailing: Text(locale == const Locale('en') ? 'EN' : 'PT'),
-            onTap: () {
+            onTap: () async {
               if (locale == const Locale('en')) {
                 ref.read(localeProvider.notifier).state = null;
+                if (user != null && !user.isAnonymous) {
+                  await service.upsertUser(user, null);
+                }
               } else {
                 ref.read(localeProvider.notifier).state = const Locale('en');
+                if (user != null && !user.isAnonymous) {
+                  await service.upsertUser(user, const Locale('en'));
+                }
               }
             },
           ),
