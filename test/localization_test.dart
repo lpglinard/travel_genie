@@ -4,8 +4,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod/riverpod.dart';
 
 import 'package:travel_genie/main.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
+import 'package:travel_genie/firebase_options.dart';
 
 void main() {
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp(
+      name: 'test-localization',
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  });
+
+  tearDownAll(() async {
+    // Firebase app deletion is not supported in the mocks.
+    // Apps are given unique names to avoid conflicts across tests.
+  });
   testWidgets('shows English texts when locale is en', (tester) async {
     await tester.pumpWidget(
       ProviderScope(
