@@ -3,5 +3,9 @@
   "appTitle": "Travel Genie",
   "demoHomePageTitle": "Flutter Demo Home Page",
   "incrementTooltip": "Increment",
-  "buttonMessage": "You have pushed the button this many times:"
+  "buttonMessage": "You have pushed the button this many times:",
+  "profileButtonTooltip": "Profile",
+  "profileTitle": "Profile",
+  "changeLanguage": "Change language",
+  "logout": "Logout"
 }

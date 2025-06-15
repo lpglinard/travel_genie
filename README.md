@@ -20,9 +20,20 @@ samples, guidance on mobile development, and a full API reference.
 ## Como construir e executar
 
 1. Instale o [Flutter](https://docs.flutter.dev/get-started/install).
-2. Execute `flutter pub get` para baixar as dependências.
-3. Para gerar os arquivos de internacionalização utilize `flutter gen-l10n`.
-4. Em seguida rode `flutter run` para iniciar o aplicativo no dispositivo ou emulador desejado.
-5. Para gerar um APK de release use `flutter build apk`. Outras plataformas podem ser construídas com comandos equivalentes.
+2. Instale o Android NDK versão `27.0.12077973`. Você pode utilizar o SDK Manager do Android Studio ou o comando `sdkmanager "ndk;27.0.12077973"`.
+3. Execute `flutter pub get` para baixar as dependências.
+4. Para gerar os arquivos de internacionalização utilize `flutter gen-l10n`.
+5. Defina o *Google Client ID* utilizando a opção `--dart-define` ao executar o aplicativo, por exemplo:
+   `flutter run --dart-define=GOOGLE_CLIENT_ID=<seu-id>`.
+6. Para gerar um APK de release use `flutter build apk --dart-define=GOOGLE_CLIENT_ID=<seu-id>`. Outras plataformas podem ser construídas com comandos equivalentes.
 
 Os arquivos `.arb` que definem as traduções ficam em `lib/l10n` e o arquivo `l10n.yaml` configura a geração automática do código de localização.
+
+## Configuração do Google Sign-In no Android
+
+Este projeto utiliza o pacote [`google_sign_in`](https://pub.dev/packages/google_sign_in).
+
+1. Registre seu aplicativo seguindo o guia do [Firebase para Android](https://firebase.google.com/docs/android/setup).
+2. Habilite as APIs OAuth necessárias no [Google Cloud Platform API Manager](https://console.developers.google.com/), como a [Google People API](https://developers.google.com/people/).
+3. Preencha todos os campos obrigatórios da [tela de consentimento OAuth](https://console.developers.google.com/apis/credentials/consent) no console do Google Cloud para evitar erros `APIException`.
+4. Inclua o arquivo `google-services.json` em `android/app` caso utilize serviços do Google que o exijam.

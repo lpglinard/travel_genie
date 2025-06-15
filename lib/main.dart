@@ -1,14 +1,43 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
+import 'config.dart';
+import 'profile_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    firebase_ui_auth.FirebaseUIAuth.configureProviders([
+      firebase_ui_auth.EmailAuthProvider(),
+      GoogleProvider(clientId: googleClientId),
+      AppleProvider(),
+    ]);
+    if (FirebaseAuth.instance.currentUser == null) {
+      await FirebaseAuth.instance.signInAnonymously();
+      print('Usuário autenticado anonimamente');
+    }
+    print("Firebase inicializado com sucesso");
+  } catch (error) {
+    print("Erro ao inicializar o Firebase: $error");
+  }
   runApp(const ProviderScope(child: MyApp()));
 }
 
 final counterProvider = StateProvider<int>((ref) => 0);
 final localeProvider = StateProvider<Locale?>((ref) => null);
+final authStateChangesProvider =
+    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -26,27 +55,8 @@ class MyApp extends ConsumerWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en'),
-        Locale('pt'),
-      ],
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      supportedLocales: const [Locale('en'), Locale('pt')],
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const MyHomePage(),
     );
@@ -59,19 +69,42 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
-    final locale = ref.watch(localeProvider);
+    final user = ref.watch(authStateChangesProvider).value;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(AppLocalizations.of(context)!.demoHomePageTitle),
         actions: [
           IconButton(
-            icon: const Icon(Icons.language),
+            icon: const Icon(Icons.person),
+            tooltip: AppLocalizations.of(context)!.profileButtonTooltip,
             onPressed: () {
-              if (locale == const Locale('en')) {
-                ref.read(localeProvider.notifier).state = null;
+              final currentUser = FirebaseAuth.instance.currentUser;
+              if (currentUser != null && !currentUser.isAnonymous) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ProfileScreen(),
+                  ),
+                );
               } else {
-                ref.read(localeProvider.notifier).state = const Locale('en');
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => firebase_ui_auth.SignInScreen(
+                      providers: [
+                        firebase_ui_auth.EmailAuthProvider(),
+                        GoogleProvider(clientId: googleClientId),
+                        AppleProvider(),
+                      ],
+                      actions: [
+                        firebase_ui_auth.AuthStateChangeAction<firebase_ui_auth.SignedIn>(
+                          (context, state) {
+                            Navigator.of(context).popUntil((route) => route.isFirst);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               }
             },
           ),
@@ -82,10 +115,7 @@ class MyHomePage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(AppLocalizations.of(context)!.buttonMessage),
-            Text(
-              '$counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text('$counter', style: Theme.of(context).textTheme.headlineMedium),
           ],
         ),
       ),
