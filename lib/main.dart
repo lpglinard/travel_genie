@@ -10,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'config.dart';
+import 'profile_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +69,6 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
-    final locale = ref.watch(localeProvider);
     final user = ref.watch(authStateChangesProvider).value;
     return Scaffold(
       appBar: AppBar(
@@ -76,21 +76,16 @@ class MyHomePage extends ConsumerWidget {
         title: Text(AppLocalizations.of(context)!.demoHomePageTitle),
         actions: [
           IconButton(
-            icon: const Icon(Icons.language),
+            icon: const Icon(Icons.person),
+            tooltip: AppLocalizations.of(context)!.profileButtonTooltip,
             onPressed: () {
-              if (locale == const Locale('en')) {
-                ref.read(localeProvider.notifier).state = null;
-              } else {
-                ref.read(localeProvider.notifier).state = const Locale('en');
-              }
-            },
-          ),
-          IconButton(
-            icon: Icon(user != null && !user.isAnonymous ? Icons.logout : Icons.login),
-            color: user != null && !user.isAnonymous ? Colors.red : null,
-            onPressed: () {
-              if (user != null && !user.isAnonymous) {
-                FirebaseAuth.instance.signOut();
+              final currentUser = FirebaseAuth.instance.currentUser;
+              if (currentUser != null && !currentUser.isAnonymous) {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const ProfileScreen(),
+                  ),
+                );
               } else {
                 Navigator.of(context).push(
                   MaterialPageRoute(

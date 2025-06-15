@@ -3,5 +3,9 @@
   "appTitle": "Travel Genie",
   "demoHomePageTitle": "Página Inicial do Flutter",
   "incrementTooltip": "Incrementar",
-  "buttonMessage": "Você apertou o botão tantas vezes:"
+  "buttonMessage": "Você apertou o botão tantas vezes:",
+  "profileButtonTooltip": "Perfil",
+  "profileTitle": "Perfil",
+  "changeLanguage": "Alterar idioma",
+  "logout": "Sair"
 }
