@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +16,8 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    FirebaseUIAuth.configureProviders([
-      EmailAuthProvider(),
+    firebase_ui_auth.FirebaseUIAuth.configureProviders([
+      firebase_ui_auth.EmailAuthProvider(),
       GoogleProvider(clientId: 'YOUR_GOOGLE_CLIENT_ID'),
       AppleProvider(),
     ]);
@@ -102,9 +102,9 @@ class MyHomePage extends ConsumerWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => SignInScreen(
+                  builder: (context) => firebase_ui_auth.SignInScreen(
                     providers: [
-                      EmailAuthProvider(),
+                      firebase_ui_auth.EmailAuthProvider(),
                       GoogleProvider(clientId: 'YOUR_GOOGLE_CLIENT_ID'),
                       AppleProvider(),
                     ],
