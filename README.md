@@ -23,8 +23,9 @@ samples, guidance on mobile development, and a full API reference.
 2. Instale o Android NDK versão `27.0.12077973`. Você pode utilizar o SDK Manager do Android Studio ou o comando `sdkmanager "ndk;27.0.12077973"`.
 3. Execute `flutter pub get` para baixar as dependências.
 4. Para gerar os arquivos de internacionalização utilize `flutter gen-l10n`.
-5. Em seguida rode `flutter run` para iniciar o aplicativo no dispositivo ou emulador desejado.
-6. Para gerar um APK de release use `flutter build apk`. Outras plataformas podem ser construídas com comandos equivalentes.
+5. Defina o *Google Client ID* utilizando a opção `--dart-define` ao executar o aplicativo, por exemplo:
+   `flutter run --dart-define=GOOGLE_CLIENT_ID=<seu-id>`.
+6. Para gerar um APK de release use `flutter build apk --dart-define=GOOGLE_CLIENT_ID=<seu-id>`. Outras plataformas podem ser construídas com comandos equivalentes.
 
 Os arquivos `.arb` que definem as traduções ficam em `lib/l10n` e o arquivo `l10n.yaml` configura a geração automática do código de localização.
 
