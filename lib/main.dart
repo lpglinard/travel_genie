@@ -35,6 +35,8 @@ Future<void> main() async {
 
 final counterProvider = StateProvider<int>((ref) => 0);
 final localeProvider = StateProvider<Locale?>((ref) => null);
+final authStateChangesProvider =
+    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -83,6 +85,7 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
     final locale = ref.watch(localeProvider);
+    final user = ref.watch(authStateChangesProvider).value;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -99,19 +102,31 @@ class MyHomePage extends ConsumerWidget {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.login),
+            icon: Icon(user != null && !user.isAnonymous ? Icons.logout : Icons.login),
+            color: user != null && !user.isAnonymous ? Colors.red : null,
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => firebase_ui_auth.SignInScreen(
-                    providers: [
-                      firebase_ui_auth.EmailAuthProvider(),
-                      GoogleProvider(clientId: googleClientId),
-                      AppleProvider(),
-                    ],
+              if (user != null && !user.isAnonymous) {
+                FirebaseAuth.instance.signOut();
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => firebase_ui_auth.SignInScreen(
+                      providers: [
+                        firebase_ui_auth.EmailAuthProvider(),
+                        GoogleProvider(clientId: googleClientId),
+                        AppleProvider(),
+                      ],
+                      actions: [
+                        firebase_ui_auth.AuthStateChangeAction<firebase_ui_auth.SignedIn>(
+                          (context, state) {
+                            Navigator.of(context).popUntil((route) => route.isFirst);
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
+                );
+              }
             },
           ),
         ],
