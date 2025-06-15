@@ -1,12 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:integration_test/integration_test.dart';
 import 'package:travel_genie/main.dart' as app;
 import 'package:travel_genie/main.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/test.dart';
+import 'package:travel_genie/firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() async {
+    setupFirebaseCoreMocks();
+    await Firebase.initializeApp(
+      name: 'test-integration',
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  });
+
+  tearDownAll(() async {
+    // Firebase app deletion is not supported in the mocks.
+    // Apps are given unique names to avoid conflicts across tests.
+  });
 
   group('TG-4: Ambiente Multiplataforma', () {
     testWidgets('tap on the floating action button, verify counter', (
