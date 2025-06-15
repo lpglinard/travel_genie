@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +16,11 @@ Future<void> main() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    FirebaseUIAuth.configureProviders([
+      EmailAuthProvider(),
+      GoogleProvider(clientId: 'YOUR_GOOGLE_CLIENT_ID'),
+      AppleProvider(),
+    ]);
     if (FirebaseAuth.instance.currentUser == null) {
       await FirebaseAuth.instance.signInAnonymously();
       print('Usuário autenticado anonimamente');
@@ -87,6 +95,22 @@ class MyHomePage extends ConsumerWidget {
               } else {
                 ref.read(localeProvider.notifier).state = const Locale('en');
               }
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.login),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => SignInScreen(
+                    providers: [
+                      EmailAuthProvider(),
+                      GoogleProvider(clientId: 'YOUR_GOOGLE_CLIENT_ID'),
+                      AppleProvider(),
+                    ],
+                  ),
+                ),
+              );
             },
           ),
         ],
