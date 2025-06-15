@@ -37,3 +37,7 @@ Este projeto utiliza o pacote [`google_sign_in`](https://pub.dev/packages/google
 2. Habilite as APIs OAuth necessárias no [Google Cloud Platform API Manager](https://console.developers.google.com/), como a [Google People API](https://developers.google.com/people/).
 3. Preencha todos os campos obrigatórios da [tela de consentimento OAuth](https://console.developers.google.com/apis/credentials/consent) no console do Google Cloud para evitar erros `APIException`.
 4. Inclua o arquivo `google-services.json` em `android/app` caso utilize serviços do Google que o exijam.
+
+## Armazenamento de preferências com Firestore
+
+O aplicativo utiliza o [Cloud Firestore](https://firebase.google.com/docs/firestore) para salvar informações básicas do usuário, como nome, e-mail e idioma preferido. As regras de segurança em `firestore.rules` garantem que cada usuário acesse apenas seus próprios dados. Para aplicar as regras execute `firebase deploy --only firestore:rules` após configurar o Firebase CLI.
