@@ -72,4 +72,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'travel-genie-494f7.firebasestorage.app',
     iosBundleId: 'tech.linard.travelgenieapp.travelGenie',
   );
+
 }
