@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
+import 'config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +19,7 @@ Future<void> main() async {
     );
     firebase_ui_auth.FirebaseUIAuth.configureProviders([
       firebase_ui_auth.EmailAuthProvider(),
-      GoogleProvider(clientId: 'YOUR_GOOGLE_CLIENT_ID'),
+      GoogleProvider(clientId: googleClientId),
       AppleProvider(),
     ]);
     if (FirebaseAuth.instance.currentUser == null) {
@@ -105,7 +106,7 @@ class MyHomePage extends ConsumerWidget {
                   builder: (context) => firebase_ui_auth.SignInScreen(
                     providers: [
                       firebase_ui_auth.EmailAuthProvider(),
-                      GoogleProvider(clientId: 'YOUR_GOOGLE_CLIENT_ID'),
+                      GoogleProvider(clientId: googleClientId),
                       AppleProvider(),
                     ],
                   ),
