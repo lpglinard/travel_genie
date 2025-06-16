@@ -45,3 +45,10 @@ O aplicativo utiliza o [Cloud Firestore](https://firebase.google.com/docs/firest
 ## Monitoramento com Firebase Analytics
 
 O projeto já inclui suporte ao [Firebase Analytics](https://firebase.google.com/docs/analytics) e ao [Firebase Performance](https://firebase.google.com/docs/perf-mon). Os eventos básicos registrados podem ser encontrados em [`docs/analytics_events.md`](docs/analytics_events.md).
+
+## Relatórios de falhas com Firebase Crashlytics
+
+O aplicativo também está configurado para enviar relatórios de falhas para o
+[Firebase Crashlytics](https://firebase.google.com/products/crashlytics). Todas
+as exceções não tratadas são capturadas automaticamente, permitindo acompanhar
+erros em produção tanto no Android quanto no iOS.
