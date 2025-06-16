@@ -9,7 +9,6 @@ import '../config.dart';
 import '../l10n/app_localizations.dart';
 import '../profile_screen.dart';
 import '../user_providers.dart';
-import '../services/analytics_service.dart';
 
 final counterProvider = StateProvider<int>((ref) => 0);
 
@@ -19,22 +18,19 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final counter = ref.watch(counterProvider);
-    final user = ref.watch(authStateChangesProvider).value;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context)!.demoHomePageTitle),
+        title: Text(AppLocalizations.of(context).demoHomePageTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
-            tooltip: AppLocalizations.of(context)!.profileButtonTooltip,
+            tooltip: AppLocalizations.of(context).profileButtonTooltip,
             onPressed: () {
               final currentUser = FirebaseAuth.instance.currentUser;
               if (currentUser != null && !currentUser.isAnonymous) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => const ProfileScreen(),
-                  ),
+                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
                 );
               } else {
                 Navigator.of(context).push(
@@ -46,17 +42,32 @@ class MyHomePage extends ConsumerWidget {
                         AppleProvider(),
                       ],
                       actions: [
-                        firebase_ui_auth.AuthStateChangeAction<firebase_ui_auth.SignedIn>(
-                          (context, state) {
-                            final analytics = ref.read(analyticsServiceProvider);
-                            if (state.credential?.additionalUserInfo?.isNewUser ?? false) {
-                              analytics.logSignUp(method: state.credential?.providerId ?? 'unknown');
-                            } else {
-                              analytics.logLogin(method: state.credential?.providerId ?? 'unknown');
-                            }
-                            Navigator.of(context).popUntil((route) => route.isFirst);
-                          },
-                        ),
+                        firebase_ui_auth.AuthStateChangeAction<
+                          firebase_ui_auth.UserCreated
+                        >((context, state) {
+                          final analytics = ref.read(analyticsServiceProvider);
+                          analytics.logSignUp(
+                            method:
+                                state.credential.credential?.providerId ??
+                                'unknown',
+                          );
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
+                        }),
+                        firebase_ui_auth.AuthStateChangeAction<
+                          firebase_ui_auth.SignedIn
+                        >((context, state) {
+                          final analytics = ref.read(analyticsServiceProvider);
+                          final providerId =
+                              state.user?.providerData.isNotEmpty == true
+                              ? state.user!.providerData.first.providerId
+                              : 'unknown';
+                          analytics.logLogin(method: providerId);
+                          Navigator.of(
+                            context,
+                          ).popUntil((route) => route.isFirst);
+                        }),
                       ],
                     ),
                   ),
@@ -70,7 +81,7 @@ class MyHomePage extends ConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(AppLocalizations.of(context)!.buttonMessage),
+            Text(AppLocalizations.of(context).buttonMessage),
             Text('$counter', style: Theme.of(context).textTheme.headlineMedium),
           ],
         ),
@@ -78,7 +89,7 @@ class MyHomePage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => ref.read(counterProvider.notifier).state++,
         key: const Key('increment'),
-        tooltip: AppLocalizations.of(context)!.incrementTooltip,
+        tooltip: AppLocalizations.of(context).incrementTooltip,
         child: const Icon(Icons.add),
       ),
     );
