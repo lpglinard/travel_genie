@@ -41,3 +41,7 @@ Este projeto utiliza o pacote [`google_sign_in`](https://pub.dev/packages/google
 ## Armazenamento de preferências com Firestore
 
 O aplicativo utiliza o [Cloud Firestore](https://firebase.google.com/docs/firestore) para salvar informações básicas do usuário, como nome, e-mail e idioma preferido. As regras de segurança em `firestore.rules` garantem que cada usuário acesse apenas seus próprios dados. Para aplicar as regras execute `firebase deploy --only firestore:rules` após configurar o Firebase CLI.
+
+## Monitoramento com Firebase Analytics
+
+O projeto já inclui suporte ao [Firebase Analytics](https://firebase.google.com/docs/analytics) e ao [Firebase Performance](https://firebase.google.com/docs/perf-mon). Os eventos básicos registrados podem ser encontrados em [`docs/analytics_events.md`](docs/analytics_events.md).

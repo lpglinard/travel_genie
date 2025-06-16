@@ -9,6 +9,7 @@ import '../config.dart';
 import '../l10n/app_localizations.dart';
 import '../profile_screen.dart';
 import '../user_providers.dart';
+import '../services/analytics_service.dart';
 
 final counterProvider = StateProvider<int>((ref) => 0);
 
@@ -47,6 +48,12 @@ class MyHomePage extends ConsumerWidget {
                       actions: [
                         firebase_ui_auth.AuthStateChangeAction<firebase_ui_auth.SignedIn>(
                           (context, state) {
+                            final analytics = ref.read(analyticsServiceProvider);
+                            if (state.credential?.additionalUserInfo?.isNewUser ?? false) {
+                              analytics.logSignUp(method: state.credential?.providerId ?? 'unknown');
+                            } else {
+                              analytics.logLogin(method: state.credential?.providerId ?? 'unknown');
+                            }
                             Navigator.of(context).popUntil((route) => route.isFirst);
                           },
                         ),
