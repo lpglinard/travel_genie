@@ -5,7 +5,6 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'config.dart';
@@ -15,7 +14,6 @@ import 'user_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -34,26 +32,8 @@ Future<void> main() async {
     print("Erro ao inicializar o Firebase: $error");
   }
   runApp(
-    ProviderScope(
-      overrides: [
-        sharedPrefsProvider.overrideWithValue(prefs),
-        preferencesServiceProvider.overrideWithValue(PreferencesService(prefs)),
-        localeProvider.overrideWithValue(
-          StateController(
-            prefs.containsKey('locale')
-                ? Locale(prefs.getString('locale')!)
-                : null,
-          ),
-        ),
-        themeModeProvider.overrideWithValue(
-          StateController(
-            prefs.getBool('darkMode') == true
-                ? ThemeMode.dark
-                : ThemeMode.light,
-          ),
-        ),
-      ],
-      child: const MyApp(),
+    const ProviderScope(
+      child: MyApp(),
     ),
   );
 }

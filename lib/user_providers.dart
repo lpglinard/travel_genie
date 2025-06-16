@@ -12,12 +12,12 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);
 });
 
-final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
-  throw UnimplementedError();
+final sharedPrefsProvider = FutureProvider<SharedPreferences>((ref) async {
+  return SharedPreferences.getInstance();
 });
 
-final preferencesServiceProvider = Provider<PreferencesService>((ref) {
-  final prefs = ref.watch(sharedPrefsProvider);
+final preferencesServiceProvider = FutureProvider<PreferencesService>((ref) async {
+  final prefs = await ref.watch(sharedPrefsProvider.future);
   return PreferencesService(prefs);
 });
 

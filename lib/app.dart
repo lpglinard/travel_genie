@@ -17,9 +17,9 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
-    final prefs = ref.read(preferencesServiceProvider);
 
-    ref.listen(userDataProvider, (_, next) {
+    ref.listen(userDataProvider, (_, next) async {
+      final prefs = await ref.read(preferencesServiceProvider.future);
       final userData = next.valueOrNull;
       if (userData != null) {
         if (userData.locale != null) {
@@ -30,22 +30,25 @@ class MyApp extends ConsumerWidget {
               userData.darkMode! ? ThemeMode.dark : ThemeMode.light;
         }
         prefs.saveUserData(userData.name, userData.email);
-        prefs.setLocale(userData.locale != null ? Locale(userData.locale!) : null);
+        await prefs.setLocale(
+            userData.locale != null ? Locale(userData.locale!) : null);
         if (userData.darkMode != null) {
-          prefs.setThemeMode(
+          await prefs.setThemeMode(
               userData.darkMode! ? ThemeMode.dark : ThemeMode.light);
         }
       } else {
-        prefs.clearAll();
+        await prefs.clearAll();
       }
     });
 
-    ref.listen<Locale?>(localeProvider, (_, next) {
-      prefs.setLocale(next);
+    ref.listen<Locale?>(localeProvider, (_, next) async {
+      final prefs = await ref.read(preferencesServiceProvider.future);
+      await prefs.setLocale(next);
     });
 
-    ref.listen<ThemeMode>(themeModeProvider, (_, next) {
-      prefs.setThemeMode(next);
+    ref.listen<ThemeMode>(themeModeProvider, (_, next) async {
+      final prefs = await ref.read(preferencesServiceProvider.future);
+      await prefs.setThemeMode(next);
     });
 
     ref.listen(authStateChangesProvider, (_, next) {
