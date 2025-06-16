@@ -13,6 +13,7 @@ import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'config.dart';
 import 'profile_screen.dart';
+import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,18 +48,27 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeModeProvider);
     ref.listen(userDataProvider, (_, next) {
       final userData = next.valueOrNull;
-      if (userData != null && userData.locale != null) {
-        ref.read(localeProvider.notifier).state = Locale(userData.locale!);
+      if (userData != null) {
+        if (userData.locale != null) {
+          ref.read(localeProvider.notifier).state = Locale(userData.locale!);
+        }
+        if (userData.darkMode != null) {
+          ref.read(themeModeProvider.notifier).state =
+              userData.darkMode! ? ThemeMode.dark : ThemeMode.light;
+        }
       }
     });
     ref.listen(authStateChangesProvider, (_, next) {
       final user = next.value;
       if (user != null && !user.isAnonymous) {
-        ref
-            .read(firestoreServiceProvider)
-            .upsertUser(user, ref.read(localeProvider));
+        ref.read(firestoreServiceProvider).upsertUser(
+              user,
+              locale: ref.read(localeProvider),
+              darkMode: ref.read(themeModeProvider) == ThemeMode.dark,
+            );
       }
     });
     return MaterialApp(
@@ -71,8 +81,9 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en'), Locale('pt')],
-      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
+      themeMode: themeMode,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       home: const MyHomePage(),
     );
   }

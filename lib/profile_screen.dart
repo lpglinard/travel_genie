@@ -13,6 +13,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
     final locale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeModeProvider);
     final userData = ref.watch(userDataProvider).valueOrNull;
     final service = ref.read(firestoreServiceProvider);
     return Scaffold(
@@ -35,15 +36,41 @@ class ProfileScreen extends ConsumerWidget {
               if (locale == const Locale('en')) {
                 ref.read(localeProvider.notifier).state = null;
                 if (user != null && !user.isAnonymous) {
-                  await service.upsertUser(user, null);
+                  await service.upsertUser(
+                    user,
+                    locale: null,
+                    darkMode: themeMode == ThemeMode.dark,
+                  );
                 }
               } else {
                 ref.read(localeProvider.notifier).state = const Locale('en');
                 if (user != null && !user.isAnonymous) {
-                  await service.upsertUser(user, const Locale('en'));
+                  await service.upsertUser(
+                    user,
+                    locale: const Locale('en'),
+                    darkMode: themeMode == ThemeMode.dark,
+                  );
                 }
               }
             },
+          ),
+          ListTile(
+            leading: const Icon(Icons.brightness_6),
+            title: Text(AppLocalizations.of(context)!.toggleDarkMode),
+            trailing: Switch(
+              value: themeMode == ThemeMode.dark,
+              onChanged: (value) async {
+                ref.read(themeModeProvider.notifier).state =
+                    value ? ThemeMode.dark : ThemeMode.light;
+                if (user != null && !user.isAnonymous) {
+                  await service.upsertUser(
+                    user,
+                    locale: locale,
+                    darkMode: value,
+                  );
+                }
+              },
+            ),
           ),
           ListTile(
             leading: const Icon(Icons.logout),

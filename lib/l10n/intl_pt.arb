@@ -7,5 +7,6 @@
   "profileButtonTooltip": "Perfil",
   "profileTitle": "Perfil",
   "changeLanguage": "Alterar idioma",
-  "logout": "Sair"
+  "logout": "Sair",
+  "toggleDarkMode": "Usar tema escuro"
 }
