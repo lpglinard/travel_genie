@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'services/preferences_service.dart';
+import 'services/analytics_service.dart';
 
 import 'firestore_service.dart';
 
@@ -19,6 +20,10 @@ final sharedPrefsProvider = FutureProvider<SharedPreferences>((ref) async {
 final preferencesServiceProvider = FutureProvider<PreferencesService>((ref) async {
   final prefs = await ref.watch(sharedPrefsProvider.future);
   return PreferencesService(prefs);
+});
+
+final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
+  return AnalyticsService();
 });
 
 final authStateChangesProvider =
