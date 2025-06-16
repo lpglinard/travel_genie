@@ -17,7 +17,6 @@ class ProfileScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final userData = ref.watch(userDataProvider).valueOrNull;
     final service = ref.read(firestoreServiceProvider);
-    final prefs = ref.read(preferencesServiceProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.profileTitle),
@@ -44,7 +43,8 @@ class ProfileScreen extends ConsumerWidget {
                     darkMode: themeMode == ThemeMode.dark,
                   );
                 }
-                prefs.setLocale(null);
+                final prefs = await ref.read(preferencesServiceProvider.future);
+                await prefs.setLocale(null);
               } else {
                 ref.read(localeProvider.notifier).state = const Locale('en');
                 if (user != null && !user.isAnonymous) {
@@ -54,7 +54,8 @@ class ProfileScreen extends ConsumerWidget {
                     darkMode: themeMode == ThemeMode.dark,
                   );
                 }
-                prefs.setLocale(const Locale('en'));
+                final prefs = await ref.read(preferencesServiceProvider.future);
+                await prefs.setLocale(const Locale('en'));
               }
             },
           ),
@@ -73,7 +74,9 @@ class ProfileScreen extends ConsumerWidget {
                     darkMode: value,
                   );
                 }
-                prefs.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+                final prefs = await ref.read(preferencesServiceProvider.future);
+                await prefs.setThemeMode(
+                    value ? ThemeMode.dark : ThemeMode.light);
               },
             ),
           ),
@@ -82,6 +85,7 @@ class ProfileScreen extends ConsumerWidget {
             title: Text(AppLocalizations.of(context)!.logout),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
+              final prefs = await ref.read(preferencesServiceProvider.future);
               await prefs.clearAll();
               if (context.mounted) {
                 Navigator.of(context).pop();
