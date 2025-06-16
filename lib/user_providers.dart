@@ -19,3 +19,7 @@ final userDataProvider = StreamProvider<UserData?>((ref) {
 
 final localeProvider = StateProvider<Locale?>((ref) => null);
 
+final themeModeProvider =
+    StateProvider<ThemeMode>((ref) => ThemeMode.light);
+
+
