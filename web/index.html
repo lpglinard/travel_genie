@@ -31,6 +31,22 @@
 
   <title>travel_genie</title>
   <link rel="manifest" href="manifest.json">
+  <!-- Firebase JS SDKs -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+    import { getCrashlytics } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-crashlytics.js';
+
+    const firebaseConfig = {
+      apiKey: 'YOUR_API_KEY',
+      authDomain: 'YOUR_AUTH_DOMAIN',
+      projectId: 'YOUR_PROJECT_ID',
+      appId: 'YOUR_APP_ID',
+      measurementId: 'YOUR_MEASUREMENT_ID'
+    };
+
+    const app = initializeApp(firebaseConfig);
+    getCrashlytics(app);
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
