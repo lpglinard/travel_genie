@@ -6,6 +6,7 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'user_providers.dart';
 import 'firestore_service.dart';
 
@@ -17,6 +18,7 @@ import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -34,7 +36,28 @@ Future<void> main() async {
   } catch (error) {
     print("Erro ao inicializar o Firebase: $error");
   }
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPrefsProvider.overrideWithValue(prefs),
+        localeProvider.overrideWithValue(
+          StateController(
+            prefs.containsKey('locale')
+                ? Locale(prefs.getString('locale')!)
+                : null,
+          ),
+        ),
+        themeModeProvider.overrideWithValue(
+          StateController(
+            prefs.getBool('darkMode') == true
+                ? ThemeMode.dark
+                : ThemeMode.light,
+          ),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 final counterProvider = StateProvider<int>((ref) => 0);
@@ -59,7 +82,46 @@ class MyApp extends ConsumerWidget {
           ref.read(themeModeProvider.notifier).state =
               userData.darkMode! ? ThemeMode.dark : ThemeMode.light;
         }
+        final prefs = ref.read(sharedPrefsProvider);
+        if (userData.name != null) {
+          prefs.setString('name', userData.name!);
+        } else {
+          prefs.remove('name');
+        }
+        if (userData.email != null) {
+          prefs.setString('email', userData.email!);
+        } else {
+          prefs.remove('email');
+        }
+        if (userData.locale != null) {
+          prefs.setString('locale', userData.locale!);
+        } else {
+          prefs.remove('locale');
+        }
+        if (userData.darkMode != null) {
+          prefs.setBool('darkMode', userData.darkMode!);
+        } else {
+          prefs.remove('darkMode');
+        }
+      } else {
+        final prefs = ref.read(sharedPrefsProvider);
+        prefs.remove('name');
+        prefs.remove('email');
+        prefs.remove('locale');
+        prefs.remove('darkMode');
       }
+    });
+    ref.listen<Locale?>(localeProvider, (_, next) {
+      final prefs = ref.read(sharedPrefsProvider);
+      if (next != null) {
+        prefs.setString('locale', next.languageCode);
+      } else {
+        prefs.remove('locale');
+      }
+    });
+    ref.listen<ThemeMode>(themeModeProvider, (_, next) {
+      final prefs = ref.read(sharedPrefsProvider);
+      prefs.setBool('darkMode', next == ThemeMode.dark);
     });
     ref.listen(authStateChangesProvider, (_, next) {
       final user = next.value;
