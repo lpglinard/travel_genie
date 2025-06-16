@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'l10n/app_localizations.dart';
 import 'user_providers.dart';
@@ -16,6 +17,7 @@ class ProfileScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final userData = ref.watch(userDataProvider).valueOrNull;
     final service = ref.read(firestoreServiceProvider);
+    final prefs = ref.read(sharedPrefsProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.profileTitle),
@@ -42,6 +44,7 @@ class ProfileScreen extends ConsumerWidget {
                     darkMode: themeMode == ThemeMode.dark,
                   );
                 }
+                prefs.remove('locale');
               } else {
                 ref.read(localeProvider.notifier).state = const Locale('en');
                 if (user != null && !user.isAnonymous) {
@@ -51,6 +54,7 @@ class ProfileScreen extends ConsumerWidget {
                     darkMode: themeMode == ThemeMode.dark,
                   );
                 }
+                prefs.setString('locale', 'en');
               }
             },
           ),
@@ -69,6 +73,7 @@ class ProfileScreen extends ConsumerWidget {
                     darkMode: value,
                   );
                 }
+                prefs.setBool('darkMode', value);
               },
             ),
           ),
@@ -77,6 +82,7 @@ class ProfileScreen extends ConsumerWidget {
             title: Text(AppLocalizations.of(context)!.logout),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
+              await prefs.clear();
               if (context.mounted) {
                 Navigator.of(context).pop();
               }
