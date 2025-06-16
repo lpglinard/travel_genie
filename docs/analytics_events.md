@@ -11,3 +11,5 @@ O aplicativo utiliza o Firebase Analytics para monitorar algumas ações básica
 | `change_theme` | Registrado ao alternar entre tema claro ou escuro. | `theme` – nome do tema selecionado (`light` ou `dark`). |
 
 Os eventos são registrados através da classe `AnalyticsService`, localizada em `lib/services/analytics_service.dart`. Utilize esse serviço sempre que novas ações relevantes forem implementadas para manter um padrão de registro.
+
+As navegações entre telas também são monitoradas automaticamente. O `MaterialApp` utiliza um `FirebaseAnalyticsObserver` e cada `Route` recebe um nome significativo através de `RouteSettings`, permitindo que o Firebase Analytics informe com clareza quais telas foram acessadas.

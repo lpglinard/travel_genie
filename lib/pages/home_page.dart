@@ -30,11 +30,15 @@ class MyHomePage extends ConsumerWidget {
               final currentUser = FirebaseAuth.instance.currentUser;
               if (currentUser != null && !currentUser.isAnonymous) {
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const ProfileScreen()),
+                  MaterialPageRoute(
+                    settings: const RouteSettings(name: 'profile'),
+                    builder: (_) => const ProfileScreen(),
+                  ),
                 );
               } else {
                 Navigator.of(context).push(
                   MaterialPageRoute(
+                    settings: const RouteSettings(name: 'sign_in'),
                     builder: (context) => firebase_ui_auth.SignInScreen(
                       providers: [
                         firebase_ui_auth.EmailAuthProvider(),
