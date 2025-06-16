@@ -7,5 +7,6 @@
   "profileButtonTooltip": "Profile",
   "profileTitle": "Profile",
   "changeLanguage": "Change language",
-  "logout": "Logout"
+  "logout": "Logout",
+  "toggleDarkMode": "Dark theme"
 }
