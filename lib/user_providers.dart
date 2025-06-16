@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'services/preferences_service.dart';
+
 import 'firestore_service.dart';
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
@@ -13,6 +15,14 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
 final sharedPrefsProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError();
 });
+
+final preferencesServiceProvider = Provider<PreferencesService>((ref) {
+  final prefs = ref.watch(sharedPrefsProvider);
+  return PreferencesService(prefs);
+});
+
+final authStateChangesProvider =
+    StreamProvider<User?>((ref) => FirebaseAuth.instance.authStateChanges());
 
 final userDataProvider = StreamProvider<UserData?>((ref) {
   final service = ref.watch(firestoreServiceProvider);
