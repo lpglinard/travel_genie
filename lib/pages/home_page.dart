@@ -40,7 +40,7 @@ class MyHomePage extends ConsumerWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => firebase_ui_auth.SignInScreen(
-                      providers: const [
+                      providers: [
                         firebase_ui_auth.EmailAuthProvider(),
                         GoogleProvider(clientId: googleClientId),
                         AppleProvider(),
