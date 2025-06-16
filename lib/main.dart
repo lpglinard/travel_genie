@@ -47,16 +47,18 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final locale = ref.watch(localeProvider);
-    ref.listen<UserData?>(userDataProvider, (_, next) {
-      if (next != null && next.locale != null) {
-        ref.read(localeProvider.notifier).state = Locale(next.locale!);
+    ref.listen(userDataProvider, (_, next) {
+      final userData = next.valueOrNull;
+      if (userData != null && userData.locale != null) {
+        ref.read(localeProvider.notifier).state = Locale(userData.locale!);
       }
     });
-    ref.listen<User?>(authStateChangesProvider, (_, next) {
-      if (next != null && !next.isAnonymous) {
+    ref.listen(authStateChangesProvider, (_, next) {
+      final user = next.value;
+      if (user != null && !user.isAnonymous) {
         ref
             .read(firestoreServiceProvider)
-            .upsertUser(next, ref.read(localeProvider));
+            .upsertUser(user, ref.read(localeProvider));
       }
     });
     return MaterialApp(
