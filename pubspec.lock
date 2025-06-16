@@ -213,7 +213,7 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_crashlytics
-      sha256: 8cf18604255e964b568e572f1a155b4e3cec9ea31f9043fc51414d33aa444393
+      sha256: "8cf18604255e964b568e572f1a155b4e3cec9ea31f9043fc51414d33aa444393"
       url: "https://pub.dev"
     source: hosted
     version: "4.3.7"

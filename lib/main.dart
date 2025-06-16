@@ -6,6 +6,7 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -30,10 +31,13 @@ Future<void> main() async {
     // Initialize analytics and performance monitoring
     FirebaseAnalytics.instance;
     FirebasePerformance.instance;
-    await FirebaseCrashlytics.instance
-        .setCrashlyticsCollectionEnabled(true);
-    FlutterError.onError =
-        FirebaseCrashlytics.instance.recordFlutterFatalError;
+    if (!kIsWeb) {
+      await FirebaseCrashlytics.instance
+          .setCrashlyticsCollectionEnabled(true);
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+    }
+
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
