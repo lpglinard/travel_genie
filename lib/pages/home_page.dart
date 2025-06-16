@@ -4,6 +4,7 @@ import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../config.dart';
 import '../l10n/app_localizations.dart';
@@ -91,7 +92,14 @@ class MyHomePage extends ConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => ref.read(counterProvider.notifier).state++,
+        onPressed: () {
+          final notifier = ref.read(counterProvider.notifier);
+          if (notifier.state >= 4) {
+            FirebaseCrashlytics.instance.crash();
+          } else {
+            notifier.state++;
+          }
+        },
         key: const Key('increment'),
         tooltip: AppLocalizations.of(context).incrementTooltip,
         child: const Icon(Icons.add),
