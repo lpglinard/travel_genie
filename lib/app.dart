@@ -54,11 +54,8 @@ class MyApp extends ConsumerWidget {
     ref.listen(authStateChangesProvider, (_, next) {
       final user = next.value;
       if (user != null && !user.isAnonymous) {
-        ref.read(firestoreServiceProvider).upsertUser(
-              user,
-              locale: ref.read(localeProvider),
-              darkMode: ref.read(themeModeProvider) == ThemeMode.dark,
-            );
+        // Create or update the user document with basic information only.
+        ref.read(firestoreServiceProvider).upsertUser(user);
       }
     });
 

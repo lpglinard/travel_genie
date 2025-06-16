@@ -53,14 +53,16 @@ class FirestoreService {
     bool? darkMode,
   }) {
     final doc = _users.doc(user.uid);
-    return doc.set(
-      {
-        'name': user.displayName,
-        'email': user.email,
-        'locale': locale?.languageCode,
-        'darkMode': darkMode,
-      },
-      SetOptions(merge: true),
-    );
+    final data = <String, dynamic>{
+      'name': user.displayName,
+      'email': user.email,
+    };
+    if (locale != null) {
+      data['locale'] = locale.languageCode;
+    }
+    if (darkMode != null) {
+      data['darkMode'] = darkMode;
+    }
+    return doc.set(data, SetOptions(merge: true));
   }
 }
