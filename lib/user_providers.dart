@@ -10,12 +10,11 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
 });
 
 final userDataProvider = StreamProvider<UserData?>((ref) {
-  final user = FirebaseAuth.instance.currentUser;
-  if (user == null) {
-    return const Stream.empty();
-  }
   final service = ref.watch(firestoreServiceProvider);
-  return service.streamUser(user.uid);
+  return FirebaseAuth.instance
+      .authStateChanges()
+      .asyncExpand((user) =>
+          user == null ? const Stream.empty() : service.streamUser(user.uid));
 });
 
 final localeProvider = StateProvider<Locale?>((ref) => null);
