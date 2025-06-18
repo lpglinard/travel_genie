@@ -9,6 +9,7 @@ import 'theme.dart';
 import 'user_providers.dart';
 import 'firestore_service.dart';
 import 'services/preferences_service.dart';
+import 'services/analytics_service.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -44,11 +45,15 @@ class MyApp extends ConsumerWidget {
     ref.listen<Locale?>(localeProvider, (_, next) async {
       final prefs = await ref.read(preferencesServiceProvider.future);
       await prefs.setLocale(next);
+      if (next != null) {
+        ref.read(analyticsServiceProvider).logLanguageChange(next.languageCode);
+      }
     });
 
     ref.listen<ThemeMode>(themeModeProvider, (_, next) async {
       final prefs = await ref.read(preferencesServiceProvider.future);
       await prefs.setThemeMode(next);
+      ref.read(analyticsServiceProvider).logThemeChange(next.name);
     });
 
     ref.listen(authStateChangesProvider, (_, next) {
@@ -56,6 +61,7 @@ class MyApp extends ConsumerWidget {
       if (user != null && !user.isAnonymous) {
         // Create or update the user document with basic information only.
         ref.read(firestoreServiceProvider).upsertUser(user);
+        ref.read(analyticsServiceProvider).logLogin(method: user.providerData.isNotEmpty ? user.providerData.first.providerId : 'unknown');
       }
     });
 
@@ -69,6 +75,7 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en'), Locale('pt')],
+      navigatorObservers: [ref.read(analyticsServiceProvider).observer],
       themeMode: themeMode,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
