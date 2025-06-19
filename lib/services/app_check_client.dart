@@ -9,15 +9,18 @@ class AppCheckClient extends http.BaseClient {
 
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
+    print('Sending request to ${request.url}');
+    print('Headers: ${request.headers}');
     try {
-      final tokenResult = await FirebaseAppCheck.instance.getToken();
-      final token = tokenResult.token;
-      if (token != null) {
-        request.headers['X-Firebase-AppCheck'] = token;
+      final String? tokenResult = await FirebaseAppCheck.instance.getToken();
+      if (tokenResult != null) {
+        request.headers['X-Firebase-AppCheck'] = tokenResult;
       }
     } catch (_) {
       // If App Check token retrieval fails, send the request without it.
     }
+    print('Sending request to ${request.url}');
+    print('Headers: ${request.headers}');
     return _inner.send(request);
   }
 }

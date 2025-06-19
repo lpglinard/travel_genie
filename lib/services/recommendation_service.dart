@@ -7,7 +7,7 @@ import '../models/place.dart';
 
 class RecommendationService {
   RecommendationService();
-  final _client = AppCheckClient();
+  final AppCheckClient _client = AppCheckClient();
 
   Future<List<Place>> search(String name) async {
     final encodedName = Uri.encodeComponent(name);

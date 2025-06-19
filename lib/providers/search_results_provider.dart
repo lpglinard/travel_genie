@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/user_providers.dart';
 
 import '../models/place.dart';
 import '../services/recommendation_service.dart';
