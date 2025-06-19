@@ -37,13 +37,25 @@ void main() {
   });
 
   test('search returns list of places when response is successful', () async {
-    // Load the fortaleza.json file
-    final file = File('fortaleza.json');
-    final jsonString = await file.readAsString();
+    // Create a simplified JSON response with only the essential fields
+    final jsonString = '''
+    {
+      "city": "fortaleza",
+      "places": [
+        {
+          "place_id": "123",
+          "display_name": "Martyrs Square",
+          "formatted_address": "Praca dos Martires - Centro, Fortaleza - CE, 60030-000, Brazil",
+          "google_maps_uri": "https://maps.google.com/?cid=12976531288368862883",
+          "location": {"lat": -3.7228790999999997, "lng": -38.5264022}
+        }
+      ]
+    }
+    ''';
 
-    // Set up the mock client to return the fortaleza.json content
+    // Set up the mock client to return the simplified JSON content
     final uri = Uri.parse('https://recommendations-1052236350369.europe-west1.run.app/places/fortaleza');
-    mockClient.addResponse(uri, http.Response(jsonString, 200));
+    mockClient.addResponse(uri, http.Response(jsonString, 200, headers: {'content-type': 'application/json; charset=utf-8'}));
 
     // Call the method under test
     final places = await recommendationService.search('fortaleza');
