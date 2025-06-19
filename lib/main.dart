@@ -33,7 +33,7 @@ Future<void> main() async {
       // 1. Debug provider
       // 2. Safety Net provider
       // 3. Play Integrity provider
-      androidProvider: app_check.AndroidProvider.debug,
+      androidProvider: app_check.AndroidProvider.playIntegrity,
       // Default provider for iOS/macOS is the Device Check provider. You can use the "AppleProvider" enum to choose
       // your preferred provider. Choose from:
       // 1. Debug provider
