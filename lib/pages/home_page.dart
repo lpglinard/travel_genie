@@ -18,11 +18,39 @@ final _destinations = [
       'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60'),
 ];
 
-class MyHomePage extends ConsumerWidget {
+class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends ConsumerState<MyHomePage> {
+  final formKey = GlobalKey<FormState>();
+  late final TextEditingController searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  void _submitSearch(String value) {
+    if (value.isNotEmpty) {
+      log('Search form submitted with value: ' + value);
+      ref.read(autocompleteProvider.notifier).search('');
+      ref.read(searchResultsProvider.notifier).search(value);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final userData = ref.watch(userDataProvider).valueOrNull;
     String greeting = AppLocalizations.of(context).greeting;
@@ -50,20 +78,29 @@ class MyHomePage extends ConsumerWidget {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 12),
-            TextField(
-              onChanged: (value) {
-                log('HomePage search field changed: ' + value);
-                ref.read(autocompleteProvider.notifier).search(value);
-              },
-              decoration: InputDecoration(
-                hintText: AppLocalizations.of(context).searchPlaceholder,
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor:
-                    Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
+            Form(
+              key: formKey,
+              child: TextFormField(
+                controller: searchController,
+                onChanged: (value) {
+                  log('HomePage search field changed: ' + value);
+                  ref.read(autocompleteProvider.notifier).search(value);
+                },
+                onFieldSubmitted: _submitSearch,
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context).searchPlaceholder,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.arrow_forward),
+                    onPressed: () => _submitSearch(searchController.text),
+                  ),
+                  filled: true,
+                  fillColor:
+                      Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
                 ),
               ),
             ),
@@ -78,12 +115,8 @@ class MyHomePage extends ConsumerWidget {
                               (s) => ListTile(
                                 title: Text(s),
                                 onTap: () {
-                                  ref
-                                      .read(autocompleteProvider.notifier)
-                                      .search('');
-                                  ref
-                                      .read(searchResultsProvider.notifier)
-                                      .search(s);
+                                  searchController.text = s;
+                                  _submitSearch(s);
                                 },
                               ),
                             )

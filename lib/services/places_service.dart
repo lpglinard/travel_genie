@@ -1,12 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'app_check_client.dart';
 
 class PlacesService {
   PlacesService(this.apiKey);
   final String apiKey;
-  final _client = AppCheckClient();
+  final _client = http.Client();
 
   Future<List<String>> autocomplete(
     String input, {
