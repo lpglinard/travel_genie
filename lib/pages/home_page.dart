@@ -58,7 +58,8 @@ class MyHomePage extends ConsumerWidget {
                 hintText: AppLocalizations.of(context).searchPlaceholder,
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
-                fillColor: Colors.grey.withOpacity(0.2),
+                fillColor:
+                    Theme.of(context).colorScheme.surface.withOpacity(0.2),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,
@@ -111,8 +112,6 @@ class MyHomePage extends ConsumerWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
         items: [
           BottomNavigationBarItem(
