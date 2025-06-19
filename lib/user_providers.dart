@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'services/preferences_service.dart';
 import 'services/analytics_service.dart';
 import 'services/places_service.dart';
+import 'services/recommendation_service.dart';
 import 'config.dart';
 
 import 'firestore_service.dart';
@@ -49,3 +50,7 @@ final placesServiceProvider = Provider<PlacesService>((ref) {
 });
 
 
+
+final recommendationServiceProvider = Provider<RecommendationService>((ref) {
+  return RecommendationService();
+});
