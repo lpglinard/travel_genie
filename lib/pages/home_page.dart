@@ -59,7 +59,7 @@ class MyHomePage extends ConsumerWidget {
                 prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor:
-                    Theme.of(context).colorScheme.surface.withOpacity(0.2),
+                    Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: BorderSide.none,

@@ -27,7 +27,6 @@ class AutocompleteNotifier extends StateNotifier<AsyncValue<List<String>>> {
       try {
         final results = await _service.autocomplete(
           query,
-          maxResults: 5,
           regionCode: 'br',
         );
         log('Autocomplete returned ' + results.length.toString() + ' results');
