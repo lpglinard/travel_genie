@@ -12,7 +12,9 @@ class AppCheckClient extends http.BaseClient {
     print('Sending request to ${request.url}');
     print('Headers: ${request.headers}');
     try {
-      final String? tokenResult = await FirebaseAppCheck.instance.getToken();
+      // Force a token refresh to ensure we get a valid token.
+      final String? tokenResult =
+          await FirebaseAppCheck.instance.getToken(true);
       if (tokenResult != null) {
         request.headers['X-Firebase-AppCheck'] = tokenResult;
       }
