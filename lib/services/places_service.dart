@@ -9,7 +9,6 @@ class PlacesService {
 
   Future<List<String>> autocomplete(
     String input, {
-    int maxResults = 5,
     String? regionCode,
     String? locationBias,
   }) async {
@@ -19,11 +18,11 @@ class PlacesService {
     final headers = {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': apiKey,
-      'X-Goog-FieldMask': 'places.displayName',
+      'X-Goog-FieldMask':
+          'suggestions.placePrediction.text.text,suggestions.queryPrediction.text.text',
     };
     final body = {
       'input': input,
-      'maxResultCount': maxResults,
       if (regionCode != null) 'regionCode': regionCode,
       if (locationBias != null) 'locationBias': locationBias,
     };
@@ -43,9 +42,15 @@ class PlacesService {
     }
 
     final data = json.decode(response.body) as Map<String, dynamic>;
-    final predictions = data['places'] as List? ?? data['predictions'] as List? ?? [];
-    final results = predictions
-        .map((e) => e['displayName']?['text'] as String?)
+    final suggestions = data['suggestions'] as List? ?? [];
+    final results = suggestions
+        .map((e) {
+          final prediction =
+              e['placePrediction'] ?? e['queryPrediction'] as Map<String, dynamic>?;
+          if (prediction == null) return null;
+          final text = prediction['text'] as Map<String, dynamic>?;
+          return text?['text'] as String?;
+        })
         .whereType<String>()
         .toList();
     log('Parsed predictions: ' + results.toString());
