@@ -1,108 +1,119 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
-import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-import '../config.dart';
 import '../l10n/app_localizations.dart';
-import '../profile_screen.dart';
 import '../user_providers.dart';
+import '../models/destination.dart';
 
-final counterProvider = StateProvider<int>((ref) => 0);
+final _destinations = [
+  Destination('Paris',
+      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60'),
+  Destination('Caribbean Beaches',
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60'),
+  Destination('Patagonia',
+      'https://images.unsplash.com/photo-1508264165352-258a45199388?auto=format&fit=crop&w=400&q=60'),
+];
 
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final counter = ref.watch(counterProvider);
+    final user = FirebaseAuth.instance.currentUser;
+    final userData = ref.watch(userDataProvider).valueOrNull;
+    String greeting = AppLocalizations.of(context).greeting;
+    if (user != null && !user.isAnonymous) {
+      final name = userData?.name ?? user.displayName;
+      if (name != null && name.isNotEmpty) {
+        greeting = '${AppLocalizations.of(context).greeting}, $name';
+      }
+    }
+    const heroImage =
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60';
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(AppLocalizations.of(context).demoHomePageTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            tooltip: AppLocalizations.of(context).profileButtonTooltip,
-            onPressed: () {
-              final currentUser = FirebaseAuth.instance.currentUser;
-              if (currentUser != null && !currentUser.isAnonymous) {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    settings: const RouteSettings(name: 'profile'),
-                    builder: (_) => const ProfileScreen(),
-                  ),
-                );
-              } else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    settings: const RouteSettings(name: 'sign_in'),
-                    builder: (context) => firebase_ui_auth.SignInScreen(
-                      providers: [
-                        firebase_ui_auth.EmailAuthProvider(),
-                        GoogleProvider(clientId: googleClientId),
-                        AppleProvider(),
-                      ],
-                      actions: [
-                        firebase_ui_auth.AuthStateChangeAction<
-                          firebase_ui_auth.UserCreated
-                        >((context, state) {
-                          final analytics = ref.read(analyticsServiceProvider);
-                          analytics.logSignUp(
-                            method:
-                                state.credential.credential?.providerId ??
-                                'unknown',
-                          );
-                          Navigator.of(
-                            context,
-                          ).popUntil((route) => route.isFirst);
-                        }),
-                        firebase_ui_auth.AuthStateChangeAction<
-                          firebase_ui_auth.SignedIn
-                        >((context, state) {
-                          final analytics = ref.read(analyticsServiceProvider);
-                          final providerId =
-                              state.user?.providerData.isNotEmpty == true
-                              ? state.user!.providerData.first.providerId
-                              : 'unknown';
-                          analytics.logLogin(method: providerId);
-                          Navigator.of(
-                            context,
-                          ).popUntil((route) => route.isFirst);
-                        }),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(AppLocalizations.of(context).buttonMessage),
-            Text('$counter', style: Theme.of(context).textTheme.headlineMedium),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.network(heroImage, height: 180, fit: BoxFit.cover),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              greeting,
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              decoration: InputDecoration(
+                hintText: AppLocalizations.of(context).searchPlaceholder,
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.grey.withOpacity(0.2),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              AppLocalizations.of(context).popularDestinations,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 150,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  final dest = _destinations[index];
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(dest.imageUrl,
+                            width: 120, height: 100, fit: BoxFit.cover),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(dest.name),
+                    ],
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemCount: _destinations.length,
+              ),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final notifier = ref.read(counterProvider.notifier);
-          if (notifier.state >= 4) {
-            FirebaseCrashlytics.instance.crash();
-          } else {
-            notifier.state++;
-          }
-        },
-        key: const Key('increment'),
-        tooltip: AppLocalizations.of(context).incrementTooltip,
-        child: const Icon(Icons.add),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        selectedItemColor: Colors.black,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: AppLocalizations.of(context).navHome,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.search),
+            label: AppLocalizations.of(context).navExplore,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.map),
+            label: AppLocalizations.of(context).navMyTrips,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.group),
+            label: AppLocalizations.of(context).navGroups,
+          ),
+        ],
       ),
     );
   }

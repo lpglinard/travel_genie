@@ -8,5 +8,12 @@
   "profileTitle": "Perfil",
   "changeLanguage": "Alterar idioma",
   "logout": "Sair",
-  "toggleDarkMode": "Usar tema escuro"
+  "toggleDarkMode": "Usar tema escuro",
+  "greeting": "Olá",
+  "searchPlaceholder": "Para onde você quer ir?",
+  "popularDestinations": "Destinos Populares",
+  "navHome": "Início",
+  "navExplore": "Explorar",
+  "navMyTrips": "Minhas Viagens",
+  "navGroups": "Grupos"
 }
