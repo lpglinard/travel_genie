@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_localizations.dart';
 import '../user_providers.dart';
 import '../models/destination.dart';
+import '../providers/autocomplete_provider.dart';
 
 final _destinations = [
   Destination('Paris',
@@ -48,6 +49,8 @@ class MyHomePage extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             TextField(
+              onChanged: (value) =>
+                  ref.read(autocompleteProvider.notifier).search(value),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context).searchPlaceholder,
                 prefixIcon: const Icon(Icons.search),
@@ -59,6 +62,18 @@ class MyHomePage extends ConsumerWidget {
                 ),
               ),
             ),
+            () {
+              final suggestions = ref.watch(autocompleteProvider);
+              return suggestions.maybeWhen(
+                data: (list) => list.isEmpty
+                    ? const SizedBox.shrink()
+                    : Column(
+                        children:
+                            list.map((s) => ListTile(title: Text(s))).toList(),
+                      ),
+                orElse: () => const SizedBox.shrink(),
+              );
+            }(),
             const SizedBox(height: 24),
             Text(
               AppLocalizations.of(context).popularDestinations,
