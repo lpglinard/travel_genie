@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/place.dart';
 import '../providers/search_results_provider.dart';
 import '../l10n/app_localizations.dart';
+import '../config.dart';
 import 'place_detail_page.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class SearchResultsPage extends ConsumerStatefulWidget {
   const SearchResultsPage({super.key, required this.query});
@@ -39,14 +41,32 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               final place = list[index];
               return Card(
                 child: ListTile(
-                  leading: place.photos.isNotEmpty && place.photos.first.url != null
-                      ? Image.network(
-                          place.photos.first.url!,
+                  leading: place.photos.isNotEmpty
+                      ? CachedNetworkImage(
+                          imageUrl: place.photos.first
+                              .urlWithKey(googlePlacesApiKey),
                           width: 60,
                           height: 60,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            width: 60,
+                            height: 60,
+                            color: Colors.grey.shade300,
+                            child: const Icon(Icons.image, size: 24),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            width: 60,
+                            height: 60,
+                            color: Colors.grey.shade300,
+                            child: const Icon(Icons.broken_image, size: 24),
+                          ),
                         )
-                      : const SizedBox(width: 60, height: 60),
+                      : Container(
+                          width: 60,
+                          height: 60,
+                          color: Colors.grey.shade300,
+                          child: const Icon(Icons.image, size: 24),
+                        ),
                   title: Text(place.displayName),
                   subtitle: place.rating != null
                       ? Row(
