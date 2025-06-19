@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:developer';
 
 import '../l10n/app_localizations.dart';
 import '../user_providers.dart';
@@ -49,8 +50,10 @@ class MyHomePage extends ConsumerWidget {
             ),
             const SizedBox(height: 12),
             TextField(
-              onChanged: (value) =>
-                  ref.read(autocompleteProvider.notifier).search(value),
+              onChanged: (value) {
+                log('HomePage search field changed: ' + value);
+                ref.read(autocompleteProvider.notifier).search(value);
+              },
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context).searchPlaceholder,
                 prefixIcon: const Icon(Icons.search),
