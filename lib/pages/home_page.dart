@@ -8,7 +8,7 @@ import '../user_providers.dart';
 import '../models/destination.dart';
 import '../providers/autocomplete_provider.dart';
 
-import '../providers/search_results_provider.dart';
+import '../pages/search_results_page.dart';
 final _destinations = [
   Destination('Paris',
       'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60'),
@@ -45,7 +45,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     if (value.isNotEmpty) {
       log('Search form submitted with value: ' + value);
       ref.read(autocompleteProvider.notifier).search('');
-      ref.read(searchResultsProvider.notifier).search(value);
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => SearchResultsPage(query: value),
+        ),
+      );
     }
   }
 
@@ -125,38 +129,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 orElse: () => const SizedBox.shrink(),
               );
             }(),
-            (() {
-              final results = ref.watch(searchResultsProvider);
-              return results.maybeWhen(
-                data: (list) => list.isEmpty
-                    ? const SizedBox.shrink()
-                    : Column(
-                        children: list
-                            .map(
-                              (r) => Card(
-                                child: ListTile(
-                                  leading: r.photos.isNotEmpty &&
-                                          r.photos.first.url != null &&
-                                          r.photos.first.url!.isNotEmpty
-                                      ? Image.network(
-                                          r.photos.first.url!,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                  title: Text(r.displayName),
-                                  subtitle: Text(r.formattedAddress),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                orElse: () => const SizedBox.shrink(),
-              );
-            })(),
             const SizedBox(height: 24),
             Text(
               AppLocalizations.of(context).popularDestinations,
