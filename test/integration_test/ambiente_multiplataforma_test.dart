@@ -22,26 +22,12 @@ void main() {
   });
 
   group('TG-4: Ambiente Multiplataforma', () {
-    testWidgets('tap on the floating action button, verify counter', (
-      tester,
-    ) async {
-      // Load app widget.
+    testWidgets('home shows search field', (tester) async {
       await tester.pumpWidget(const ProviderScope(child: MyApp()));
-
-      // Verify the counter starts at 0.
-      expect(find.text('0'), findsOneWidget);
-
-      // Finds the floating action button to tap on.
-      final fab = find.byKey(const ValueKey('increment'));
-
-      // Emulate a tap on the floating action button.
-      await tester.tap(fab);
-
-      // Trigger a frame.
       await tester.pumpAndSettle();
 
-      // Verify the counter increments by 1.
-      expect(find.text('1'), findsOneWidget);
+      expect(find.byType(TextField), findsOneWidget);
+      expect(find.byType(BottomNavigationBar), findsOneWidget);
     });
   });
 }
