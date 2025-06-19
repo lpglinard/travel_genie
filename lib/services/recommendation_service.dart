@@ -1,15 +1,17 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:http/http.dart' as http;
+import 'app_check_client.dart';
 
 import '../models/place.dart';
 
 class RecommendationService {
   RecommendationService();
-  final _client = http.Client();
+  final _client = AppCheckClient();
 
   Future<List<Place>> search(String name) async {
-    final uri = Uri.parse('https://recommendations.odsy.to/places/$name');
+    final encodedName = Uri.encodeComponent(name);
+    final uri = Uri.parse('https://recommendations.odsy.to/places/$encodedName');
     log('GET \$uri');
     final response = await _client.get(uri);
     log('RecommendationService response: \${response.statusCode}');
