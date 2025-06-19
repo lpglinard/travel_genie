@@ -11,6 +11,17 @@ class Photo {
   final int? height;
   final String? url;
 
+  /// Returns a photo URL using the provided [apiKey]. If [url] is already
+  /// present, it is returned as is. Otherwise the URL is constructed following
+  /// the Google Places photo API format.
+  String urlWithKey(String apiKey) {
+    return url ??
+        'https://maps.googleapis.com/maps/api/place/photo'
+        '?maxwidth=400'
+        '&photo_reference=$reference'
+        '&key=$apiKey';
+  }
+
   factory Photo.fromJson(Map<String, dynamic> json) {
     return Photo(
       reference: json['reference'] as String? ?? '',
