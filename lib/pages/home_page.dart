@@ -12,7 +12,7 @@ final _destinations = [
   Destination('Caribbean Beaches',
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60'),
   Destination('Patagonia',
-      'https://images.unsplash.com/photo-1508264165352-258a45199388?auto=format&fit=crop&w=400&q=60'),
+      'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60'),
 ];
 
 class MyHomePage extends ConsumerWidget {
