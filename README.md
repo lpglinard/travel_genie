@@ -52,3 +52,15 @@ O aplicativo também está configurado para enviar relatórios de falhas para o
 [Firebase Crashlytics](https://firebase.google.com/products/crashlytics). Todas
 as exceções não tratadas são capturadas automaticamente, permitindo acompanhar
 erros em produção tanto no Android quanto no iOS.
+
+# AdMob
+Siga estas instruções:
+
+## ANDROID Odsy: AI Travel Assistant
+ca-app-pub-3852573623829744~8339600928
+
+Card lista de destinos
+ca-app-pub-3852573623829744/7647667487
+
+Banner simples lista de resultados
+ca-app-pub-3852573623829744/7294128476
