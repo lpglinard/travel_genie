@@ -15,5 +15,8 @@
   "navHome": "Home",
   "navExplore": "Explore",
   "navMyTrips": "My Trips",
-  "navGroups": "Groups"
+  "navGroups": "Groups",
+  "noResults": "No results",
+  "openingHours": "Opening hours:",
+  "openInMaps": "Open in Google Maps"
 }
