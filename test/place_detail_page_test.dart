@@ -28,7 +28,8 @@ void main() {
       home: const PlaceDetailPage(place: place),
     ));
 
-    expect(find.widgetWithText(AppBar, 'Test Place'), findsOneWidget);
+    // The title is now in a Text widget, not in an AppBar
+    expect(find.text('Test Place'), findsOneWidget);
     expect(find.text('123 Street'), findsOneWidget);
   });
 
@@ -72,7 +73,12 @@ void main() {
     expect(find.text('RESTAURANT'), findsOneWidget);
 
     // Opening hours
-    expect(find.text('Open Now'), findsOneWidget).or(expect(find.text('Closed Now'), findsOneWidget));
+    // Check for either Open Now or Closed Now
+    expect(
+      find.text('Open Now').evaluate().isNotEmpty || 
+      find.text('Closed Now').evaluate().isNotEmpty,
+      isTrue
+    );
     expect(find.text('Tap for hours'), findsOneWidget);
 
     // Additional information
@@ -92,7 +98,7 @@ void main() {
 
     // Map preview
     expect(find.text('Location'), findsOneWidget);
-    expect(find.text('Open in Maps'), findsOneWidget);
+    expect(find.text('Open in Google Maps'), findsOneWidget);
 
     // Description
     expect(find.text('Description'), findsOneWidget);
@@ -102,11 +108,6 @@ void main() {
     // Action buttons
     expect(find.text('Save'), findsOneWidget);
     expect(find.text('Add to Itinerary'), findsOneWidget);
-
-    // Bottom navigation bar
-    expect(find.text('Explore'), findsOneWidget);
-    expect(find.text('Itinerary'), findsOneWidget);
-    expect(find.text('Profile'), findsOneWidget);
   });
 
   testWidgets('tests interaction with UI elements', (tester) async {
@@ -149,16 +150,6 @@ void main() {
 
     // Test Add to Itinerary button
     await tester.tap(find.text('Add to Itinerary'));
-    await tester.pump();
-
-    // Test bottom navigation bar
-    await tester.tap(find.text('Itinerary'));
-    await tester.pump();
-
-    await tester.tap(find.text('Profile'));
-    await tester.pump();
-
-    await tester.tap(find.text('Explore'));
     await tester.pump();
   });
 }

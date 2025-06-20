@@ -54,9 +54,13 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
+    final authState = ref.watch(authStateChangesProvider);
     final userData = ref.watch(userDataProvider).valueOrNull;
     String greeting = AppLocalizations.of(context).greeting;
+
+    // Get the user from the authState
+    final user = authState.valueOrNull;
+
     if (user != null && !user.isAnonymous) {
       final name = userData?.name ?? user.displayName;
       if (name != null && name.isNotEmpty) {
@@ -68,6 +72,23 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     _destinations = _getDestinations(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).navHome),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              if (user != null && !user.isAnonymous) {
+                // Navigate to profile screen if user is authenticated and not anonymous
+                context.push('/profile');
+              } else {
+                // Navigate to sign-in screen if user is anonymous
+                context.go('/signin');
+              }
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),

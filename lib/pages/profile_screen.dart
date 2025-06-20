@@ -12,7 +12,8 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = FirebaseAuth.instance.currentUser;
+    final authState = ref.watch(authStateChangesProvider);
+    final user = authState.valueOrNull;
     final locale = ref.watch(localeProvider);
     final themeMode = ref.watch(themeModeProvider);
     final userData = ref.watch(userDataProvider).valueOrNull;

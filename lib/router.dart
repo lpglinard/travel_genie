@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 
 import 'pages/home_page.dart';
 import 'pages/search_results_page.dart';
 import 'pages/place_detail_page.dart';
+import 'pages/profile_screen.dart' as app_profile;
 import 'services/analytics_service.dart';
 import 'providers/user_providers.dart';
 import 'l10n/app_localizations.dart';
+import 'core/config/config.dart';
 
 // Navigation destinations
 enum AppRoute {
@@ -109,6 +114,57 @@ final routerProvider = Provider<GoRouter>((ref) {
             child: PlaceDetailPage(
               place: place?['place'],
               heroTagIndex: place?['heroTagIndex'],
+            ),
+          );
+        },
+      ),
+      // Profile screen route (outside the shell)
+      GoRoute(
+        path: '/profile',
+        pageBuilder: (context, state) {
+          return MaterialPage(
+            key: state.pageKey,
+            child: const app_profile.ProfileScreen(),
+          );
+        },
+      ),
+      // Sign-in screen route (outside the shell)
+      GoRoute(
+        path: '/signin',
+        pageBuilder: (context, state) {
+          return MaterialPage(
+            key: state.pageKey,
+            child: SignInScreen(
+              providers: [
+                EmailAuthProvider(),
+                GoogleProvider(clientId: googleClientId, scopes: [
+                  'email',
+                  'profile',
+                  'openid'
+                ]
+                ),
+                AppleProvider(),
+              ],
+              headerBuilder: (context, constraints, _) {
+                return Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Image.asset('images/odsy_main.png'),
+                  ),
+                );
+              },
+              actions: [
+                AuthStateChangeAction<SignedIn>((context, state) {
+                  context.go('/');
+                }),
+                AuthStateChangeAction<UserCreated>((context, state) {
+                  context.go('/');
+                }),
+                AuthStateChangeAction<CredentialLinked>((context, state) {
+                  context.go('/');
+                }),
+              ],
             ),
           );
         },
