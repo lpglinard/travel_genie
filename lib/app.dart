@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'l10n/app_localizations.dart';
-import 'theme.dart';
-import 'user_providers.dart';
-import 'firestore_service.dart';
+import 'core/theme/theme.dart';
+import 'providers/user_providers.dart';
+import 'services/firestore_service.dart';
 import 'services/preferences_service.dart';
 import 'services/analytics_service.dart';
 import 'router.dart';

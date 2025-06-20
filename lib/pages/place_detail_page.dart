@@ -6,7 +6,7 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:go_router/go_router.dart';
 import '../l10n/app_localizations.dart';
 import '../models/place.dart';
-import '../config.dart';
+import '../core/config/config.dart';
 
 class PlaceDetailPage extends StatefulWidget {
   const PlaceDetailPage({

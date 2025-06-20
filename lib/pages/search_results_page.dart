@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../models/place.dart';
 import '../providers/search_results_provider.dart';
 import '../l10n/app_localizations.dart';
-import '../config.dart';
+import '../core/config/config.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class SearchResultsPage extends ConsumerStatefulWidget {

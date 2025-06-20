@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'dart:developer';
 
 import '../l10n/app_localizations.dart';
-import '../user_providers.dart';
+import '../providers/user_providers.dart';
 import '../models/destination.dart';
 import '../providers/autocomplete_provider.dart';
 List<Destination> _getDestinations(BuildContext context) {

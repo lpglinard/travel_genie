@@ -15,10 +15,10 @@ import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
-import 'config.dart';
+import 'core/config/config.dart';
 import 'firebase_options.dart';
 import 'services/preferences_service.dart';
-import 'user_providers.dart';
+import 'providers/user_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -7,7 +7,7 @@ import 'pages/home_page.dart';
 import 'pages/search_results_page.dart';
 import 'pages/place_detail_page.dart';
 import 'services/analytics_service.dart';
-import 'user_providers.dart';
+import 'providers/user_providers.dart';
 import 'l10n/app_localizations.dart';
 
 // Navigation destinations
@@ -21,7 +21,7 @@ enum AppRoute {
 // Provider for the router
 final routerProvider = Provider<GoRouter>((ref) {
   final analyticsService = ref.watch(analyticsServiceProvider);
-  
+
   // Create a navigation observer that logs screen views to Firebase Analytics
   final observer = FirebaseAnalyticsObserver(
     analytics: FirebaseAnalytics.instance,
@@ -101,7 +101,7 @@ final routerProvider = Provider<GoRouter>((ref) {
           // from the provider or pass it through state.extra
           final placeId = state.pathParameters['id']!;
           final place = state.extra as Map<String, dynamic>?;
-          
+
           // In a real implementation, you would fetch the place data
           // or pass it through state.extra
           return MaterialPage(
@@ -131,7 +131,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final analyticsService = ref.watch(analyticsServiceProvider);
-    
+
     return Scaffold(
       body: child,
       bottomNavigationBar: BottomNavigationBar(
@@ -170,7 +170,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   void _onItemTapped(int index, BuildContext context, AnalyticsService analyticsService) {
     String destination;
     String screenName;
-    
+
     switch (index) {
       case 0:
         destination = '/';
@@ -192,10 +192,10 @@ class ScaffoldWithNavBar extends ConsumerWidget {
         destination = '/';
         screenName = 'home_screen';
     }
-    
+
     // Log screen view to analytics
     FirebaseAnalytics.instance.logScreenView(screenName: screenName);
-    
+
     // Navigate to the destination
     context.go(destination);
   }
