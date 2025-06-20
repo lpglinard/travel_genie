@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:developer';
 
 import '../l10n/app_localizations.dart';
 import '../user_providers.dart';
 import '../models/destination.dart';
 import '../providers/autocomplete_provider.dart';
-
-import '../pages/search_results_page.dart';
 List<Destination> _getDestinations(BuildContext context) {
   return [
     Destination(AppLocalizations.of(context).paris,
@@ -48,11 +47,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     if (value.isNotEmpty) {
       log('Search form submitted with value: ' + value);
       ref.read(autocompleteProvider.notifier).search('');
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (_) => SearchResultsPage(query: value),
-        ),
-      );
+      // Use go_router to navigate to the explore page with the query parameter
+      context.go('/explore?query=$value');
     }
   }
 
@@ -164,28 +160,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: AppLocalizations.of(context).navHome,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: AppLocalizations.of(context).navExplore,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.map),
-            label: AppLocalizations.of(context).navMyTrips,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.group),
-            label: AppLocalizations.of(context).navGroups,
-          ),
-        ],
       ),
     );
   }

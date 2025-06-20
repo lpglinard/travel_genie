@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../models/place.dart';
 import '../providers/search_results_provider.dart';
 import '../l10n/app_localizations.dart';
 import '../config.dart';
-import 'place_detail_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class SearchResultsPage extends ConsumerStatefulWidget {
@@ -60,23 +60,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
     }
   }
 
-  // Add a variable to track the selected navigation index
-  int _selectedNavIndex = 1; // Default to Explore tab
-
-  void _onNavItemTapped(int index) {
-    if (index != _selectedNavIndex) {
-      setState(() {
-        _selectedNavIndex = index;
-      });
-
-      // Navigate to the appropriate page
-      if (index == 0) {
-        // Navigate to Home
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      }
-      // Other navigation options can be added here
-    }
-  }
+  // Navigation is now handled by go_router
 
   @override
   Widget build(BuildContext context) {
@@ -179,14 +163,11 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                         elevation: 2,
                         child: InkWell(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => PlaceDetailPage(
-                                  place: place,
-                                  heroTagIndex: index,
-                                ),
-                              ),
-                            );
+                            // Navigate to place detail using go_router
+                            context.go('/place/${place.placeId}', extra: {
+                              'place': place,
+                              'heroTagIndex': index,
+                            });
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,29 +327,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedNavIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onNavItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: AppLocalizations.of(context).navHome,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: AppLocalizations.of(context).navExplore,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.map),
-            label: AppLocalizations.of(context).navMyTrips,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.group),
-            label: AppLocalizations.of(context).navGroups,
-          ),
-        ],
-      ),
+      // Bottom navigation is now handled by the ScaffoldWithNavBar in router.dart
     );
   }
 

@@ -2,14 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'l10n/app_localizations.dart';
-import 'pages/home_page.dart';
 import 'theme.dart';
 import 'user_providers.dart';
 import 'firestore_service.dart';
 import 'services/preferences_service.dart';
 import 'services/analytics_service.dart';
+import 'router.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -65,7 +66,9 @@ class MyApp extends ConsumerWidget {
       }
     });
 
-    return MaterialApp(
+    final router = ref.watch(routerProvider);
+
+    return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       locale: locale,
       localizationsDelegates: const [
@@ -75,11 +78,10 @@ class MyApp extends ConsumerWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en'), Locale('pt')],
-      navigatorObservers: [ref.read(analyticsServiceProvider).observer],
       themeMode: themeMode,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      home: const MyHomePage(),
+      routerConfig: router,
     );
   }
 }

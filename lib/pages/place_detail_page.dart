@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
+import 'package:go_router/go_router.dart';
 import '../l10n/app_localizations.dart';
 import '../models/place.dart';
 import '../config.dart';
@@ -139,15 +140,25 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
         _selectedNavIndex = index;
       });
 
-      // Navigate to the appropriate page
-      if (index == 0) {
-        // Navigate to Home
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      } else if (index == 1) {
-        // If we're already in a search flow, just go back one level
-        Navigator.of(context).pop();
+      // Navigate using go_router
+      switch (index) {
+        case 0:
+          // Navigate to Home
+          context.go('/');
+          break;
+        case 1:
+          // Navigate to Explore
+          context.go('/explore');
+          break;
+        case 2:
+          // Navigate to Trips
+          context.go('/trips');
+          break;
+        case 3:
+          // Navigate to Groups
+          context.go('/groups');
+          break;
       }
-      // Other navigation options can be added here
     }
   }
 
@@ -442,42 +453,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
             ),
           ),
 
-          // Bottom navigation bar
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: BottomNavigationBar(
-              currentIndex: _selectedNavIndex,
-              type: BottomNavigationBarType.fixed,
-              onTap: _onNavItemTapped,
-              items: [
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.home),
-                  label: AppLocalizations.of(context).navHome,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.search),
-                  label: AppLocalizations.of(context).navExplore,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.map),
-                  label: AppLocalizations.of(context).navMyTrips,
-                ),
-                BottomNavigationBarItem(
-                  icon: const Icon(Icons.group),
-                  label: AppLocalizations.of(context).navGroups,
-                ),
-              ],
-            ),
-          ),
+          // Bottom navigation is now handled by the ScaffoldWithNavBar in router.dart
         ],
       ),
     );
