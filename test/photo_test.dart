@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logging/logging.dart';
 import 'package:travel_genie/models/photo.dart';
+import 'package:travel_genie/models/author_attribution.dart';
 
 void main() {
   setUp(() {

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_genie/models/place.dart';
 import 'package:travel_genie/models/place_category.dart';
+import 'package:travel_genie/models/place_categories.dart';
 import 'package:travel_genie/models/location.dart';
 
 void main() {
@@ -67,18 +68,18 @@ void main() {
         location: const Location(lat: 0, lng: 0),
       );
 
-      // Test containsPlace method
-      expect(PlaceCategories.transportation.containsPlace(airportPlace), true);
-      expect(PlaceCategories.transportation.containsPlace(hotelPlace), false);
-      expect(PlaceCategories.transportation.containsPlace(restaurantPlace), false);
+      // Test containsPlaceTypes method
+      expect(PlaceCategories.transportation.containsPlaceTypes(airportPlace.types), true);
+      expect(PlaceCategories.transportation.containsPlaceTypes(hotelPlace.types), false);
+      expect(PlaceCategories.transportation.containsPlaceTypes(restaurantPlace.types), false);
 
-      expect(PlaceCategories.accommodation.containsPlace(airportPlace), false);
-      expect(PlaceCategories.accommodation.containsPlace(hotelPlace), true);
-      expect(PlaceCategories.accommodation.containsPlace(restaurantPlace), false);
+      expect(PlaceCategories.accommodation.containsPlaceTypes(airportPlace.types), false);
+      expect(PlaceCategories.accommodation.containsPlaceTypes(hotelPlace.types), true);
+      expect(PlaceCategories.accommodation.containsPlaceTypes(restaurantPlace.types), false);
 
-      expect(PlaceCategories.foodAndDrink.containsPlace(airportPlace), false);
-      expect(PlaceCategories.foodAndDrink.containsPlace(hotelPlace), false);
-      expect(PlaceCategories.foodAndDrink.containsPlace(restaurantPlace), true);
+      expect(PlaceCategories.foodAndDrink.containsPlaceTypes(airportPlace.types), false);
+      expect(PlaceCategories.foodAndDrink.containsPlaceTypes(hotelPlace.types), false);
+      expect(PlaceCategories.foodAndDrink.containsPlaceTypes(restaurantPlace.types), true);
     });
 
     test('getCategoriesForPlace returns correct categories', () {
@@ -93,8 +94,8 @@ void main() {
         location: const Location(lat: 0, lng: 0),
       );
 
-      // Test getCategoriesForPlace method
-      final categories = PlaceCategories.getCategoriesForPlace(multiCategoryPlace);
+      // Test getCategoriesForTypes method
+      final categories = PlaceCategories.getCategoriesForTypes(multiCategoryPlace.types);
       expect(categories.length, 2);
       expect(categories.any((c) => c.id == PlaceCategories.accommodation.id), true);
       expect(categories.any((c) => c.id == PlaceCategories.foodAndDrink.id), true);

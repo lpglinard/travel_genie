@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/places_service.dart';
-import '../user_providers.dart';
+import './user_providers.dart';
 
 class AutocompleteNotifier extends StateNotifier<AsyncValue<List<String>>> {
   AutocompleteNotifier(this._service)

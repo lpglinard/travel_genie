@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../models/destination.dart';
 import '../providers/autocomplete_provider.dart';
 import '../providers/user_providers.dart';
+import '../widgets/search_field.dart';
 
 List<Destination> _getDestinations(BuildContext context) {
   return [
@@ -110,28 +111,17 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             const SizedBox(height: 12),
             Form(
               key: formKey,
-              child: TextFormField(
+              child: SearchField(
                 controller: searchController,
+                hintText: AppLocalizations.of(context).searchPlaceholder,
                 onChanged: (value) {
                   log('HomePage search field changed: ' + value);
                   ref.read(autocompleteProvider.notifier).search(value);
                 },
-                onFieldSubmitted: _submitSearch,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).searchPlaceholder,
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: () => _submitSearch(searchController.text),
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(
-                    context,
-                  ).colorScheme.inverseSurface.withOpacity(0.2),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
+                onSubmitted: _submitSearch,
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.arrow_forward),
+                  onPressed: () => _submitSearch(searchController.text),
                 ),
               ),
             ),

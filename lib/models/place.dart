@@ -3,6 +3,7 @@ import 'package:logging/logging.dart';
 import 'location.dart';
 import 'photo.dart';
 import 'place_category.dart';
+import 'place_categories.dart';
 
 class Place {
   /// Creates a logger for the Place class
@@ -24,52 +25,7 @@ class Place {
     this.generativeSummary = '',
     this.disclosureText = '',
     PlaceCategory? category,
-  }) : category = category ?? _determineCategoryFromTypes(types);
-
-  /// Determines the most appropriate category based on the place types
-  /// The category with the most matching types is chosen
-  /// In case of a tie, the first category with the most matches is selected
-  /// If no matches are found, returns the first category (Transportation)
-  static PlaceCategory _determineCategoryFromTypes(List<String> types) {
-    // Use the first category (Transportation) as default
-    final defaultCategory = PlaceCategories.all.first;
-
-    if (types.isEmpty) {
-      return defaultCategory; // Use first category if no types
-    }
-
-    // Get all categories that match any of the given types
-    final matchingCategories = PlaceCategories.getCategoriesForTypes(types);
-
-    if (matchingCategories.isEmpty) {
-      return defaultCategory; // Use first category if no matches
-    }
-
-    // Count occurrences of each category to find the one with most matches
-    Map<PlaceCategory, int> matchCounts = {};
-    for (final category in matchingCategories) {
-      int matches = 0;
-      for (final type in types) {
-        if (category.types.contains(type)) {
-          matches++;
-        }
-      }
-      matchCounts[category] = matches;
-    }
-
-    // Find the category with the most matches
-    PlaceCategory bestCategory = matchingCategories.first;
-    int maxMatches = matchCounts[bestCategory] ?? 0;
-
-    for (final entry in matchCounts.entries) {
-      if (entry.value > maxMatches) {
-        maxMatches = entry.value;
-        bestCategory = entry.key;
-      }
-    }
-
-    return bestCategory;
-  }
+  }) : category = category ?? PlaceCategories.determineCategoryFromTypes(types);
 
 
   final String placeId;

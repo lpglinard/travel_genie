@@ -214,18 +214,12 @@ class ScaffoldWithNavBar extends ConsumerWidget {
     final isHome = location == '/' || location == '';
 
     return PopScope(
-      canPop: false,
+      canPop: isHome, // Only allow system back to close app when on home screen
       onPopInvoked: (didPop) {
-        // If we're already on the home screen, don't allow the app to quit
-        // Instead, we've set canPop: false to prevent the app from closing
-        if (!isHome) {
-          // If not on home screen, try to pop the current route
-          if (context.canPop()) {
-            context.pop();
-          } else {
-            // If can't pop, navigate to the home screen
-            context.go('/');
-          }
+        // If we're on a non-home screen and the pop wasn't handled by the system
+        if (!isHome && !didPop) {
+          // Navigate to home screen when back button is pressed on other screens
+          context.go('/');
         }
       },
       child: Scaffold(

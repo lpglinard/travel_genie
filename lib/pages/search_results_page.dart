@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/config/config.dart';
+import '../core/extensions/string_extension.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/search_results_provider.dart';
+import '../widgets/search_field.dart';
 
 class SearchResultsPage extends ConsumerStatefulWidget {
   const SearchResultsPage({super.key, required this.query});
@@ -100,25 +102,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
             // Search bar
             Padding(
               padding: const EdgeInsets.all(16.0),
-              child: TextField(
+              child: SearchField(
                 controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).searchPlaceholder,
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                    },
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey.shade200,
-                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                ),
+                hintText: AppLocalizations.of(context).searchPlaceholder,
                 onSubmitted: (value) {
                   if (value.isNotEmpty) {
                     ref.read(searchResultsProvider.notifier).search(value);
@@ -522,12 +508,5 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
       return '${countInK.toStringAsFixed(1)}k';
     }
     return count.toString();
-  }
-}
-
-// Extension to capitalize the first letter of a string
-extension StringExtension on String {
-  String capitalize() {
-    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

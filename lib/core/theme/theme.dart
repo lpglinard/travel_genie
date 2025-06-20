@@ -45,6 +45,134 @@ class AppTheme {
     onSurface: Colors.white,
   );
 
-  static final lightTheme = ThemeData.from(colorScheme: _lightColorScheme);
-  static final darkTheme = ThemeData.from(colorScheme: _darkColorScheme);
+  static final lightTheme = ThemeData(
+    useMaterial3: true,
+    colorScheme: _lightColorScheme,
+    fontFamily: 'Nunito',
+    // Typography - define TextTheme for Material 3 (light mode)
+    textTheme: TextTheme(
+      displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.w400, letterSpacing: -0.25, color: _lightColorScheme.onSurface),
+      displayMedium: TextStyle(fontSize: 45, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _lightColorScheme.onSurface),
+      displaySmall: TextStyle(fontSize: 36, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _lightColorScheme.onSurface),
+      headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _lightColorScheme.onSurface),
+      headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _lightColorScheme.onSurface),
+      headlineSmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _lightColorScheme.onSurface),
+      titleLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _lightColorScheme.onSurface),
+      titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, letterSpacing: 0.15, color: _lightColorScheme.onSurface),
+      titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: _lightColorScheme.onSurface),
+      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5, color: _lightColorScheme.onSurface),    // typically the default text style
+      bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25, color: _lightColorScheme.onSurface),
+      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4, color: _lightColorScheme.onSurfaceVariant), // onSurfaceVariant for less emphasis
+      labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: _lightColorScheme.onPrimary),      // e.g., onPrimary for buttons on primary color
+      labelMedium: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: _lightColorScheme.onSurface),
+      labelSmall: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: _lightColorScheme.onSurfaceVariant),
+    ),
+
+    // AppBar theme for consistent styling
+    appBarTheme: AppBarTheme(
+      elevation: 0, // no shadow
+      backgroundColor: _lightColorScheme.surface,
+      surfaceTintColor: _lightColorScheme.primary, // allow a hint of primary color overlay when scrolled
+      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: _lightColorScheme.onSurface),  // slightly smaller than TitleLarge for AppBar
+      iconTheme: IconThemeData(color: _lightColorScheme.onSurface),
+      toolbarTextStyle: TextStyle(color: _lightColorScheme.onSurface),  // for any other text in the toolbar
+    ),
+
+    // Input decoration theme for TextField, TextFormField, etc.
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: _lightColorScheme.surfaceVariant.withOpacity(0.1),  // light tint background for text fields
+      alignLabelWithHint: true,
+      // Outline border for all states
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)), 
+        borderSide: BorderSide(color: _lightColorScheme.outline),
+      ),
+      // When text field is enabled and not focused
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _lightColorScheme.outline),
+      ),
+      // Focused state - highlight with primary color
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _lightColorScheme.primary, width: 2),
+      ),
+      // Error state
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _lightColorScheme.error, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _lightColorScheme.error, width: 2),
+      ),
+      // Label styles
+      labelStyle: TextStyle(color: _lightColorScheme.onSurfaceVariant),
+      floatingLabelStyle: TextStyle(color: _lightColorScheme.primary, fontWeight: FontWeight.w500),
+      helperStyle: TextStyle(color: _lightColorScheme.onSurfaceVariant),
+      errorStyle: TextStyle(color: _lightColorScheme.error),
+    ),
+  );
+
+  static final darkTheme = ThemeData(
+    useMaterial3: true,
+    colorScheme: _darkColorScheme,
+    fontFamily: 'Nunito',
+    // Typography: reuse the same sizes, just ensure colors appropriate for dark (usually onSurface is light)
+    textTheme: TextTheme(
+      displayLarge: TextStyle(fontSize: 57, fontWeight: FontWeight.w400, letterSpacing: -0.25, color: _darkColorScheme.onSurface),
+      displayMedium: TextStyle(fontSize: 45, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _darkColorScheme.onSurface),
+      displaySmall: TextStyle(fontSize: 36, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _darkColorScheme.onSurface),
+      headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _darkColorScheme.onSurface),
+      headlineMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _darkColorScheme.onSurface),
+      headlineSmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _darkColorScheme.onSurface),
+      titleLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w400, letterSpacing: 0.0, color: _darkColorScheme.onSurface),
+      titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, letterSpacing: 0.15, color: _darkColorScheme.onSurface),
+      titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: _darkColorScheme.onSurface),
+      bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, letterSpacing: 0.5, color: _darkColorScheme.onSurface),
+      bodyMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, letterSpacing: 0.25, color: _darkColorScheme.onSurface),
+      bodySmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, letterSpacing: 0.4, color: _darkColorScheme.onSurfaceVariant),
+      labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 0.1, color: _darkColorScheme.onPrimary),
+      labelMedium: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: _darkColorScheme.onSurface),
+      labelSmall: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, letterSpacing: 0.5, color: _darkColorScheme.onSurfaceVariant),
+    ),
+    appBarTheme: AppBarTheme(
+      elevation: 0,
+      backgroundColor: _darkColorScheme.surface,
+      surfaceTintColor: _darkColorScheme.primary,
+      titleTextStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: _darkColorScheme.onSurface),
+      iconTheme: IconThemeData(color: _darkColorScheme.onSurface),
+      toolbarTextStyle: TextStyle(color: _darkColorScheme.onSurface),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: _darkColorScheme.surfaceVariant.withOpacity(0.2), // a bit higher opacity on dark for visibility
+      alignLabelWithHint: true,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _darkColorScheme.outline),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _darkColorScheme.outline),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _darkColorScheme.primary, width: 2),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _darkColorScheme.error, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(8)),
+        borderSide: BorderSide(color: _darkColorScheme.error, width: 2),
+      ),
+      labelStyle: TextStyle(color: _darkColorScheme.onSurfaceVariant),
+      floatingLabelStyle: TextStyle(color: _darkColorScheme.primary, fontWeight: FontWeight.w500),
+      helperStyle: TextStyle(color: _darkColorScheme.onSurfaceVariant),
+      errorStyle: TextStyle(color: _darkColorScheme.error),
+    ),
+  );
 }

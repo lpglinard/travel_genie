@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel_genie/services/recommendation_service.dart';
 import 'package:travel_genie/models/place.dart';
+import 'package:travel_genie/models/paginated_places.dart';
 
 // Simple mock of http.Client
 class MockHttpClient implements http.Client {
@@ -36,7 +37,7 @@ void main() {
     recommendationService = RecommendationService(client: mockClient);
   });
 
-  test('search returns list of places when response is successful without languageCode', () async {
+  test('search returns paginated places when response is successful without languageCode', () async {
     // Create a simplified JSON response with only the essential fields
     final jsonString = '''
     {
@@ -67,15 +68,15 @@ void main() {
     mockClient.addResponse(uri, http.Response(jsonString, 200, headers: {'content-type': 'application/json; charset=utf-8'}));
 
     // Call the method under test
-    final places = await recommendationService.search('fortaleza');
+    final result = await recommendationService.search('fortaleza');
 
     // Verify the result
-    expect(places, isA<List<Place>>());
-    expect(places.isNotEmpty, true);
-    expect(places.first.displayName, 'Martyrs Square');
+    expect(result, isA<PaginatedPlaces>());
+    expect(result.places, isNotEmpty);
+    expect(result.places.first.displayName, 'Martyrs Square');
   });
 
-  test('search returns list of places when response is successful with languageCode', () async {
+  test('search returns paginated places when response is successful with languageCode', () async {
     // Create a simplified JSON response with only the essential fields
     final jsonString = '''
     {
@@ -106,11 +107,11 @@ void main() {
     mockClient.addResponse(uri, http.Response(jsonString, 200, headers: {'content-type': 'application/json; charset=utf-8'}));
 
     // Call the method under test
-    final places = await recommendationService.search('fortaleza', languageCode: 'pt');
+    final result = await recommendationService.search('fortaleza', languageCode: 'pt');
 
     // Verify the result
-    expect(places, isA<List<Place>>());
-    expect(places.isNotEmpty, true);
-    expect(places.first.displayName, 'Martyrs Square');
+    expect(result, isA<PaginatedPlaces>());
+    expect(result.places, isNotEmpty);
+    expect(result.places.first.displayName, 'Martyrs Square');
   });
 }
