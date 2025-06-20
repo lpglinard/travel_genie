@@ -1,21 +1,28 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'dart:developer';
 
 import '../l10n/app_localizations.dart';
-import '../providers/user_providers.dart';
 import '../models/destination.dart';
 import '../providers/autocomplete_provider.dart';
+import '../providers/user_providers.dart';
+
 List<Destination> _getDestinations(BuildContext context) {
   return [
-    Destination(AppLocalizations.of(context).paris,
-        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60'),
-    Destination(AppLocalizations.of(context).caribbeanBeaches,
-        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60'),
-    Destination(AppLocalizations.of(context).patagonia,
-        'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60'),
+    Destination(
+      AppLocalizations.of(context).paris,
+      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60',
+    ),
+    Destination(
+      AppLocalizations.of(context).caribbeanBeaches,
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60',
+    ),
+    Destination(
+      AppLocalizations.of(context).patagonia,
+      'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60',
+    ),
   ];
 }
 
@@ -96,13 +103,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.asset(heroImage,  fit: BoxFit.cover),
+              child: Image.asset(heroImage, fit: BoxFit.cover),
             ),
             const SizedBox(height: 16),
-            Text(
-              greeting,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            Text(greeting, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 12),
             Form(
               key: formKey,
@@ -121,8 +125,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     onPressed: () => _submitSearch(searchController.text),
                   ),
                   filled: true,
-                  fillColor:
-                      Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+                  fillColor: Theme.of(
+                    context,
+                  ).colorScheme.inverseSurface.withOpacity(0.2),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide.none,
@@ -168,8 +173,12 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.network(dest.imageUrl,
-                            width: 120, height: 100, fit: BoxFit.cover),
+                        child: Image.network(
+                          dest.imageUrl,
+                          width: 120,
+                          height: 100,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(dest.name),

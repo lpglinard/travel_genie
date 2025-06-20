@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'services/preferences_service.dart';
 
 import 'l10n/app_localizations.dart';
 import 'user_providers.dart';
-import 'firestore_service.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -18,15 +16,15 @@ class ProfileScreen extends ConsumerWidget {
     final userData = ref.watch(userDataProvider).valueOrNull;
     final service = ref.read(firestoreServiceProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.profileTitle),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.profileTitle)),
       body: ListView(
         children: [
           if (user != null && !user.isAnonymous)
             ListTile(
               leading: const Icon(Icons.person),
-              title: Text(userData?.name ?? user.displayName ?? user.email ?? 'User'),
+              title: Text(
+                userData?.name ?? user.displayName ?? user.email ?? 'User',
+              ),
               subtitle: userData?.email != null ? Text(userData!.email!) : null,
             ),
           ListTile(
@@ -65,8 +63,9 @@ class ProfileScreen extends ConsumerWidget {
             trailing: Switch(
               value: themeMode == ThemeMode.dark,
               onChanged: (value) async {
-                ref.read(themeModeProvider.notifier).state =
-                    value ? ThemeMode.dark : ThemeMode.light;
+                ref.read(themeModeProvider.notifier).state = value
+                    ? ThemeMode.dark
+                    : ThemeMode.light;
                 if (user != null && !user.isAnonymous) {
                   await service.upsertUser(
                     user,
@@ -76,7 +75,8 @@ class ProfileScreen extends ConsumerWidget {
                 }
                 final prefs = await ref.read(preferencesServiceProvider.future);
                 await prefs.setThemeMode(
-                    value ? ThemeMode.dark : ThemeMode.light);
+                  value ? ThemeMode.dark : ThemeMode.light,
+                );
               },
             ),
           ),

@@ -12,11 +12,7 @@ import '../core/config/config.dart';
 import '../providers/user_providers.dart';
 
 class PlaceDetailPage extends ConsumerStatefulWidget {
-  const PlaceDetailPage({
-    super.key, 
-    required this.place, 
-    this.heroTagIndex,
-  });
+  const PlaceDetailPage({super.key, required this.place, this.heroTagIndex});
 
   final Place place;
   final int? heroTagIndex;
@@ -60,7 +56,10 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
 
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
-      final isSaved = await firestoreService.isPlaceSaved(user.uid, widget.place.placeId);
+      final isSaved = await firestoreService.isPlaceSaved(
+        user.uid,
+        widget.place.placeId,
+      );
 
       setState(() {
         _isSaved = isSaved;
@@ -92,7 +91,12 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
               appBar: AppBar(
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.white,
-                title: Text(AppLocalizations.of(context).imageCount('${currentIndex + 1}', '${widget.place.photos.length}')),
+                title: Text(
+                  AppLocalizations.of(context).imageCount(
+                    '${currentIndex + 1}',
+                    '${widget.place.photos.length}',
+                  ),
+                ),
               ),
               body: Stack(
                 children: [
@@ -116,11 +120,14 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                         child: CircularProgressIndicator(
                           value: event == null
                               ? 0
-                              : event.cumulativeBytesLoaded / (event.expectedTotalBytes ?? 1),
+                              : event.cumulativeBytesLoaded /
+                                    (event.expectedTotalBytes ?? 1),
                         ),
                       ),
                     ),
-                    backgroundDecoration: const BoxDecoration(color: Colors.black),
+                    backgroundDecoration: const BoxDecoration(
+                      color: Colors.black,
+                    ),
                     pageController: PageController(initialPage: index),
                     onPageChanged: (i) {
                       setState(() {
@@ -128,16 +135,27 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                       });
                     },
                   ),
-                  if (widget.place.photos[currentIndex].authorAttributions.isNotEmpty)
+                  if (widget
+                      .place
+                      .photos[currentIndex]
+                      .authorAttributions
+                      .isNotEmpty)
                     Positioned(
                       bottom: 0,
                       right: 0,
                       left: 0,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 16,
+                        ),
                         color: Colors.black.withOpacity(0.5),
                         child: Text(
-                          AppLocalizations.of(context).photoBy(widget.place.photos[currentIndex].authorAttributions.map((attr) => attr.displayName).join(", ")),
+                          AppLocalizations.of(context).photoBy(
+                            widget.place.photos[currentIndex].authorAttributions
+                                .map((attr) => attr.displayName)
+                                .join(", "),
+                          ),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 14,
@@ -149,7 +167,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                 ],
               ),
             );
-          }
+          },
         ),
       ),
     );
@@ -158,12 +176,15 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   void _sharePlaceInfo() {
     final url = widget.place.googleMapsUri;
     final message = AppLocalizations.of(context).shareMessage(
-        widget.place.formattedAddress,
-        widget.place.displayName,
-        url);
+      widget.place.formattedAddress,
+      widget.place.displayName,
+      url,
+    );
 
     // Since we don't have share_plus package, we'll use url_launcher to open a share intent
-    final uri = Uri.parse('mailto:?subject=${AppLocalizations.of(context).shareSubject}&body=$message');
+    final uri = Uri.parse(
+      'mailto:?subject=${AppLocalizations.of(context).shareSubject}&body=$message',
+    );
     launchUrl(uri);
   }
 
@@ -203,9 +224,11 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       // Show success message
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_isSaved 
-            ? 'Place saved to your favorites' 
-            : 'Place removed from your favorites'),
+          content: Text(
+            _isSaved
+                ? 'Place saved to your favorites'
+                : 'Place removed from your favorites',
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -306,9 +329,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             // Place name
                             Text(
                               widget.place.displayName,
-                              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.headlineMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
 
                             const SizedBox(height: 8),
@@ -327,21 +349,31 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                                 if (widget.place.types.isNotEmpty)
                                   Text(
                                     widget.place.types.first.toUpperCase(),
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Theme.of(context).colorScheme.primary,
-                                    ),
+                                    style: Theme.of(context).textTheme.bodySmall
+                                        ?.copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
                                   ),
-                                if (widget.place.types.isNotEmpty && widget.place.rating != null)
+                                if (widget.place.types.isNotEmpty &&
+                                    widget.place.rating != null)
                                   const SizedBox(width: 8),
                                 if (widget.place.rating != null) ...[
-                                  const Icon(Icons.star, color: Colors.amber, size: 16),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                    size: 16,
+                                  ),
                                   const SizedBox(width: 4),
                                   Text(widget.place.rating!.toString()),
                                   if (widget.place.userRatingCount != null) ...[
                                     const SizedBox(width: 4),
                                     Text(
                                       '(${widget.place.userRatingCount} reviews)',
-                                      style: Theme.of(context).textTheme.bodySmall,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodySmall,
                                     ),
                                   ],
                                 ],
@@ -354,9 +386,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             if (widget.place.generativeSummary.isNotEmpty) ...[
                               Text(
                                 AppLocalizations.of(context).description,
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: Theme.of(context).textTheme.titleMedium
+                                    ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8),
                               Text(
@@ -367,10 +398,13 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                                 const SizedBox(height: 8),
                                 Text(
                                   widget.place.disclosureText,
-                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontStyle: FontStyle.italic,
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(
+                                        fontStyle: FontStyle.italic,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
                                 ),
                               ],
                               const SizedBox(height: 24),
@@ -379,9 +413,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             // Additional information
                             Text(
                               AppLocalizations.of(context).additionalInfo,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 16),
 
@@ -389,10 +422,15 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             if (widget.place.openingHours.isNotEmpty) ...[
                               _buildInfoItem(
                                 icon: Icons.access_time,
-                                title: widget.place.openingHours.first.contains('Open') 
-                                    ? AppLocalizations.of(context).openNow 
+                                title:
+                                    widget.place.openingHours.first.contains(
+                                      'Open',
+                                    )
+                                    ? AppLocalizations.of(context).openNow
                                     : AppLocalizations.of(context).closedNow,
-                                subtitle: AppLocalizations.of(context).tapForHours,
+                                subtitle: AppLocalizations.of(
+                                  context,
+                                ).tapForHours,
                                 onTap: () => _showOpeningHours(context),
                               ),
                               const Divider(),
@@ -411,11 +449,21 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                               _buildInfoItem(
                                 icon: Icons.language,
                                 title: AppLocalizations.of(context).website,
-                                subtitle: AppLocalizations.of(context).visitWebsite,
-                                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                                subtitle: AppLocalizations.of(
+                                  context,
+                                ).visitWebsite,
+                                trailing: const Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 16,
+                                ),
                                 onTap: () {
-                                  final uri = Uri.parse(widget.place.websiteUri!);
-                                  launchUrl(uri, mode: LaunchMode.externalApplication);
+                                  final uri = Uri.parse(
+                                    widget.place.websiteUri!,
+                                  );
+                                  launchUrl(
+                                    uri,
+                                    mode: LaunchMode.externalApplication,
+                                  );
                                 },
                               ),
                               const Divider(),
@@ -424,12 +472,24 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             // Google Maps
                             _buildInfoItem(
                               icon: Icons.map,
-                              title: AppLocalizations.of(context).viewOnGoogleMaps,
-                              subtitle: AppLocalizations.of(context).openInExternalApp,
-                              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                              title: AppLocalizations.of(
+                                context,
+                              ).viewOnGoogleMaps,
+                              subtitle: AppLocalizations.of(
+                                context,
+                              ).openInExternalApp,
+                              trailing: const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                              ),
                               onTap: () {
-                                final uri = Uri.parse(widget.place.googleMapsUri);
-                                launchUrl(uri, mode: LaunchMode.externalApplication);
+                                final uri = Uri.parse(
+                                  widget.place.googleMapsUri,
+                                );
+                                launchUrl(
+                                  uri,
+                                  mode: LaunchMode.externalApplication,
+                                );
                               },
                             ),
                             const Divider(),
@@ -437,8 +497,12 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             // Average visit time (mock data)
                             _buildInfoItem(
                               icon: Icons.timelapse,
-                              title: AppLocalizations.of(context).averageVisitTime,
-                              subtitle: AppLocalizations.of(context).oneToTwoHours,
+                              title: AppLocalizations.of(
+                                context,
+                              ).averageVisitTime,
+                              subtitle: AppLocalizations.of(
+                                context,
+                              ).oneToTwoHours,
                             ),
 
                             const SizedBox(height: 24),
@@ -446,9 +510,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             // Map preview
                             Text(
                               AppLocalizations.of(context).location,
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 16),
                             ClipRRect(
@@ -471,13 +534,25 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                                       left: 0,
                                       right: 0,
                                       child: Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                                        color: Theme.of(context).colorScheme.primary,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 8,
+                                          horizontal: 16,
+                                        ),
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
                                         child: Text(
-                                          AppLocalizations.of(context).openInMaps,
-                                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                            color: Theme.of(context).colorScheme.onPrimary,
-                                          ),
+                                          AppLocalizations.of(
+                                            context,
+                                          ).openInMaps,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onPrimary,
+                                              ),
                                           textAlign: TextAlign.center,
                                         ),
                                       ),
@@ -518,7 +593,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: _isLoading ? null : _toggleSaved,
-                    icon: _isLoading 
+                    icon: _isLoading
                         ? SizedBox(
                             width: 24,
                             height: 24,
@@ -527,10 +602,14 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           )
-                        : Icon(_isSaved ? Icons.bookmark : Icons.bookmark_border),
-                    label: Text(_isLoading 
-                        ? AppLocalizations.of(context).close 
-                        : AppLocalizations.of(context).save),
+                        : Icon(
+                            _isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          ),
+                    label: Text(
+                      _isLoading
+                          ? AppLocalizations.of(context).close
+                          : AppLocalizations.of(context).save,
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -538,8 +617,12 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      disabledBackgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
-                      disabledForegroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
+                      disabledBackgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.6),
+                      disabledForegroundColor: Theme.of(
+                        context,
+                      ).colorScheme.onPrimary.withOpacity(0.8),
                     ),
                   ),
                 ),
@@ -551,7 +634,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                     label: Text(AppLocalizations.of(context).addToItinerary),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.primary,
-                      side: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      side: BorderSide(
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -588,17 +673,21 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                 child: Stack(
                   children: [
                     Hero(
-                      tag: widget.heroTagIndex != null 
-                          ? 'place-image-${widget.place.placeId}-${widget.heroTagIndex}' 
+                      tag: widget.heroTagIndex != null
+                          ? 'place-image-${widget.place.placeId}-${widget.heroTagIndex}'
                           : 'place-image-${widget.place.placeId}',
                       child: CachedNetworkImage(
-                        imageUrl: widget.place.photos[index].urlWithKey(googlePlacesApiKey),
+                        imageUrl: widget.place.photos[index].urlWithKey(
+                          googlePlacesApiKey,
+                        ),
                         height: 250,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           color: Colors.grey.shade300,
-                          child: const Center(child: CircularProgressIndicator()),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
                         errorWidget: (context, url, error) => Container(
                           color: Colors.grey.shade300,
@@ -606,16 +695,27 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                         ),
                       ),
                     ),
-                    if (widget.place.photos[index].authorAttributions.isNotEmpty)
+                    if (widget
+                        .place
+                        .photos[index]
+                        .authorAttributions
+                        .isNotEmpty)
                       Positioned(
                         bottom: 0,
                         right: 0,
                         left: 0,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 8,
+                          ),
                           color: Colors.black.withOpacity(0.5),
                           child: Text(
-                            AppLocalizations.of(context).photoBy(widget.place.photos[index].authorAttributions.map((attr) => attr.displayName).join(", ")),
+                            AppLocalizations.of(context).photoBy(
+                              widget.place.photos[index].authorAttributions
+                                  .map((attr) => attr.displayName)
+                                  .join(", "),
+                            ),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -674,14 +774,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                  Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+                  Text(title, style: Theme.of(context).textTheme.titleSmall),
+                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
             ),
@@ -707,10 +801,14 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
-              ...widget.place.openingHours.map((hour) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(hour),
-              )).toList(),
+              ...widget.place.openingHours
+                  .map(
+                    (hour) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(hour),
+                    ),
+                  )
+                  .toList(),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,

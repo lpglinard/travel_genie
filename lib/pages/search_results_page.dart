@@ -1,11 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../models/place.dart';
-import '../providers/search_results_provider.dart';
-import '../l10n/app_localizations.dart';
+
 import '../core/config/config.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../l10n/app_localizations.dart';
+import '../providers/search_results_provider.dart';
 
 class SearchResultsPage extends ConsumerStatefulWidget {
   const SearchResultsPage({super.key, required this.query});
@@ -19,12 +19,13 @@ class SearchResultsPage extends ConsumerStatefulWidget {
 class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
   late TextEditingController _searchController;
   String _selectedCategory = 'All';
+
   List<String> _getCategories(BuildContext context) {
     return [
       AppLocalizations.of(context).categoryAll,
       AppLocalizations.of(context).categoryAttractions,
       AppLocalizations.of(context).categoryRestaurants,
-      AppLocalizations.of(context).categoryHotels
+      AppLocalizations.of(context).categoryHotels,
     ];
   }
 
@@ -116,8 +117,12 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                     child: ElevatedButton(
                       onPressed: () => _filterByCategory(category),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade200,
-                        foregroundColor: isSelected ? Colors.white : Colors.black87,
+                        backgroundColor: isSelected
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey.shade200,
+                        foregroundColor: isSelected
+                            ? Colors.white
+                            : Colors.black87,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -135,7 +140,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               child: results.when(
                 data: (list) {
                   if (list.isEmpty) {
-                    return Center(child: Text(AppLocalizations.of(context).noResults));
+                    return Center(
+                      child: Text(AppLocalizations.of(context).noResults),
+                    );
                   }
 
                   return ListView.builder(
@@ -145,13 +152,14 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                       final place = list[index];
 
                       // Get the first type or use a default
-                      String placeType = place.types.isNotEmpty 
+                      String placeType = place.types.isNotEmpty
                           ? place.types.first.replaceAll('_', ' ').capitalize()
                           : AppLocalizations.of(context).defaultPlaceType;
 
                       // Extract location from formatted address (simplified)
-                      String location = place.formattedAddress.split(',').length > 1 
-                          ? place.formattedAddress.split(',')[1].trim() 
+                      String location =
+                          place.formattedAddress.split(',').length > 1
+                          ? place.formattedAddress.split(',')[1].trim()
                           : '';
 
                       return Card(
@@ -164,10 +172,10 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                         child: InkWell(
                           onTap: () {
                             // Navigate to place detail using go_router
-                            context.go('/place/${place.placeId}', extra: {
-                              'place': place,
-                              'heroTagIndex': index,
-                            });
+                            context.go(
+                              '/place/${place.placeId}',
+                              extra: {'place': place, 'heroTagIndex': index},
+                            );
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,62 +185,110 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                 width: double.infinity,
                                 height: 200, // Fixed height for all images
                                 child: place.photos.isNotEmpty
-                                  ? Stack(
-                                      children: [
-                                        Positioned.fill(
-                                          child: ClipRRect(
-                                            borderRadius: const BorderRadius.only(
-                                              topLeft: Radius.circular(12),
-                                              topRight: Radius.circular(12),
-                                            ),
-                                            child: Hero(
-                                              tag: 'place-image-${place.placeId}-$index',
-                                              child: CachedNetworkImage(
-                                                imageUrl: place.photos.first
-                                                    .urlWithKey(googlePlacesApiKey),
-                                                fit: BoxFit.cover,
-                                                width: double.infinity,
-                                                height: double.infinity,
-                                                placeholder: (context, url) => Container(
-                                                  color: Colors.grey.shade300,
-                                                  child: const Center(
-                                                    child: CircularProgressIndicator(),
+                                    ? Stack(
+                                        children: [
+                                          Positioned.fill(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                    topLeft: Radius.circular(
+                                                      12,
+                                                    ),
+                                                    topRight: Radius.circular(
+                                                      12,
+                                                    ),
                                                   ),
-                                                ),
-                                                errorWidget: (context, url, error) => Container(
-                                                  color: Colors.grey.shade300,
-                                                  child: const Icon(Icons.broken_image, size: 40),
+                                              child: Hero(
+                                                tag:
+                                                    'place-image-${place.placeId}-$index',
+                                                child: CachedNetworkImage(
+                                                  imageUrl: place.photos.first
+                                                      .urlWithKey(
+                                                        googlePlacesApiKey,
+                                                      ),
+                                                  fit: BoxFit.cover,
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  placeholder: (context, url) =>
+                                                      Container(
+                                                        color: Colors
+                                                            .grey
+                                                            .shade300,
+                                                        child: const Center(
+                                                          child:
+                                                              CircularProgressIndicator(),
+                                                        ),
+                                                      ),
+                                                  errorWidget:
+                                                      (
+                                                        context,
+                                                        url,
+                                                        error,
+                                                      ) => Container(
+                                                        color: Colors
+                                                            .grey
+                                                            .shade300,
+                                                        child: const Icon(
+                                                          Icons.broken_image,
+                                                          size: 40,
+                                                        ),
+                                                      ),
                                                 ),
                                               ),
                                             ),
                                           ),
+                                          if (place
+                                              .photos
+                                              .first
+                                              .authorAttributions
+                                              .isNotEmpty)
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              left: 0,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                      horizontal: 8,
+                                                    ),
+                                                color: Colors.black.withOpacity(
+                                                  0.5,
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  ).photoBy(
+                                                    place
+                                                        .photos
+                                                        .first
+                                                        .authorAttributions
+                                                        .map(
+                                                          (attr) =>
+                                                              attr.displayName,
+                                                        )
+                                                        .join(", "),
+                                                  ),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 10,
+                                                  ),
+                                                  textAlign: TextAlign.end,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      )
+                                    : Container(
+                                        color: Colors.grey.shade300,
+                                        child: const Icon(
+                                          Icons.image,
+                                          size: 40,
                                         ),
-                                        if (place.photos.first.authorAttributions.isNotEmpty)
-                                          Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            left: 0,
-                                            child: Container(
-                                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                                              color: Colors.black.withOpacity(0.5),
-                                              child: Text(
-                                                AppLocalizations.of(context).photoBy(place.photos.first.authorAttributions.map((attr) => attr.displayName).join(", ")),
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                ),
-                                                textAlign: TextAlign.end,
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    )
-                                  : Container(
-                                      color: Colors.grey.shade300,
-                                      child: const Icon(Icons.image, size: 40),
-                                    ),
+                                      ),
                               ),
 
                               // Text content section
@@ -255,9 +311,12 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                     // Title
                                     Text(
                                       place.displayName,
-                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
 
                                     const SizedBox(height: 8),
@@ -295,17 +354,34 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                     if (place.rating != null)
                                       Row(
                                         children: [
-                                          const Icon(Icons.star, size: 16, color: Colors.amber),
+                                          const Icon(
+                                            Icons.star,
+                                            size: 16,
+                                            color: Colors.amber,
+                                          ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            AppLocalizations.of(context).stars(place.rating!.toString()),
-                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                            AppLocalizations.of(
+                                              context,
+                                            ).stars(place.rating!.toString()),
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                          if (place.userRatingCount != null) ...[
+                                          if (place.userRatingCount !=
+                                              null) ...[
                                             const SizedBox(width: 4),
                                             Text(
-                                              AppLocalizations.of(context).reviews(_formatRatingCount(place.userRatingCount!)),
-                                              style: TextStyle(color: Colors.grey.shade600),
+                                              AppLocalizations.of(
+                                                context,
+                                              ).reviews(
+                                                _formatRatingCount(
+                                                  place.userRatingCount!,
+                                                ),
+                                              ),
+                                              style: TextStyle(
+                                                color: Colors.grey.shade600,
+                                              ),
                                             ),
                                           ],
                                         ],

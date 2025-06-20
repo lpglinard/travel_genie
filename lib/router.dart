@@ -1,27 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import 'core/config/config.dart';
+import 'l10n/app_localizations.dart';
 import 'pages/home_page.dart';
-import 'pages/search_results_page.dart';
 import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
-import 'services/analytics_service.dart';
+import 'pages/search_results_page.dart';
 import 'providers/user_providers.dart';
-import 'l10n/app_localizations.dart';
-import 'core/config/config.dart';
+import 'services/analytics_service.dart';
 
 // Navigation destinations
-enum AppRoute {
-  home,
-  explore,
-  trips,
-  groups,
-}
+enum AppRoute { home, explore, trips, groups }
 
 // Provider for the router
 final routerProvider = Provider<GoRouter>((ref) {
@@ -57,10 +52,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/',
             name: AppRoute.home.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              key: state.pageKey,
-              child: const MyHomePage(),
-            ),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const MyHomePage()),
           ),
           // Explore route
           GoRoute(
@@ -80,9 +73,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: AppRoute.trips.name,
             pageBuilder: (context, state) => NoTransitionPage(
               key: state.pageKey,
-              child: const Scaffold(
-                body: Center(child: Text('My Trips')),
-              ),
+              child: const Scaffold(body: Center(child: Text('My Trips'))),
             ),
           ),
           // Groups route (placeholder)
@@ -91,9 +82,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: AppRoute.groups.name,
             pageBuilder: (context, state) => NoTransitionPage(
               key: state.pageKey,
-              child: const Scaffold(
-                body: Center(child: Text('Groups')),
-              ),
+              child: const Scaffold(body: Center(child: Text('Groups'))),
             ),
           ),
         ],
@@ -127,9 +116,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 heroTagIndex: place?['heroTagIndex'],
               ),
             ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           );
         },
       ),
@@ -152,9 +142,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               },
               child: const app_profile.ProfileScreen(),
             ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           );
         },
       ),
@@ -178,11 +169,9 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: SignInScreen(
                 providers: [
                   EmailAuthProvider(),
-                  GoogleProvider(clientId: googleClientId, scopes: [
-                    'email',
-                    'profile',
-                    'openid'
-                  ]
+                  GoogleProvider(
+                    clientId: googleClientId,
+                    scopes: ['email', 'profile', 'openid'],
                   ),
                   AppleProvider(),
                 ],
@@ -208,9 +197,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ],
               ),
             ),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return FadeTransition(opacity: animation, child: child);
-            },
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
           );
         },
       ),
@@ -236,9 +226,10 @@ class ScaffoldWithNavBar extends ConsumerWidget {
 
     return WillPopScope(
       onWillPop: () async {
-        // If we're already on the home screen, allow the app to quit
+        // If we're already on the home screen, don't allow the app to quit
+        // Instead, return false to prevent the app from closing
         if (isHome) {
-          return true;
+          return false;
         }
 
         // Otherwise, navigate to the home screen
@@ -281,7 +272,11 @@ class ScaffoldWithNavBar extends ConsumerWidget {
     return 0; // Default to home
   }
 
-  void _onItemTapped(int index, BuildContext context, AnalyticsService analyticsService) {
+  void _onItemTapped(
+    int index,
+    BuildContext context,
+    AnalyticsService analyticsService,
+  ) {
     String destination;
     String screenName;
 

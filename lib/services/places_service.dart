@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
+
 import 'package:http/http.dart' as http;
 
 class PlacesService {
   PlacesService(this.apiKey);
+
   final String apiKey;
   final _client = http.Client();
 
@@ -14,7 +16,9 @@ class PlacesService {
   }) async {
     if (input.isEmpty) return [];
     log('Autocomplete called with input: "' + input + '"');
-    final uri = Uri.parse('https://places.googleapis.com/v1/places:autocomplete');
+    final uri = Uri.parse(
+      'https://places.googleapis.com/v1/places:autocomplete',
+    );
     final headers = {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': apiKey,
@@ -46,7 +50,8 @@ class PlacesService {
     final results = suggestions
         .map((e) {
           final prediction =
-              e['placePrediction'] ?? e['queryPrediction'] as Map<String, dynamic>?;
+              e['placePrediction'] ??
+              e['queryPrediction'] as Map<String, dynamic>?;
           if (prediction == null) return null;
           final text = prediction['text'] as Map<String, dynamic>?;
           return text?['text'] as String?;

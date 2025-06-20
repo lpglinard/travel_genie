@@ -27,9 +27,9 @@ class UserData {
   }
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'email': email,
-        'locale': locale,
-        'darkMode': darkMode,
-      };
+    'name': name,
+    'email': email,
+    'locale': locale,
+    'darkMode': darkMode,
+  };
 }

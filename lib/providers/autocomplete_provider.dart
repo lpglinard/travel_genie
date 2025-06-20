@@ -8,7 +8,7 @@ import '../user_providers.dart';
 
 class AutocompleteNotifier extends StateNotifier<AsyncValue<List<String>>> {
   AutocompleteNotifier(this._service)
-      : super(const AsyncValue.data(<String>[]));
+    : super(const AsyncValue.data(<String>[]));
 
   final PlacesService _service;
   Timer? _debounce;
@@ -25,10 +25,7 @@ class AutocompleteNotifier extends StateNotifier<AsyncValue<List<String>>> {
       log('Triggering autocomplete for query: ' + query);
       state = const AsyncValue.loading();
       try {
-        final results = await _service.autocomplete(
-          query,
-          regionCode: 'br',
-        );
+        final results = await _service.autocomplete(query, regionCode: 'br');
         log('Autocomplete returned ' + results.length.toString() + ' results');
         state = AsyncValue.data(results);
       } catch (e, st) {
@@ -47,8 +44,9 @@ class AutocompleteNotifier extends StateNotifier<AsyncValue<List<String>>> {
 }
 
 final autocompleteProvider =
-    StateNotifierProvider<AutocompleteNotifier, AsyncValue<List<String>>>(
-        (ref) {
-  final service = ref.watch(placesServiceProvider);
-  return AutocompleteNotifier(service);
-});
+    StateNotifierProvider<AutocompleteNotifier, AsyncValue<List<String>>>((
+      ref,
+    ) {
+      final service = ref.watch(placesServiceProvider);
+      return AutocompleteNotifier(service);
+    });

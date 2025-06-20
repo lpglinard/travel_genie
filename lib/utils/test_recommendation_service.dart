@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:developer';
+
 import 'package:travel_genie/models/place.dart';
 
 Future<void> main() async {
@@ -12,7 +12,9 @@ Future<void> main() async {
     final file = File('fortaleza.json');
     final jsonString = await file.readAsString();
     print('File loaded successfully. Length: ${jsonString.length}');
-    print('First 100 characters: ${jsonString.substring(0, jsonString.length > 100 ? 100 : jsonString.length)}');
+    print(
+      'First 100 characters: ${jsonString.substring(0, jsonString.length > 100 ? 100 : jsonString.length)}',
+    );
 
     // Parse the JSON
     print('Parsing JSON...');
@@ -45,7 +47,9 @@ Future<void> main() async {
           // If we get here, the test passed
           print('TEST PASSED: Successfully parsed the response');
         } else {
-          print('TEST FAILED: The "places" field is not a List: ${places.runtimeType}');
+          print(
+            'TEST FAILED: The "places" field is not a List: ${places.runtimeType}',
+          );
         }
       } else {
         print('TEST FAILED: JSON does not contain a "places" key');

@@ -3,13 +3,14 @@ import 'package:firebase_performance/firebase_performance.dart';
 
 class AnalyticsService {
   AnalyticsService()
-      : _analytics = FirebaseAnalytics.instance,
-        _performance = FirebasePerformance.instance;
+    : _analytics = FirebaseAnalytics.instance,
+      _performance = FirebasePerformance.instance;
 
   final FirebaseAnalytics _analytics;
   final FirebasePerformance _performance;
 
-  FirebaseAnalyticsObserver get observer => FirebaseAnalyticsObserver(analytics: _analytics);
+  FirebaseAnalyticsObserver get observer =>
+      FirebaseAnalyticsObserver(analytics: _analytics);
 
   Future<void> logLogin({String method = 'email'}) {
     return _analytics.logLogin(loginMethod: method);

@@ -1,6 +1,7 @@
+import 'package:logging/logging.dart';
+
 import 'location.dart';
 import 'photo.dart';
-import 'package:logging/logging.dart';
 
 class Place {
   /// Creates a logger for the Place class
@@ -45,7 +46,8 @@ class Place {
     if (json['display_name'] is Map<String, dynamic>) {
       final displayNameObj = json['display_name'] as Map<String, dynamic>;
       displayName = displayNameObj['text'] as String? ?? '';
-      displayNameLanguageCode = displayNameObj['language_code'] as String? ?? '';
+      displayNameLanguageCode =
+          displayNameObj['language_code'] as String? ?? '';
     } else if (json['display_name'] is String) {
       // For backward compatibility
       displayName = json['display_name'] as String;
@@ -56,12 +58,15 @@ class Place {
     String generativeSummary = '';
     String disclosureText = '';
     if (json['generative_summary'] is Map<String, dynamic>) {
-      final generativeSummaryObj = json['generative_summary'] as Map<String, dynamic>;
+      final generativeSummaryObj =
+          json['generative_summary'] as Map<String, dynamic>;
       if (generativeSummaryObj['overview'] is Map<String, dynamic>) {
-        generativeSummary = generativeSummaryObj['overview']['text'] as String? ?? '';
+        generativeSummary =
+            generativeSummaryObj['overview']['text'] as String? ?? '';
       }
       if (generativeSummaryObj['disclosure_text'] is Map<String, dynamic>) {
-        disclosureText = generativeSummaryObj['disclosure_text']['text'] as String? ?? '';
+        disclosureText =
+            generativeSummaryObj['disclosure_text']['text'] as String? ?? '';
       }
     }
 
@@ -78,22 +83,25 @@ class Place {
       location: json['location'] == null
           ? const Location(lat: 0, lng: 0)
           : Location.fromJson(json['location'] as Map<String, dynamic>),
-      openingHours: (json['opening_hours'] as List?)?.cast<String>() ?? const [],
+      openingHours:
+          (json['opening_hours'] as List?)?.cast<String>() ?? const [],
       generativeSummary: generativeSummary,
       disclosureText: disclosureText,
       photos: () {
-        final photosList = (json['photos'] as List?)
-            ?.map((e) {
-              final photo = Photo.fromJson(e as Map<String, dynamic>);
-              Photo.logCreation(photo);
-              return photo;
-            })
-            .toList();
+        final photosList = (json['photos'] as List?)?.map((e) {
+          final photo = Photo.fromJson(e as Map<String, dynamic>);
+          Photo.logCreation(photo);
+          return photo;
+        }).toList();
 
         if (photosList != null) {
-          _logger.fine('Created ${photosList.length} Photo instances for place ${json['place_id']}');
+          _logger.fine(
+            'Created ${photosList.length} Photo instances for place ${json['place_id']}',
+          );
         } else {
-          _logger.fine('No photos found for place ${json['place_id']}, using empty list');
+          _logger.fine(
+            'No photos found for place ${json['place_id']}, using empty list',
+          );
         }
 
         return photosList ?? const [];

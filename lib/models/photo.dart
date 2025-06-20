@@ -6,7 +6,7 @@ class Photo {
   static final _logger = Logger('Photo');
 
   /// Creates a new Photo instance.
-  /// 
+  ///
   /// [reference] is the photo reference from Google Places API.
   /// [width] is the optional width of the photo.
   /// [height] is the optional height of the photo.
@@ -27,7 +27,9 @@ class Photo {
   /// Logs the creation of a Photo instance.
   /// This is separate from the constructor to maintain const constructor.
   static void logCreation(Photo photo) {
-    _logger.fine('Photo created with reference: ${photo.reference}, width: ${photo.width}, height: ${photo.height}, url: ${photo.url ?? "null"}');
+    _logger.fine(
+      'Photo created with reference: ${photo.reference}, width: ${photo.width}, height: ${photo.height}, url: ${photo.url ?? "null"}',
+    );
   }
 
   final String reference;
@@ -37,23 +39,27 @@ class Photo {
   final List<AuthorAttribution> authorAttributions;
   final String? flagContentUri;
   final String? googleMapsUri;
+
   /// Returns a photo URL using the provided [apiKey]. If [url] is already
   /// present, it is returned as is. Otherwise the URL is constructed following
   /// the Google Places photo API format.
   String urlWithKey(String apiKey) {
-    _logger.fine('urlWithKey called with apiKey: ${apiKey.length > 10 ? apiKey.substring(0, 10) + '...' : apiKey}');
+    _logger.fine(
+      'urlWithKey called with apiKey: ${apiKey.length > 10 ? apiKey.substring(0, 10) + '...' : apiKey}',
+    );
 
-    final result = url ?? 
+    final result =
+        url ??
         'https://places.googleapis.com/v1/$reference/media'
-        '?key=$apiKey'
-        '&maxWidthPx=800';
+            '?key=$apiKey'
+            '&maxWidthPx=800';
 
     _logger.fine('urlWithKey returning: $result');
     return result;
   }
 
   /// Creates a Photo instance from a JSON map.
-  /// 
+  ///
   /// The JSON map should contain the following keys:
   /// - reference: String (required)
   /// - width: int (optional)
@@ -73,11 +79,15 @@ class Photo {
     final googleMapsUri = json['google_maps_uri'] as String?;
 
     // Parse author attributions
-    final authorAttributionsList = (json['author_attributions'] as List?)
-        ?.map((e) => AuthorAttribution.fromJson(e as Map<String, dynamic>))
-        .toList() ?? const [];
+    final authorAttributionsList =
+        (json['author_attributions'] as List?)
+            ?.map((e) => AuthorAttribution.fromJson(e as Map<String, dynamic>))
+            .toList() ??
+        const [];
 
-    _logger.fine('Photo.fromJson parsed values - reference: $reference, width: $width, height: $height, url: ${url ?? "null"}');
+    _logger.fine(
+      'Photo.fromJson parsed values - reference: $reference, width: $width, height: $height, url: ${url ?? "null"}',
+    );
 
     return Photo(
       reference: reference,
@@ -93,11 +103,7 @@ class Photo {
 
 /// A class representing an author attribution for a photo.
 class AuthorAttribution {
-  const AuthorAttribution({
-    required this.displayName,
-    this.uri,
-    this.photoUri,
-  });
+  const AuthorAttribution({required this.displayName, this.uri, this.photoUri});
 
   final String displayName;
   final String? uri;

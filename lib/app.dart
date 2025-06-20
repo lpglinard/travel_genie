@@ -1,15 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import 'l10n/app_localizations.dart';
 import 'core/theme/theme.dart';
+import 'l10n/app_localizations.dart';
 import 'providers/user_providers.dart';
-import 'services/firestore_service.dart';
-import 'services/preferences_service.dart';
-import 'services/analytics_service.dart';
 import 'router.dart';
 
 class MyApp extends ConsumerWidget {
@@ -28,15 +23,18 @@ class MyApp extends ConsumerWidget {
           ref.read(localeProvider.notifier).state = Locale(userData.locale!);
         }
         if (userData.darkMode != null) {
-          ref.read(themeModeProvider.notifier).state =
-              userData.darkMode! ? ThemeMode.dark : ThemeMode.light;
+          ref.read(themeModeProvider.notifier).state = userData.darkMode!
+              ? ThemeMode.dark
+              : ThemeMode.light;
         }
         prefs.saveUserData(userData.name, userData.email);
         await prefs.setLocale(
-            userData.locale != null ? Locale(userData.locale!) : null);
+          userData.locale != null ? Locale(userData.locale!) : null,
+        );
         if (userData.darkMode != null) {
           await prefs.setThemeMode(
-              userData.darkMode! ? ThemeMode.dark : ThemeMode.light);
+            userData.darkMode! ? ThemeMode.dark : ThemeMode.light,
+          );
         }
       } else {
         await prefs.clearAll();
@@ -62,14 +60,20 @@ class MyApp extends ConsumerWidget {
       if (user != null && !user.isAnonymous) {
         // Create or update the user document with basic information only.
         ref.read(firestoreServiceProvider).upsertUser(user);
-        ref.read(analyticsServiceProvider).logLogin(method: user.providerData.isNotEmpty ? user.providerData.first.providerId : 'unknown');
+        ref
+            .read(analyticsServiceProvider)
+            .logLogin(
+              method: user.providerData.isNotEmpty
+                  ? user.providerData.first.providerId
+                  : 'unknown',
+            );
       }
     });
 
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       locale: locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,

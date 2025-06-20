@@ -29,15 +29,16 @@ class UserData {
   }
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'email': email,
-        'locale': locale,
-        'darkMode': darkMode,
-      };
+    'name': name,
+    'email': email,
+    'locale': locale,
+    'darkMode': darkMode,
+  };
 }
 
 class FirestoreService {
   FirestoreService(this._firestore);
+
   final FirebaseFirestore _firestore;
 
   CollectionReference<Map<String, dynamic>> get _users =>
@@ -47,11 +48,7 @@ class FirestoreService {
     return _users.doc(uid).snapshots().map(UserData.fromDoc);
   }
 
-  Future<void> upsertUser(
-    User user, {
-    Locale? locale,
-    bool? darkMode,
-  }) {
+  Future<void> upsertUser(User user, {Locale? locale, bool? darkMode}) {
     final doc = _users.doc(user.uid);
     final data = <String, dynamic>{
       'name': user.displayName,

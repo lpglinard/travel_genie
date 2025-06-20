@@ -1,14 +1,15 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
-import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
-import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_performance/firebase_performance.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:ui';
 import 'dart:developer' as developer;
+import 'dart:ui';
+
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_performance/firebase_performance.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui_auth;
+import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
+import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
@@ -17,8 +18,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/config/config.dart';
 import 'firebase_options.dart';
-import 'services/preferences_service.dart';
 import 'providers/user_providers.dart';
+import 'services/preferences_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,8 +61,7 @@ Future<void> main() async {
 
     if (!kIsWeb) {
       mainLogger.info('Initializing Firebase Crashlytics');
-      await FirebaseCrashlytics.instance
-          .setCrashlyticsCollectionEnabled(true);
+      await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
     }
@@ -77,12 +77,18 @@ Future<void> main() async {
       await FirebaseAuth.instance.signInAnonymously();
       mainLogger.info('User authenticated anonymously');
     } else {
-      mainLogger.info('User already authenticated: ${FirebaseAuth.instance.currentUser!.uid}');
+      mainLogger.info(
+        'User already authenticated: ${FirebaseAuth.instance.currentUser!.uid}',
+      );
     }
 
     mainLogger.info('Firebase initialization completed successfully');
   } catch (error, stackTrace) {
-    mainLogger.severe('Error during Firebase initialization', error, stackTrace);
+    mainLogger.severe(
+      'Error during Firebase initialization',
+      error,
+      stackTrace,
+    );
   }
 
   // Read user locale
@@ -104,7 +110,8 @@ Future<void> main() async {
     mainLogger.info('Device locale: ${deviceLocale.languageCode}');
 
     // Check if device locale is supported (en or pt)
-    if (deviceLocale.languageCode == 'en' || deviceLocale.languageCode == 'pt') {
+    if (deviceLocale.languageCode == 'en' ||
+        deviceLocale.languageCode == 'pt') {
       mainLogger.info('Using device locale: ${deviceLocale.languageCode}');
       container.read(localeProvider.notifier).state = deviceLocale;
     } else {
@@ -114,10 +121,5 @@ Future<void> main() async {
     }
   }
 
-  runApp(
-    ProviderScope(
-      parent: container,
-      child: const MyApp(),
-    ),
-  );
+  runApp(ProviderScope(parent: container, child: const MyApp()));
 }

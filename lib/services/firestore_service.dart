@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/user_data.dart';
 import '../models/place.dart';
+import '../models/user_data.dart';
 
 class FirestoreService {
   FirestoreService(this._firestore);
+
   final FirebaseFirestore _firestore;
 
   CollectionReference<Map<String, dynamic>> get _users =>
@@ -16,11 +17,7 @@ class FirestoreService {
     return _users.doc(uid).snapshots().map(UserData.fromDoc);
   }
 
-  Future<void> upsertUser(
-    User user, {
-    Locale? locale,
-    bool? darkMode,
-  }) {
+  Future<void> upsertUser(User user, {Locale? locale, bool? darkMode}) {
     final doc = _users.doc(user.uid);
     final data = <String, dynamic>{
       'name': user.displayName,
@@ -36,7 +33,9 @@ class FirestoreService {
   }
 
   // Get reference to a user's saved places collection
-  CollectionReference<Map<String, dynamic>> _savedPlacesCollection(String userId) {
+  CollectionReference<Map<String, dynamic>> _savedPlacesCollection(
+    String userId,
+  ) {
     return _users.doc(userId).collection('saved_places');
   }
 
@@ -75,8 +74,8 @@ class FirestoreService {
 
   // Get all saved places for a user
   Stream<QuerySnapshot<Map<String, dynamic>>> streamSavedPlaces(String userId) {
-    return _savedPlacesCollection(userId)
-        .orderBy('savedDate', descending: true)
-        .snapshots();
+    return _savedPlacesCollection(
+      userId,
+    ).orderBy('savedDate', descending: true).snapshots();
   }
 }
