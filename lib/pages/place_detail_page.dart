@@ -4,11 +4,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_localizations.dart';
 import '../models/place.dart';
 import '../core/config/config.dart';
+import '../providers/user_providers.dart';
 
-class PlaceDetailPage extends StatefulWidget {
+class PlaceDetailPage extends ConsumerStatefulWidget {
   const PlaceDetailPage({
     super.key, 
     required this.place, 
@@ -19,15 +22,57 @@ class PlaceDetailPage extends StatefulWidget {
   final int? heroTagIndex;
 
   @override
-  State<PlaceDetailPage> createState() => _PlaceDetailPageState();
+  ConsumerState<PlaceDetailPage> createState() => _PlaceDetailPageState();
 }
 
-class _PlaceDetailPageState extends State<PlaceDetailPage> {
+class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   int _currentImageIndex = 0;
   final PageController _pageController = PageController();
   bool _isSaved = false;
   bool _isAddedToItinerary = false;
   int _selectedNavIndex = 0;
+  bool _isLoading = false;
+  String? _currentUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUser();
+    _checkIfPlaceIsSaved();
+  }
+
+  void _getCurrentUser() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _currentUserId = user.uid;
+      });
+    }
+  }
+
+  Future<void> _checkIfPlaceIsSaved() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final isSaved = await firestoreService.isPlaceSaved(user.uid, widget.place.placeId);
+
+      setState(() {
+        _isSaved = isSaved;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print('Error checking if place is saved: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -122,10 +167,62 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
     launchUrl(uri);
   }
 
-  void _toggleSaved() {
+  Future<void> _toggleSaved() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      // Show a message to the user that they need to be logged in
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('${AppLocalizations.of(context).logout} required'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
+
     setState(() {
-      _isSaved = !_isSaved;
+      _isLoading = true;
     });
+
+    try {
+      final firestoreService = ref.read(firestoreServiceProvider);
+
+      if (_isSaved) {
+        // Remove from saved places
+        await firestoreService.removePlace(user.uid, widget.place.placeId);
+      } else {
+        // Add to saved places
+        await firestoreService.savePlace(user.uid, widget.place);
+      }
+
+      setState(() {
+        _isSaved = !_isSaved;
+        _isLoading = false;
+      });
+
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(_isSaved 
+            ? 'Place saved to your favorites' 
+            : 'Place removed from your favorites'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error saving place'),
+          duration: const Duration(seconds: 3),
+        ),
+      );
+      print('Error toggling saved place: $e');
+    }
   }
 
   void _toggleAddToItinerary() {
@@ -420,9 +517,20 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: _toggleSaved,
-                    icon: Icon(_isSaved ? Icons.bookmark : Icons.bookmark_border),
-                    label: Text(AppLocalizations.of(context).save),
+                    onPressed: _isLoading ? null : _toggleSaved,
+                    icon: _isLoading 
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          )
+                        : Icon(_isSaved ? Icons.bookmark : Icons.bookmark_border),
+                    label: Text(_isLoading 
+                        ? AppLocalizations.of(context).close 
+                        : AppLocalizations.of(context).save),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
@@ -430,6 +538,8 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
+                      disabledBackgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                      disabledForegroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.8),
                     ),
                   ),
                 ),

@@ -58,15 +58,14 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
     final userData = ref.watch(userDataProvider).valueOrNull;
     String greeting = AppLocalizations.of(context).greeting;
 
-    // Get the user from the authState
-    final user = authState.valueOrNull;
-
-    if (user != null && !user.isAnonymous) {
-      final name = userData?.name ?? user.displayName;
-      if (name != null && name.isNotEmpty) {
-        greeting = '${AppLocalizations.of(context).greeting}, $name';
+    authState.whenData((user) {
+      if (user != null && !user.isAnonymous) {
+        final name = userData?.name ?? user.displayName;
+        if (name != null && name.isNotEmpty) {
+          greeting = '${AppLocalizations.of(context).greeting}, $name';
+        }
       }
-    }
+    });
     const heroImage = 'images/odsy_main.png';
 
     _destinations = _getDestinations(context);
@@ -78,13 +77,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () {
-              if (user != null && !user.isAnonymous) {
-                // Navigate to profile screen if user is authenticated and not anonymous
-                context.push('/profile');
-              } else {
-                // Navigate to sign-in screen if user is anonymous
-                context.go('/signin');
-              }
+              authState.whenData((user) {
+                if (user != null && !user.isAnonymous) {
+                  // Navigate to profile screen if user is authenticated and not anonymous
+                  context.push('/profile');
+                } else {
+                  // Navigate to sign-in screen if user is anonymous
+                  context.go('/signin');
+                }
+              });
             },
           ),
         ],
