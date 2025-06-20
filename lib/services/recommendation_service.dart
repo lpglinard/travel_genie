@@ -4,18 +4,25 @@ import 'dart:developer';
 import 'package:http/http.dart' as http;
 
 import '../models/place.dart';
+import '../models/paginated_places.dart';
 
 class RecommendationService {
   RecommendationService({http.Client? client})
     : _client = client ?? http.Client();
   final http.Client _client;
 
-  Future<List<Place>> search(String name, {String? languageCode}) async {
+  Future<PaginatedPlaces> search(String name, {String? languageCode, String? nextPageToken}) async {
     final encodedName = Uri.encodeComponent(name);
     final queryParams = <String, String>{
       'languageCode': languageCode ?? 'en',
       // Always include languageCode, default to 'en' if not provided
     };
+
+    // Add nextPageToken to query parameters if provided
+    if (nextPageToken != null && nextPageToken.isNotEmpty) {
+      log('RecommendationService - Using nextPageToken: $nextPageToken');
+      queryParams['pageToken'] = nextPageToken;
+    }
 
     final uri = Uri.parse(
       'https://recommendations-1052236350369.europe-west1.run.app/places/$encodedName',
@@ -100,9 +107,23 @@ class RecommendationService {
         }
 
         log('RecommendationService parsed ${data.length} places from response');
-        return data
+
+        // Extract places from the data
+        final places = data
             .map((e) => Place.fromJson(e as Map<String, dynamic>))
             .toList();
+
+        // Extract next_page_token if available
+        String? nextPageToken;
+        if (jsonData is Map<String, dynamic> && jsonData.containsKey('next_page_token')) {
+          nextPageToken = jsonData['next_page_token'] as String?;
+          log('RecommendationService - Found next_page_token: $nextPageToken');
+        }
+
+        return PaginatedPlaces(
+          places: places,
+          nextPageToken: nextPageToken,
+        );
       } catch (parseError, st) {
         log(
           'RecommendationService JSON parsing error: $parseError',

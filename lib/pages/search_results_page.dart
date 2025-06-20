@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,9 +50,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
       // Check if we need to perform a new search:
       // 1. If there are no existing results, or
       // 2. If the query is different from the last search query and not empty
-      if (currentResults.value == null || 
-          currentResults.value!.isEmpty || 
+      if (currentResults.places.isEmpty || 
           (widget.query != lastQuery && widget.query.isNotEmpty)) {
+        log('SearchResultsPage - Performing initial search for query: ${widget.query}');
         ref.read(searchResultsProvider.notifier).search(widget.query);
       }
     });
@@ -83,7 +85,13 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final results = ref.watch(searchResultsProvider);
+    final resultsState = ref.watch(searchResultsProvider);
+
+    // Log the current state for debugging
+    log('SearchResultsPage - Building with state: isLoading=${resultsState.isLoading}, ' +
+        'isLoadingMore=${resultsState.isLoadingMore}, ' +
+        'places=${resultsState.places.length}, ' +
+        'hasMoreResults=${resultsState.hasMoreResults}');
 
     return Scaffold(
       body: SafeArea(
@@ -155,18 +163,66 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
 
             // Results list
             Expanded(
-              child: results.when(
-                data: (list) {
+              child: Builder(
+                builder: (context) {
+                  // Show loading indicator for initial load
+                  if (resultsState.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  // Show error if there is one
+                  if (resultsState.error != null) {
+                    return Center(
+                      child: Text('Error: ${resultsState.error}'),
+                    );
+                  }
+
+                  final list = resultsState.places;
+
+                  // Show no results message if list is empty
                   if (list.isEmpty) {
                     return Center(
                       child: Text(AppLocalizations.of(context).noResults),
                     );
                   }
 
+                  // Create a scroll controller to detect when user reaches the end
+                  final ScrollController scrollController = ScrollController();
+                  scrollController.addListener(() {
+                    // Check if we're at the bottom of the list
+                    if (scrollController.position.pixels >= 
+                        scrollController.position.maxScrollExtent - 200) {
+                      // If we have more results and we're not already loading more, load more
+                      if (resultsState.hasMoreResults && !resultsState.isLoadingMore) {
+                        log('SearchResultsPage - Reached end of list, loading more results');
+                        ref.read(searchResultsProvider.notifier).loadMore();
+                      }
+                    }
+                  });
+
                   return ListView.builder(
-                    itemCount: list.length,
+                    controller: scrollController,
+                    itemCount: list.length + (resultsState.isLoadingMore || resultsState.hasMoreResults ? 1 : 0),
                     padding: const EdgeInsets.all(16.0),
                     itemBuilder: (context, index) {
+                      // Show loading indicator at the end if loading more
+                      if (index == list.length) {
+                        if (resultsState.isLoadingMore) {
+                          log('SearchResultsPage - Showing loading indicator at the end of the list');
+                          return const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.0),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        } else {
+                          // This is a spacer for when we have more results but aren't loading yet
+                          return const SizedBox(height: 16.0);
+                        }
+                      }
+
                       final place = list[index];
 
                       // Get the first type or use a default
@@ -450,8 +506,6 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                     },
                   );
                 },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, st) => Center(child: Text(e.toString())),
               ),
             ),
           ],
