@@ -17,81 +17,317 @@ class SearchResultsPage extends ConsumerStatefulWidget {
 }
 
 class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
+  late TextEditingController _searchController;
+  String _selectedCategory = 'All';
+  final List<String> _categories = ['All', 'Attractions', 'Restaurants', 'Hotels'];
+
   @override
   void initState() {
     super.initState();
+    _searchController = TextEditingController(text: widget.query);
     Future.microtask(() {
       ref.read(searchResultsProvider.notifier).search(widget.query);
     });
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _filterByCategory(String category) {
+    setState(() {
+      _selectedCategory = category;
+    });
+    // In a real implementation, you would filter the results based on the category
+    // For now, we'll just update the UI to show the selected category
+  }
+
+  @override
   Widget build(BuildContext context) {
     final results = ref.watch(searchResultsProvider);
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.query)),
-      body: results.when(
-        data: (list) {
-          if (list.isEmpty) {
-            return Center(child: Text(AppLocalizations.of(context).noResults));
-          }
-          return ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (context, index) {
-              final place = list[index];
-              return Card(
-                child: ListTile(
-                  leading: place.photos.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: place.photos.first
-                              .urlWithKey(googlePlacesApiKey),
-                          width: 60,
-                          height: 60,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => Container(
-                            width: 60,
-                            height: 60,
-                            color: Colors.grey.shade300,
-                            child: const Icon(Icons.image, size: 24),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            width: 60,
-                            height: 60,
-                            color: Colors.grey.shade300,
-                            child: const Icon(Icons.broken_image, size: 24),
-                          ),
-                        )
-                      : Container(
-                          width: 60,
-                          height: 60,
-                          color: Colors.grey.shade300,
-                          child: const Icon(Icons.image, size: 24),
-                        ),
-                  title: Text(place.displayName),
-                  subtitle: place.rating != null
-                      ? Row(
-                          children: [
-                            const Icon(Icons.star, size: 16),
-                            const SizedBox(width: 4),
-                            Text(place.rating!.toString()),
-                          ],
-                        )
-                      : null,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => PlaceDetailPage(place: place),
-                      ),
-                    );
-                  },
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Search bar
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: AppLocalizations.of(context).searchPlaceholder,
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey.shade200,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
                 ),
-              );
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(child: Text(e.toString())),
+                onSubmitted: (value) {
+                  if (value.isNotEmpty) {
+                    ref.read(searchResultsProvider.notifier).search(value);
+                  }
+                },
+              ),
+            ),
+
+            // Category filters
+            SizedBox(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _categories.length,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                itemBuilder: (context, index) {
+                  final category = _categories[index];
+                  final isSelected = category == _selectedCategory;
+
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: ElevatedButton(
+                      onPressed: () => _filterByCategory(category),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isSelected ? Theme.of(context).primaryColor : Colors.grey.shade200,
+                        foregroundColor: isSelected ? Colors.white : Colors.black87,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        elevation: isSelected ? 2 : 0,
+                      ),
+                      child: Text(category),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            // Results list
+            Expanded(
+              child: results.when(
+                data: (list) {
+                  if (list.isEmpty) {
+                    return Center(child: Text(AppLocalizations.of(context).noResults));
+                  }
+
+                  return ListView.builder(
+                    itemCount: list.length,
+                    padding: const EdgeInsets.all(16.0),
+                    itemBuilder: (context, index) {
+                      final place = list[index];
+
+                      // Get the first type or use a default
+                      String placeType = place.types.isNotEmpty 
+                          ? place.types.first.replaceAll('_', ' ').capitalize()
+                          : 'Place';
+
+                      // Extract location from formatted address (simplified)
+                      String location = place.formattedAddress.split(',').length > 1 
+                          ? place.formattedAddress.split(',')[1].trim() 
+                          : '';
+
+                      return Card(
+                        clipBehavior: Clip.antiAlias,
+                        margin: const EdgeInsets.only(bottom: 16.0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 2,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => PlaceDetailPage(
+                                  place: place,
+                                  heroTagIndex: index,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Image section
+                              SizedBox(
+                                width: double.infinity,
+                                height: 200, // Fixed height for all images
+                                child: place.photos.isNotEmpty
+                                  ? Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: ClipRRect(
+                                            borderRadius: const BorderRadius.only(
+                                              topLeft: Radius.circular(12),
+                                              topRight: Radius.circular(12),
+                                            ),
+                                            child: Hero(
+                                              tag: 'place-image-${place.placeId}-$index',
+                                              child: CachedNetworkImage(
+                                                imageUrl: place.photos.first
+                                                    .urlWithKey(googlePlacesApiKey),
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                                placeholder: (context, url) => Container(
+                                                  color: Colors.grey.shade300,
+                                                  child: const Center(
+                                                    child: CircularProgressIndicator(),
+                                                  ),
+                                                ),
+                                                errorWidget: (context, url, error) => Container(
+                                                  color: Colors.grey.shade300,
+                                                  child: const Icon(Icons.broken_image, size: 40),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        if (place.photos.first.authorAttributions.isNotEmpty)
+                                          Positioned(
+                                            bottom: 0,
+                                            right: 0,
+                                            left: 0,
+                                            child: Container(
+                                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                                              color: Colors.black.withOpacity(0.5),
+                                              child: Text(
+                                                'Photo by: ${place.photos.first.authorAttributions.map((attr) => attr.displayName).join(", ")}',
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                ),
+                                                textAlign: TextAlign.end,
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    )
+                                  : Container(
+                                      color: Colors.grey.shade300,
+                                      child: const Icon(Icons.image, size: 40),
+                                    ),
+                              ),
+
+                              // Text content section
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Type and location
+                                    Text(
+                                      '$placeType • $location',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 4),
+
+                                    // Title
+                                    Text(
+                                      place.displayName,
+                                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    // Generative Summary
+                                    if (place.generativeSummary.isNotEmpty)
+                                      Text(
+                                        place.generativeSummary,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade800,
+                                        ),
+                                        maxLines: 3,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+
+                                    // Disclosure Text
+                                    if (place.disclosureText.isNotEmpty) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        place.disclosureText,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade600,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+
+                                    const SizedBox(height: 8),
+
+                                    // Rating and reviews
+                                    if (place.rating != null)
+                                      Row(
+                                        children: [
+                                          const Icon(Icons.star, size: 16, color: Colors.amber),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '${place.rating!.toString()} stars',
+                                            style: const TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          if (place.userRatingCount != null) ...[
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              '(${_formatRatingCount(place.userRatingCount!)} reviews)',
+                                              style: TextStyle(color: Colors.grey.shade600),
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (e, st) => Center(child: Text(e.toString())),
+              ),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  // Helper method to format rating count (e.g., 1200 -> 1.2k)
+  String _formatRatingCount(int count) {
+    if (count >= 1000) {
+      final double countInK = count / 1000;
+      return '${countInK.toStringAsFixed(1)}k';
+    }
+    return count.toString();
+  }
+}
+
+// Extension to capitalize the first letter of a string
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }

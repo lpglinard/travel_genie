@@ -8,10 +8,16 @@ class RecommendationService {
   RecommendationService({http.Client? client}) : _client = client ?? http.Client();
   final http.Client _client;
 
-  Future<List<Place>> search(String name) async {
+  Future<List<Place>> search(String name, {String? languageCode}) async {
     final encodedName = Uri.encodeComponent(name);
-    final uri = Uri.parse('https://recommendations-1052236350369.europe-west1.run.app/places/$encodedName');
+    final queryParams = <String, String>{
+      'languageCode': languageCode ?? 'en'  // Always include languageCode, default to 'en' if not provided
+    };
+
+    final uri = Uri.parse('https://recommendations-1052236350369.europe-west1.run.app/places/$encodedName')
+        .replace(queryParameters: queryParams);
     log('RecommendationService - GET $uri');
+    log('RecommendationService - queryParameters: $queryParams');
     try {
       final response = await _client.get(uri);
       log('RecommendationService response status: ${response.statusCode}');

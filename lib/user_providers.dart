@@ -40,7 +40,7 @@ final userDataProvider = StreamProvider<UserData?>((ref) {
           user == null ? const Stream.empty() : service.streamUser(user.uid));
 });
 
-final localeProvider = StateProvider<Locale?>((ref) => null);
+final localeProvider = StateProvider<Locale?>((ref) => const Locale('en'));
 
 final themeModeProvider =
     StateProvider<ThemeMode>((ref) => ThemeMode.light);

@@ -11,6 +11,7 @@ void main() {
     const place = Place(
       placeId: '1',
       displayName: 'Test Place',
+      displayNameLanguageCode: 'en',
       formattedAddress: '123 Street',
       googleMapsUri: 'https://maps.google.com/?q=1',
       location: Location(lat: 0, lng: 0),
@@ -27,7 +28,7 @@ void main() {
       home: const PlaceDetailPage(place: place),
     ));
 
-    expect(find.text('Test Place'), findsOneWidget);
+    expect(find.widgetWithText(AppBar, 'Test Place'), findsOneWidget);
     expect(find.text('123 Street'), findsOneWidget);
   });
 }

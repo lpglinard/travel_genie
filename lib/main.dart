@@ -11,6 +11,8 @@ import 'dart:ui';
 import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'config.dart';
@@ -20,16 +22,29 @@ import 'user_providers.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  developer.log('Starting application initialization', name: 'Main');
+
+  // Configure logging
+  Logger.root.level = kDebugMode ? Level.ALL : Level.INFO;
+  Logger.root.onRecord.listen((record) {
+    developer.log(
+      '${record.level.name}: ${record.message}',
+      name: record.loggerName,
+      error: record.error,
+      stackTrace: record.stackTrace,
+    );
+  });
+
+  final mainLogger = Logger('Main');
+  mainLogger.info('Starting application initialization');
 
   try {
-    developer.log('Initializing Firebase', name: 'Main');
+    mainLogger.info('Initializing Firebase');
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    developer.log('Firebase core initialized successfully', name: 'Main');
+    mainLogger.info('Firebase core initialized successfully');
 
-    developer.log('Configuring Firebase UI Auth providers', name: 'Main');
+    mainLogger.info('Configuring Firebase UI Auth providers');
     firebase_ui_auth.FirebaseUIAuth.configureProviders([
       firebase_ui_auth.EmailAuthProvider(),
       GoogleProvider(clientId: googleClientId),
@@ -37,41 +52,72 @@ Future<void> main() async {
     ]);
 
     // Initialize analytics and performance monitoring
-    developer.log('Initializing Firebase Analytics', name: 'Main');
+    mainLogger.info('Initializing Firebase Analytics');
     FirebaseAnalytics.instance;
 
-    developer.log('Initializing Firebase Performance', name: 'Main');
+    mainLogger.info('Initializing Firebase Performance');
     FirebasePerformance.instance;
 
     if (!kIsWeb) {
-      developer.log('Initializing Firebase Crashlytics', name: 'Main');
+      mainLogger.info('Initializing Firebase Crashlytics');
       await FirebaseCrashlytics.instance
           .setCrashlyticsCollectionEnabled(true);
       FlutterError.onError =
           FirebaseCrashlytics.instance.recordFlutterFatalError;
     }
 
-    developer.log('Setting up platform error handler', name: 'Main');
+    mainLogger.info('Setting up platform error handler');
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
 
     if (FirebaseAuth.instance.currentUser == null) {
-      developer.log('No current user, signing in anonymously', name: 'Main');
+      mainLogger.info('No current user, signing in anonymously');
       await FirebaseAuth.instance.signInAnonymously();
-      developer.log('User authenticated anonymously', name: 'Main');
+      mainLogger.info('User authenticated anonymously');
     } else {
-      developer.log('User already authenticated: ${FirebaseAuth.instance.currentUser!.uid}', name: 'Main');
+      mainLogger.info('User already authenticated: ${FirebaseAuth.instance.currentUser!.uid}');
     }
 
-    developer.log('Firebase initialization completed successfully', name: 'Main');
+    mainLogger.info('Firebase initialization completed successfully');
   } catch (error, stackTrace) {
-    developer.log('Error during Firebase initialization', name: 'Main', error: error, stackTrace: stackTrace);
+    mainLogger.severe('Error during Firebase initialization', error, stackTrace);
   }
+
+  // Read user locale
+  mainLogger.info('Reading user locale');
+  final prefs = await SharedPreferences.getInstance();
+  final preferencesService = PreferencesService(prefs);
+
+  // Create a container to override the localeProvider
+  final container = ProviderContainer();
+
+  // Check if there's a saved locale preference
+  final savedLocale = preferencesService.locale;
+  if (savedLocale != null) {
+    mainLogger.info('Using saved locale: ${savedLocale.languageCode}');
+    container.read(localeProvider.notifier).state = savedLocale;
+  } else {
+    // Get device locale
+    final deviceLocale = PlatformDispatcher.instance.locale;
+    mainLogger.info('Device locale: ${deviceLocale.languageCode}');
+
+    // Check if device locale is supported (en or pt)
+    if (deviceLocale.languageCode == 'en' || deviceLocale.languageCode == 'pt') {
+      mainLogger.info('Using device locale: ${deviceLocale.languageCode}');
+      container.read(localeProvider.notifier).state = deviceLocale;
+    } else {
+      mainLogger.info('Device locale not supported, using default: en');
+      // Default to 'en' if device locale is not supported
+      container.read(localeProvider.notifier).state = const Locale('en');
+    }
+  }
+
   runApp(
-    const ProviderScope(
-      child: MyApp(),
+    ProviderScope(
+      parent: container,
+      child: const MyApp(),
     ),
   );
 }

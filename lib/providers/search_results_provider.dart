@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:travel_genie/user_providers.dart';
 
@@ -8,10 +9,11 @@ import '../services/recommendation_service.dart';
 
 class SearchResultsNotifier
     extends StateNotifier<AsyncValue<List<Place>>> {
-  SearchResultsNotifier(this._service)
+  SearchResultsNotifier(this._service, this._locale)
       : super(const AsyncValue.data(<Place>[]));
 
   final RecommendationService _service;
+  final String? _locale;
 
   Future<void> search(String query) async {
     log('SearchResultsNotifier.search called with query: ' + query);
@@ -23,8 +25,8 @@ class SearchResultsNotifier
     log('Setting search state to loading');
     state = const AsyncValue.loading();
     try {
-      log('Calling recommendation service with query: ' + query);
-      final results = await _service.search(query);
+      log('Calling recommendation service with query: ' + query + (_locale != null ? ', languageCode: $_locale' : ''));
+      final results = await _service.search(query, languageCode: _locale);
       log('Search returned ${results.length} results');
       state = AsyncValue.data(results);
     } catch (e, st) {
@@ -38,5 +40,6 @@ final searchResultsProvider =
     StateNotifierProvider<SearchResultsNotifier, AsyncValue<List<Place>>>(
         (ref) {
   final service = ref.watch(recommendationServiceProvider);
-  return SearchResultsNotifier(service);
+  final locale = ref.watch(localeProvider);
+  return SearchResultsNotifier(service, locale?.languageCode);
 });
