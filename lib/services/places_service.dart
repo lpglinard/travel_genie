@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
@@ -15,7 +14,6 @@ class PlacesService {
     String? locationBias,
   }) async {
     if (input.isEmpty) return [];
-    log('Autocomplete called with input: "' + input + '"');
     final uri = Uri.parse(
       'https://places.googleapis.com/v1/places:autocomplete',
     );
@@ -31,17 +29,13 @@ class PlacesService {
       if (locationBias != null) 'locationBias': locationBias,
     };
 
-    log('Sending POST to ' + uri.toString() + ' with body: ' + body.toString());
     final response = await _client.post(
       uri,
       headers: headers,
       body: json.encode(body),
     );
 
-    log('Received response: status ' + response.statusCode.toString());
-
     if (response.statusCode != 200) {
-      log('Autocomplete failed: ' + response.body, level: 1000);
       throw Exception('Autocomplete failed: ${response.body}');
     }
 
@@ -58,7 +52,6 @@ class PlacesService {
         })
         .whereType<String>()
         .toList();
-    log('Parsed predictions: ' + results.toString());
     return results;
   }
 }

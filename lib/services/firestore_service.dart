@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../models/destination.dart';
 import '../models/place.dart';
 import '../models/user_data.dart';
 
@@ -77,5 +78,22 @@ class FirestoreService {
     return _savedPlacesCollection(
       userId,
     ).orderBy('savedDate', descending: true).snapshots();
+  }
+
+  // Get recommended destinations from Firestore
+  Future<List<Destination>> getRecommendedDestinations() async {
+    final snapshot = await _firestore.collection('recommendedDestinations').get();
+    return snapshot.docs
+        .map((doc) => Destination.fromFirestore(doc.data()))
+        .toList();
+  }
+
+  // Stream recommended destinations from Firestore
+  Stream<List<Destination>> streamRecommendedDestinations() {
+    return _firestore.collection('recommendedDestinations').snapshots().map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Destination.fromFirestore(doc.data()))
+              .toList(),
+        );
   }
 }
