@@ -9,14 +9,16 @@ import '../models/destination.dart';
 import '../providers/autocomplete_provider.dart';
 
 import '../pages/search_results_page.dart';
-final _destinations = [
-  Destination('Paris',
-      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60'),
-  Destination('Caribbean Beaches',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60'),
-  Destination('Patagonia',
-      'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60'),
-];
+List<Destination> _getDestinations(BuildContext context) {
+  return [
+    Destination(AppLocalizations.of(context).paris,
+        'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60'),
+    Destination(AppLocalizations.of(context).caribbeanBeaches,
+        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60'),
+    Destination(AppLocalizations.of(context).patagonia,
+        'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60'),
+  ];
+}
 
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
@@ -28,6 +30,7 @@ class MyHomePage extends ConsumerStatefulWidget {
 class _MyHomePageState extends ConsumerState<MyHomePage> {
   final formKey = GlobalKey<FormState>();
   late final TextEditingController searchController;
+  late List<Destination> _destinations;
 
   @override
   void initState() {
@@ -64,8 +67,9 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         greeting = '${AppLocalizations.of(context).greeting}, $name';
       }
     }
-    const heroImage =
-        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60';
+    const heroImage = 'images/odsy_main.png';
+
+    _destinations = _getDestinations(context);
 
     return Scaffold(
       body: SafeArea(
@@ -74,7 +78,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: Image.network(heroImage, height: 180, fit: BoxFit.cover),
+              child: Image.asset(heroImage,  fit: BoxFit.cover),
             ),
             const SizedBox(height: 16),
             Text(

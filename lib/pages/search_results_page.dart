@@ -19,7 +19,14 @@ class SearchResultsPage extends ConsumerStatefulWidget {
 class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
   late TextEditingController _searchController;
   String _selectedCategory = 'All';
-  final List<String> _categories = ['All', 'Attractions', 'Restaurants', 'Hotels'];
+  List<String> _getCategories(BuildContext context) {
+    return [
+      AppLocalizations.of(context).categoryAll,
+      AppLocalizations.of(context).categoryAttractions,
+      AppLocalizations.of(context).categoryRestaurants,
+      AppLocalizations.of(context).categoryHotels
+    ];
+  }
 
   @override
   void initState() {
@@ -42,6 +49,33 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
     });
     // In a real implementation, you would filter the results based on the category
     // For now, we'll just update the UI to show the selected category
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Initialize selected category with localized value
+    if (_selectedCategory == 'All') {
+      _selectedCategory = AppLocalizations.of(context).categoryAll;
+    }
+  }
+
+  // Add a variable to track the selected navigation index
+  int _selectedNavIndex = 1; // Default to Explore tab
+
+  void _onNavItemTapped(int index) {
+    if (index != _selectedNavIndex) {
+      setState(() {
+        _selectedNavIndex = index;
+      });
+
+      // Navigate to the appropriate page
+      if (index == 0) {
+        // Navigate to Home
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+      // Other navigation options can be added here
+    }
   }
 
   @override
@@ -87,10 +121,10 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               height: 50,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: _categories.length,
+                itemCount: _getCategories(context).length,
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 itemBuilder: (context, index) {
-                  final category = _categories[index];
+                  final category = _getCategories(context)[index];
                   final isSelected = category == _selectedCategory;
 
                   return Padding(
@@ -129,7 +163,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                       // Get the first type or use a default
                       String placeType = place.types.isNotEmpty 
                           ? place.types.first.replaceAll('_', ' ').capitalize()
-                          : 'Place';
+                          : AppLocalizations.of(context).defaultPlaceType;
 
                       // Extract location from formatted address (simplified)
                       String location = place.formattedAddress.split(',').length > 1 
@@ -201,7 +235,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                               padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                                               color: Colors.black.withOpacity(0.5),
                                               child: Text(
-                                                'Photo by: ${place.photos.first.authorAttributions.map((attr) => attr.displayName).join(", ")}',
+                                                AppLocalizations.of(context).photoBy(place.photos.first.authorAttributions.map((attr) => attr.displayName).join(", ")),
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 10,
@@ -228,7 +262,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                   children: [
                                     // Type and location
                                     Text(
-                                      '$placeType • $location',
+                                      '$placeType${AppLocalizations.of(context).locationSeparator}$location',
                                       style: TextStyle(
                                         fontSize: 12,
                                         color: Colors.grey.shade600,
@@ -283,13 +317,13 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                           const Icon(Icons.star, size: 16, color: Colors.amber),
                                           const SizedBox(width: 4),
                                           Text(
-                                            '${place.rating!.toString()} stars',
+                                            AppLocalizations.of(context).stars(place.rating!.toString()),
                                             style: const TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                           if (place.userRatingCount != null) ...[
                                             const SizedBox(width: 4),
                                             Text(
-                                              '(${_formatRatingCount(place.userRatingCount!)} reviews)',
+                                              AppLocalizations.of(context).reviews(_formatRatingCount(place.userRatingCount!)),
                                               style: TextStyle(color: Colors.grey.shade600),
                                             ),
                                           ],
@@ -311,6 +345,29 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedNavIndex,
+        type: BottomNavigationBarType.fixed,
+        onTap: _onNavItemTapped,
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: AppLocalizations.of(context).navHome,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.search),
+            label: AppLocalizations.of(context).navExplore,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.map),
+            label: AppLocalizations.of(context).navMyTrips,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.group),
+            label: AppLocalizations.of(context).navGroups,
+          ),
+        ],
       ),
     );
   }
