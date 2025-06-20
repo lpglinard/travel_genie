@@ -8,13 +8,13 @@ import 'package:travel_genie/pages/place_detail_page.dart';
 
 void main() {
   testWidgets('shows basic place information', (tester) async {
-    const place = Place(
+    final place = Place(
       placeId: '1',
       displayName: 'Test Place',
       displayNameLanguageCode: 'en',
       formattedAddress: '123 Street',
       googleMapsUri: 'https://maps.google.com/?q=1',
-      location: Location(lat: 0, lng: 0),
+      location: const Location(lat: 0, lng: 0),
     );
 
     await tester.pumpWidget(MaterialApp(
@@ -25,7 +25,7 @@ void main() {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [Locale('en'), Locale('pt')],
-      home: const PlaceDetailPage(place: place),
+      home: PlaceDetailPage(place: place),
     ));
 
     // The title is now in a Text widget, not in an AppBar
