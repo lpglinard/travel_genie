@@ -140,7 +140,10 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                         ),
                         elevation: isSelected ? 2 : 0,
                       ),
-                      child: Text(category),
+                      child: Text(
+                        category,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
                     ),
                   );
                 },
@@ -161,7 +164,12 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                   // Show error if there is one
                   if (resultsState.error != null) {
                     return Center(
-                      child: Text('Error: ${resultsState.error}'),
+                      child: Text(
+                        'Error: ${resultsState.error}',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
                     );
                   }
 
@@ -170,7 +178,10 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                   // Show no results message if list is empty
                   if (list.isEmpty) {
                     return Center(
-                      child: Text(AppLocalizations.of(context).noResults),
+                      child: Text(
+                        AppLocalizations.of(context).noResults,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
                     );
                   }
 
@@ -329,9 +340,8 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                                         )
                                                         .join(", "),
                                                   ),
-                                                  style: const TextStyle(
+                                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                                     color: Colors.white,
-                                                    fontSize: 10,
                                                   ),
                                                   textAlign: TextAlign.end,
                                                   overflow:
@@ -379,9 +389,8 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                               const SizedBox(width: 4),
                                               Text(
                                                 place.category.name,
-                                                style: const TextStyle(
+                                                style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                                   color: Colors.white,
-                                                  fontSize: 12,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
@@ -392,10 +401,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                         Expanded(
                                           child: Text(
                                             location,
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey.shade600,
-                                            ),
+                                            style: Theme.of(context).textTheme.bodySmall,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
@@ -421,10 +427,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                     if (place.generativeSummary.isNotEmpty)
                                       Text(
                                         place.generativeSummary,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey.shade800,
-                                        ),
+                                        style: Theme.of(context).textTheme.bodyMedium,
                                         maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -434,9 +437,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                       const SizedBox(height: 4),
                                       Text(
                                         place.disclosureText,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey.shade600,
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                           fontStyle: FontStyle.italic,
                                         ),
                                         maxLines: 2,
@@ -460,7 +461,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                             AppLocalizations.of(
                                               context,
                                             ).stars(place.rating!.toString()),
-                                            style: const TextStyle(
+                                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                               fontWeight: FontWeight.bold,
                                             ),
                                           ),
@@ -475,9 +476,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                                                   place.userRatingCount!,
                                                 ),
                                               ),
-                                              style: TextStyle(
-                                                color: Colors.grey.shade600,
-                                              ),
+                                              style: Theme.of(context).textTheme.bodySmall,
                                             ),
                                           ],
                                         ],

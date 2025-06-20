@@ -16,7 +16,12 @@ class ProfileScreen extends ConsumerWidget {
     final userData = ref.watch(userDataProvider).valueOrNull;
     final service = ref.read(firestoreServiceProvider);
     return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.profileTitle)),
+      appBar: AppBar(
+        title: Text(
+          AppLocalizations.of(context)!.profileTitle,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
+      ),
       body: ListView(
         children: [
           if (user != null && !user.isAnonymous)
@@ -24,13 +29,20 @@ class ProfileScreen extends ConsumerWidget {
               leading: const Icon(Icons.person),
               title: Text(
                 userData?.name ?? user.displayName ?? user.email ?? 'User',
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              subtitle: userData?.email != null ? Text(userData!.email!) : null,
+              subtitle: userData?.email != null ? Text(userData!.email!, style: Theme.of(context).textTheme.bodyMedium) : null,
             ),
           ListTile(
             leading: const Icon(Icons.language),
-            title: Text(AppLocalizations.of(context)!.changeLanguage),
-            trailing: Text(locale == const Locale('en') ? 'EN' : 'PT'),
+            title: Text(
+              AppLocalizations.of(context)!.changeLanguage,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            trailing: Text(
+              locale == const Locale('en') ? 'EN' : 'PT',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             onTap: () async {
               if (locale == const Locale('en')) {
                 ref.read(localeProvider.notifier).state = null;
@@ -59,7 +71,10 @@ class ProfileScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.brightness_6),
-            title: Text(AppLocalizations.of(context)!.toggleDarkMode),
+            title: Text(
+              AppLocalizations.of(context)!.toggleDarkMode,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             trailing: Switch(
               value: themeMode == ThemeMode.dark,
               onChanged: (value) async {
@@ -82,7 +97,10 @@ class ProfileScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.logout),
-            title: Text(AppLocalizations.of(context)!.logout),
+            title: Text(
+              AppLocalizations.of(context)!.logout,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             onTap: () async {
               await FirebaseAuth.instance.signOut();
               final prefs = await ref.read(preferencesServiceProvider.future);

@@ -73,7 +73,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: AppRoute.trips.name,
             pageBuilder: (context, state) => NoTransitionPage(
               key: state.pageKey,
-              child: const Scaffold(body: Center(child: Text('My Trips'))),
+              child: Scaffold(
+                body: Center(
+                  child: Text(
+                    'My Trips',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ),
+              ),
             ),
           ),
           // Groups route (placeholder)
@@ -82,7 +89,14 @@ final routerProvider = Provider<GoRouter>((ref) {
             name: AppRoute.groups.name,
             pageBuilder: (context, state) => NoTransitionPage(
               key: state.pageKey,
-              child: const Scaffold(body: Center(child: Text('Groups'))),
+              child: Scaffold(
+                body: Center(
+                  child: Text(
+                    'Groups',
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ),
+              ),
             ),
           ),
         ],

@@ -80,7 +80,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context).navHome),
+        title: Text(
+          AppLocalizations.of(context).navHome,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
@@ -134,7 +137,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                         children: list
                             .map(
                               (s) => ListTile(
-                                title: Text(s),
+                                title: Text(
+                                  s,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
                                 onTap: () {
                                   searchController.text = s;
                                   _submitSearch(s);
@@ -171,7 +177,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(dest.name),
+                      Text(
+                        dest.name,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ],
                   );
                 },

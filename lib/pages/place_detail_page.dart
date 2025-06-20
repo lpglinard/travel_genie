@@ -107,6 +107,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                     '${currentIndex + 1}',
                     '${widget.place.photos.length}',
                   ),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               body: Stack(
@@ -206,7 +209,17 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
         // Show a message to the user that they need to be logged in
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${AppLocalizations.of(context).logout} required'),
+            content: Text(
+              '${AppLocalizations.of(context).logout} required',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).colorScheme.onPrimary 
+                    : Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+            ),
+            backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                ? Theme.of(context).colorScheme.primaryContainer 
+                : Theme.of(context).colorScheme.primaryContainer,
             duration: const Duration(seconds: 3),
           ),
         );
@@ -240,7 +253,15 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
               _isSaved
                   ? 'Place saved to your favorites'
                   : 'Place removed from your favorites',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).colorScheme.onPrimary 
+                    : Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
             ),
+            backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                ? Theme.of(context).colorScheme.primaryContainer 
+                : Theme.of(context).colorScheme.primaryContainer,
             duration: const Duration(seconds: 2),
           ),
         );
@@ -252,7 +273,17 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving place'),
+            content: Text(
+              'Error saving place',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).colorScheme.onPrimary 
+                    : Theme.of(context).colorScheme.onPrimaryContainer,
+              ),
+            ),
+            backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                ? Theme.of(context).colorScheme.primaryContainer 
+                : Theme.of(context).colorScheme.primaryContainer,
             duration: const Duration(seconds: 3),
           ),
         );
@@ -405,9 +436,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                                       const SizedBox(width: 4),
                                       Text(
                                         widget.place.category.name,
-                                        style: const TextStyle(
+                                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
                                           color: Colors.white,
-                                          fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -450,7 +480,10 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                                         size: 16,
                                       ),
                                       const SizedBox(width: 4),
-                                      Text(widget.place.rating!.toString()),
+                                      Text(
+                                        widget.place.rating!.toString(),
+                                        style: Theme.of(context).textTheme.bodyMedium,
+                                      ),
                                       if (widget.place.userRatingCount != null) ...[
                                         const SizedBox(width: 4),
                                         Text(
@@ -695,6 +728,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                       _isLoading
                           ? AppLocalizations.of(context).close
                           : AppLocalizations.of(context).save,
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -717,9 +751,19 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                   child: OutlinedButton.icon(
                     onPressed: _toggleAddToItinerary,
                     icon: Icon(_isAddedToItinerary ? Icons.check : Icons.add),
-                    label: Text(AppLocalizations.of(context).addToItinerary),
+                    label: Text(
+                      AppLocalizations.of(context).addToItinerary,
+                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: Theme.of(context).brightness == Brightness.dark 
+                            ? Theme.of(context).colorScheme.primary 
+                            : Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: Theme.of(context).brightness == Brightness.dark 
+                          ? Theme.of(context).colorScheme.surface 
+                          : Theme.of(context).colorScheme.primary,
                       side: BorderSide(
                         color: Theme.of(context).colorScheme.primary,
                       ),
@@ -802,9 +846,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                                   .map((attr) => attr.displayName)
                                   .join(", "),
                             ),
-                            style: const TextStyle(
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
                               color: Colors.white,
-                              fontSize: 12,
                             ),
                             textAlign: TextAlign.end,
                           ),
@@ -891,7 +934,10 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                   .map(
                     (hour) => Padding(
                       padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(hour),
+                      child: Text(
+                        hour,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
                   )
                   .toList(),
@@ -900,7 +946,10 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text(AppLocalizations.of(context).close),
+                  child: Text(
+                    AppLocalizations.of(context).close,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                 ),
               ),
             ],
