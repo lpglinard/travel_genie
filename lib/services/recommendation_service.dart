@@ -10,22 +10,17 @@ class RecommendationService {
     : _client = client ?? http.Client();
   final http.Client _client;
 
-  Future<PaginatedPlaces> search(String name, {String? languageCode, String? nextPageToken}) async {
+  Future<PaginatedPlaces> search(String name, {String? languageCode}) async {
     final encodedName = Uri.encodeComponent(name);
     final queryParams = <String, String>{
       'languageCode': languageCode ?? 'en',
       // Always include languageCode, default to 'en' if not provided
     };
 
-    // Add nextPageToken to query parameters if provided
-    if (nextPageToken != null && nextPageToken.isNotEmpty) {
-      queryParams['pageToken'] = nextPageToken;
-    }
-
     final uri = Uri.parse(
       'https://recommendations-1052236350369.europe-west1.run.app/places/$encodedName',
     ).replace(queryParameters: queryParams);
-    
+
     try {
       final response = await _client.get(uri);
 
@@ -91,15 +86,8 @@ class RecommendationService {
             .map((e) => Place.fromJson(e as Map<String, dynamic>))
             .toList();
 
-        // Extract next_page_token if available
-        String? nextPageToken;
-        if (jsonData is Map<String, dynamic> && jsonData.containsKey('next_page_token')) {
-          nextPageToken = jsonData['next_page_token'] as String?;
-        }
-
         return PaginatedPlaces(
           places: places,
-          nextPageToken: nextPageToken,
         );
       } catch (parseError, st) {
         throw Exception('Failed to parse recommendations: $parseError');

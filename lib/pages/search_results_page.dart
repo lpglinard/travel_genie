@@ -93,9 +93,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
 
     // Log the current state for debugging
     log('SearchResultsPage - Building with state: isLoading=${resultsState.isLoading}, ' +
-        'isLoadingMore=${resultsState.isLoadingMore}, ' +
-        'places=${resultsState.places.length}, ' +
-        'hasMoreResults=${resultsState.hasMoreResults}');
+        'places=${resultsState.places.length}');
 
     return Scaffold(
       body: SafeArea(
