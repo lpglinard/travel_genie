@@ -100,8 +100,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           // or pass it through state.extra
           return CustomTransitionPage(
             key: state.pageKey,
-            child: WillPopScope(
-              onWillPop: () async {
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
                 // Navigate back to the previous screen
                 if (context.canPop()) {
                   context.pop();
@@ -109,7 +110,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                   // If can't pop, go to home
                   context.go('/');
                 }
-                return false;
               },
               child: PlaceDetailPage(
                 place: place?['place'],
@@ -129,8 +129,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             key: state.pageKey,
-            child: WillPopScope(
-              onWillPop: () async {
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
                 // Navigate back to the previous screen
                 if (context.canPop()) {
                   context.pop();
@@ -138,7 +139,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                   // If can't pop, go to home
                   context.go('/');
                 }
-                return false;
               },
               child: const app_profile.ProfileScreen(),
             ),
@@ -155,8 +155,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         pageBuilder: (context, state) {
           return CustomTransitionPage(
             key: state.pageKey,
-            child: WillPopScope(
-              onWillPop: () async {
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
                 // Navigate back to the previous screen
                 if (context.canPop()) {
                   context.pop();
@@ -164,7 +165,6 @@ final routerProvider = Provider<GoRouter>((ref) {
                   // If can't pop, go to home
                   context.go('/');
                 }
-                return false;
               },
               child: SignInScreen(
                 providers: [
@@ -224,17 +224,15 @@ class ScaffoldWithNavBar extends ConsumerWidget {
     final analyticsService = ref.watch(analyticsServiceProvider);
     final isHome = location == '/' || location == '';
 
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
         // If we're already on the home screen, don't allow the app to quit
-        // Instead, return false to prevent the app from closing
-        if (isHome) {
-          return false;
+        // Instead, we've set canPop: false to prevent the app from closing
+        if (!isHome) {
+          // If not on home screen, navigate to the home screen
+          context.go('/');
         }
-
-        // Otherwise, navigate to the home screen
-        context.go('/');
-        return false;
       },
       child: Scaffold(
         body: child,

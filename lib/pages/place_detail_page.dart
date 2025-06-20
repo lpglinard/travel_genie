@@ -303,8 +303,13 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                   pinned: true,
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
+                    onPressed: () {
+                      if (context.canPop()) {
+                        context.go('/explore');
+                      } else {
+                        context.go('/');
+                      }
+                    },                  ),
                   actions: [
                     IconButton(
                       icon: const Icon(Icons.share),
