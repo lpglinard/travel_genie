@@ -2,8 +2,8 @@ import 'package:logging/logging.dart';
 
 import 'location.dart';
 import 'photo.dart';
-import 'place_category.dart';
 import 'place_categories.dart';
+import 'place_category.dart';
 
 class Place {
   /// Creates a logger for the Place class

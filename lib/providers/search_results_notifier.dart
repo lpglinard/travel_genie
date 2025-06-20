@@ -1,11 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:travel_genie/models/paginated_places.dart';
 import 'package:travel_genie/models/place.dart';
-import './user_providers.dart';
 
 import '../services/recommendation_service.dart';
+import './user_providers.dart';
 import 'search_results_state.dart';
 
 class SearchResultsNotifier extends StateNotifier<SearchResultsState> {

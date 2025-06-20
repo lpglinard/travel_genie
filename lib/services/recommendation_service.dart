@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
-import '../models/place.dart';
 import '../models/paginated_places.dart';
+import '../models/place.dart';
 
 class RecommendationService {
   RecommendationService({http.Client? client})

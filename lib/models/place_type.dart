@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+
 import '../l10n/app_localizations.dart';
 
 /// Utility class for working with place types.

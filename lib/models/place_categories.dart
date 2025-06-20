@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'place_category.dart';
 
 /// Utility class for working with place categories

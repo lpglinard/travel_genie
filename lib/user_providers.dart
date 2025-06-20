@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config.dart';
 import 'models/user_data.dart';
-import 'services/firestore_service.dart';
 import 'services/analytics_service.dart';
+import 'services/firestore_service.dart';
 import 'services/places_service.dart';
 import 'services/preferences_service.dart';
 import 'services/recommendation_service.dart';

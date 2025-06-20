@@ -1,4 +1,5 @@
 import 'package:logging/logging.dart';
+
 import 'author_attribution.dart';
 
 /// A class representing a photo from Google Places API.
