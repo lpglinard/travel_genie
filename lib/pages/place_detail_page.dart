@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_localizations.dart';
 import '../models/place.dart';
+import '../models/place_type.dart';
 import '../core/config/config.dart';
 import '../providers/user_providers.dart';
 
@@ -381,38 +382,54 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                             const SizedBox(height: 8),
 
                             // Category and rating
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                // Place types in a wrapping row
                                 if (widget.place.types.isNotEmpty)
-                                  Text(
-                                    widget.place.types.first.toUpperCase(),
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
+                                  Wrap(
+                                    spacing: 8, // gap between adjacent chips
+                                    runSpacing: 4, // gap between lines
+                                    children: widget.place.types.map((type) {
+                                      return Chip(
+                                        label: Text(
+                                          PlaceType.getLocalizedName(context, type),
+                                          style: Theme.of(context).textTheme.bodySmall,
                                         ),
+                                        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                                        labelStyle: TextStyle(
+                                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                        ),
+                                        visualDensity: VisualDensity.compact,
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                                      );
+                                    }).toList(),
                                   ),
-                                if (widget.place.types.isNotEmpty &&
-                                    widget.place.rating != null)
-                                  const SizedBox(width: 8),
+
+                                // Rating information
                                 if (widget.place.rating != null) ...[
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                    size: 16,
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 4),
+                                      Text(widget.place.rating!.toString()),
+                                      if (widget.place.userRatingCount != null) ...[
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '(${widget.place.userRatingCount} reviews)',
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall,
+                                        ),
+                                      ],
+                                    ],
                                   ),
-                                  const SizedBox(width: 4),
-                                  Text(widget.place.rating!.toString()),
-                                  if (widget.place.userRatingCount != null) ...[
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      '(${widget.place.userRatingCount} reviews)',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.bodySmall,
-                                    ),
-                                  ],
                                 ],
                               ],
                             ),
