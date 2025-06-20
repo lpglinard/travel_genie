@@ -37,7 +37,7 @@ class FirestoreService {
 
   // Get reference to a user's saved places collection
   CollectionReference<Map<String, dynamic>> _savedPlacesCollection(String userId) {
-    return _users.doc(userId).collection('locais_salvos');
+    return _users.doc(userId).collection('saved_places');
   }
 
   // Save a place to user's saved places
@@ -53,12 +53,12 @@ class FirestoreService {
     // Create the document with the place data
     await savedPlacesRef.doc(place.placeId).set({
       'placeId': place.placeId,
-      'nome': place.displayName,
-      'imagem': imageUrl,
-      'dataSalvo': FieldValue.serverTimestamp(),
-      'endereco': place.formattedAddress,
-      'tipos': place.types,
-      'avaliacao': place.rating,
+      'name': place.displayName,
+      'image': imageUrl,
+      'savedDate': FieldValue.serverTimestamp(),
+      'address': place.formattedAddress,
+      'types': place.types,
+      'rating': place.rating,
     });
   }
 
@@ -76,7 +76,7 @@ class FirestoreService {
   // Get all saved places for a user
   Stream<QuerySnapshot<Map<String, dynamic>>> streamSavedPlaces(String userId) {
     return _savedPlacesCollection(userId)
-        .orderBy('dataSalvo', descending: true)
+        .orderBy('savedDate', descending: true)
         .snapshots();
   }
 }

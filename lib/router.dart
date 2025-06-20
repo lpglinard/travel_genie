@@ -109,12 +109,27 @@ final routerProvider = Provider<GoRouter>((ref) {
 
           // In a real implementation, you would fetch the place data
           // or pass it through state.extra
-          return MaterialPage(
+          return CustomTransitionPage(
             key: state.pageKey,
-            child: PlaceDetailPage(
-              place: place?['place'],
-              heroTagIndex: place?['heroTagIndex'],
+            child: WillPopScope(
+              onWillPop: () async {
+                // Navigate back to the previous screen
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  // If can't pop, go to home
+                  context.go('/');
+                }
+                return false;
+              },
+              child: PlaceDetailPage(
+                place: place?['place'],
+                heroTagIndex: place?['heroTagIndex'],
+              ),
             ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           );
         },
       ),
@@ -122,9 +137,24 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile',
         pageBuilder: (context, state) {
-          return MaterialPage(
+          return CustomTransitionPage(
             key: state.pageKey,
-            child: const app_profile.ProfileScreen(),
+            child: WillPopScope(
+              onWillPop: () async {
+                // Navigate back to the previous screen
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  // If can't pop, go to home
+                  context.go('/');
+                }
+                return false;
+              },
+              child: const app_profile.ProfileScreen(),
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           );
         },
       ),
@@ -132,40 +162,55 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/signin',
         pageBuilder: (context, state) {
-          return MaterialPage(
+          return CustomTransitionPage(
             key: state.pageKey,
-            child: SignInScreen(
-              providers: [
-                EmailAuthProvider(),
-                GoogleProvider(clientId: googleClientId, scopes: [
-                  'email',
-                  'profile',
-                  'openid'
-                ]
-                ),
-                AppleProvider(),
-              ],
-              headerBuilder: (context, constraints, _) {
-                return Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: Image.asset('images/odsy_main.png'),
-                  ),
-                );
+            child: WillPopScope(
+              onWillPop: () async {
+                // Navigate back to the previous screen
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  // If can't pop, go to home
+                  context.go('/');
+                }
+                return false;
               },
-              actions: [
-                AuthStateChangeAction<SignedIn>((context, state) {
-                  context.go('/');
-                }),
-                AuthStateChangeAction<UserCreated>((context, state) {
-                  context.go('/');
-                }),
-                AuthStateChangeAction<CredentialLinked>((context, state) {
-                  context.go('/');
-                }),
-              ],
+              child: SignInScreen(
+                providers: [
+                  EmailAuthProvider(),
+                  GoogleProvider(clientId: googleClientId, scopes: [
+                    'email',
+                    'profile',
+                    'openid'
+                  ]
+                  ),
+                  AppleProvider(),
+                ],
+                headerBuilder: (context, constraints, _) {
+                  return Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.asset('images/odsy_main.png'),
+                    ),
+                  );
+                },
+                actions: [
+                  AuthStateChangeAction<SignedIn>((context, state) {
+                    context.go('/');
+                  }),
+                  AuthStateChangeAction<UserCreated>((context, state) {
+                    context.go('/');
+                  }),
+                  AuthStateChangeAction<CredentialLinked>((context, state) {
+                    context.go('/');
+                  }),
+                ],
+              ),
             ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           );
         },
       ),
@@ -187,31 +232,44 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final analyticsService = ref.watch(analyticsServiceProvider);
+    final isHome = location == '/' || location == '';
 
-    return Scaffold(
-      body: child,
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _calculateSelectedIndex(location),
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) => _onItemTapped(index, context, analyticsService),
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: AppLocalizations.of(context).navHome,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: AppLocalizations.of(context).navExplore,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.map),
-            label: AppLocalizations.of(context).navMyTrips,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.group),
-            label: AppLocalizations.of(context).navGroups,
-          ),
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        // If we're already on the home screen, allow the app to quit
+        if (isHome) {
+          return true;
+        }
+
+        // Otherwise, navigate to the home screen
+        context.go('/');
+        return false;
+      },
+      child: Scaffold(
+        body: child,
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _calculateSelectedIndex(location),
+          type: BottomNavigationBarType.fixed,
+          onTap: (index) => _onItemTapped(index, context, analyticsService),
+          items: [
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.home),
+              label: AppLocalizations.of(context).navHome,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.search),
+              label: AppLocalizations.of(context).navExplore,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.map),
+              label: AppLocalizations.of(context).navMyTrips,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.group),
+              label: AppLocalizations.of(context).navGroups,
+            ),
+          ],
+        ),
       ),
     );
   }
