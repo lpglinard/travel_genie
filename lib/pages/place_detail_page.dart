@@ -260,6 +260,11 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
         _selectedNavIndex = index;
       });
 
+      // Pop to root and then navigate to the selected tab
+      while (context.canPop()) {
+        context.pop();
+      }
+
       // Navigate using go_router
       switch (index) {
         case 0:
@@ -268,7 +273,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
           break;
         case 1:
           // Navigate to Explore
-          context.go('/explore');
+          final uri = GoRouterState.of(context).uri;
+          final query = uri.queryParameters['query'] ?? '';
+          context.go('/explore${query.isNotEmpty ? "?query=$query" : ""}');
           break;
         case 2:
           // Navigate to Trips
@@ -304,12 +311,17 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
+                      // Always try to pop first to maintain navigation history
                       if (context.canPop()) {
-                        context.go('/explore');
+                        context.pop();
                       } else {
-                        context.go('/');
+                        // If can't pop, go to explore with the query if available
+                        final uri = GoRouterState.of(context).uri;
+                        final query = uri.queryParameters['query'] ?? '';
+                        context.go('/explore${query.isNotEmpty ? "?query=$query" : ""}');
                       }
-                    },                  ),
+                    },
+                  ),
                   actions: [
                     IconButton(
                       icon: const Icon(Icons.share),

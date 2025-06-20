@@ -95,26 +95,15 @@ final routerProvider = Provider<GoRouter>((ref) {
           // from the provider or pass it through state.extra
           final placeId = state.pathParameters['id']!;
           final place = state.extra as Map<String, dynamic>?;
+          final query = state.uri.queryParameters['query'] ?? '';
 
           // In a real implementation, you would fetch the place data
           // or pass it through state.extra
           return CustomTransitionPage(
             key: state.pageKey,
-            child: PopScope(
-              canPop: false,
-              onPopInvoked: (didPop) {
-                // Navigate back to the previous screen
-                if (context.canPop()) {
-                  context.pop();
-                } else {
-                  // If can't pop, go to home
-                  context.go('/');
-                }
-              },
-              child: PlaceDetailPage(
-                place: place?['place'],
-                heroTagIndex: place?['heroTagIndex'],
-              ),
+            child: PlaceDetailPage(
+              place: place?['place'],
+              heroTagIndex: place?['heroTagIndex'],
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -230,8 +219,13 @@ class ScaffoldWithNavBar extends ConsumerWidget {
         // If we're already on the home screen, don't allow the app to quit
         // Instead, we've set canPop: false to prevent the app from closing
         if (!isHome) {
-          // If not on home screen, navigate to the home screen
-          context.go('/');
+          // If not on home screen, try to pop the current route
+          if (context.canPop()) {
+            context.pop();
+          } else {
+            // If can't pop, navigate to the home screen
+            context.go('/');
+          }
         }
       },
       child: Scaffold(

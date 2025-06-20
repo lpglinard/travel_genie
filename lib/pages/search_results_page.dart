@@ -32,9 +32,27 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
   @override
   void initState() {
     super.initState();
+    // Initialize with widget.query first to ensure it's not null
     _searchController = TextEditingController(text: widget.query);
+
+    // Only perform a search if there are no existing results or if the query has changed
     Future.microtask(() {
-      ref.read(searchResultsProvider.notifier).search(widget.query);
+      final currentResults = ref.read(searchResultsProvider);
+      final lastQuery = ref.read(searchResultsProvider.notifier).lastQuery;
+
+      // Update the search controller text with the last query if available
+      if (lastQuery.isNotEmpty) {
+        _searchController.text = lastQuery;
+      }
+
+      // Check if we need to perform a new search:
+      // 1. If there are no existing results, or
+      // 2. If the query is different from the last search query and not empty
+      if (currentResults.value == null || 
+          currentResults.value!.isEmpty || 
+          (widget.query != lastQuery && widget.query.isNotEmpty)) {
+        ref.read(searchResultsProvider.notifier).search(widget.query);
+      }
     });
   }
 
@@ -171,9 +189,9 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
                         elevation: 2,
                         child: InkWell(
                           onTap: () {
-                            // Navigate to place detail using go_router
-                            context.go(
-                              '/place/${place.placeId}',
+                            // Navigate to place detail using go_router with push
+                            context.push(
+                              '/place/${place.placeId}?query=${Uri.encodeComponent(_searchController.text)}',
                               extra: {'place': place, 'heroTagIndex': index},
                             );
                           },

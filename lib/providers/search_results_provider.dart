@@ -12,9 +12,17 @@ class SearchResultsNotifier extends StateNotifier<AsyncValue<List<Place>>> {
 
   final RecommendationService _service;
   final String? _locale;
+  String _lastQuery = '';
+
+  // Getter for the last search query
+  String get lastQuery => _lastQuery;
 
   Future<void> search(String query) async {
     log('SearchResultsNotifier.search called with query: ' + query);
+
+    // Update the last query
+    _lastQuery = query;
+
     if (query.isEmpty) {
       log('Query is empty, clearing search results');
       state = const AsyncValue.data(<Place>[]);
@@ -39,10 +47,12 @@ class SearchResultsNotifier extends StateNotifier<AsyncValue<List<Place>>> {
 }
 
 final searchResultsProvider =
-    StateNotifierProvider<SearchResultsNotifier, AsyncValue<List<Place>>>((
-      ref,
-    ) {
-      final service = ref.watch(recommendationServiceProvider);
-      final locale = ref.watch(localeProvider);
-      return SearchResultsNotifier(service, locale?.languageCode);
-    });
+    StateNotifierProvider<SearchResultsNotifier, AsyncValue<List<Place>>>(
+      (ref) {
+        final service = ref.watch(recommendationServiceProvider);
+        final locale = ref.watch(localeProvider);
+        return SearchResultsNotifier(service, locale?.languageCode);
+      },
+      // Keep the provider alive even when no widgets are listening to it
+      name: 'searchResultsProvider',
+    );
