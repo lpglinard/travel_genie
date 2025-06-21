@@ -6,8 +6,8 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) {
     return Location(
-      lat: (json['lat'] as num?)?.toDouble() ?? 0.0,
-      lng: (json['lng'] as num?)?.toDouble() ?? 0.0,
+      lat: ((json['latitude'] ?? json['lat']) as num?)?.toDouble() ?? 0.0,
+      lng: ((json['longitude'] ?? json['lng']) as num?)?.toDouble() ?? 0.0,
     );
   }
 }

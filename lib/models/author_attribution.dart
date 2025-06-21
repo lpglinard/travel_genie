@@ -13,11 +13,11 @@ class AuthorAttribution {
 
   factory AuthorAttribution.fromJson(Map<String, dynamic> json) {
     _logger.fine('AuthorAttribution.fromJson called with: $json');
-    
+
     return AuthorAttribution(
-      displayName: json['display_name'] as String? ?? '',
+      displayName: (json['displayName'] ?? json['display_name']) as String? ?? '',
       uri: json['uri'] as String?,
-      photoUri: json['photo_uri'] as String?,
+      photoUri: (json['photoUri'] ?? json['photo_uri']) as String?,
     );
   }
 }

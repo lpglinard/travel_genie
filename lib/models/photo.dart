@@ -73,16 +73,16 @@ class Photo {
   factory Photo.fromJson(Map<String, dynamic> json) {
     _logger.fine('Photo.fromJson called with: $json');
 
-    final reference = json['reference'] as String? ?? '';
-    final width = json['width'] as int?;
-    final height = json['height'] as int?;
+    final reference = (json['name'] ?? json['reference']) as String? ?? '';
+    final width = (json['widthPx'] ?? json['width']) as int?;
+    final height = (json['heightPx'] ?? json['height']) as int?;
     final url = json['url'] as String?;
-    final flagContentUri = json['flag_content_uri'] as String?;
-    final googleMapsUri = json['google_maps_uri'] as String?;
+    final flagContentUri = (json['flagContentUri'] ?? json['flag_content_uri']) as String?;
+    final googleMapsUri = (json['googleMapsUri'] ?? json['google_maps_uri']) as String?;
 
     // Parse author attributions
     final authorAttributionsList =
-        (json['author_attributions'] as List?)
+        ((json['authorAttributions'] ?? json['author_attributions']) as List?)
             ?.map((e) => AuthorAttribution.fromJson(e as Map<String, dynamic>))
             .toList() ??
         const [];

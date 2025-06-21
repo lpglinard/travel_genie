@@ -48,30 +48,30 @@ class Place {
     // Parse display_name which is now an object with text and language_code
     String displayName = '';
     String displayNameLanguageCode = '';
-    if (json['display_name'] is Map<String, dynamic>) {
-      final displayNameObj = json['display_name'] as Map<String, dynamic>;
-      displayName = displayNameObj['text'] as String? ?? '';
+    final displayNameField = json['displayName'] ?? json['display_name'];
+    if (displayNameField is Map<String, dynamic>) {
+      displayName = displayNameField['text'] as String? ?? '';
       displayNameLanguageCode =
-          displayNameObj['language_code'] as String? ?? '';
-    } else if (json['display_name'] is String) {
+          ((displayNameField['languageCode'] ?? displayNameField['language_code']) as String?) ?? '';
+    } else if (displayNameField is String) {
       // For backward compatibility
-      displayName = json['display_name'] as String;
+      displayName = displayNameField;
       displayNameLanguageCode = 'en'; // Default to English
     }
 
     // Parse generative_summary which is an object with overview and disclosure_text
     String generativeSummary = '';
     String disclosureText = '';
-    if (json['generative_summary'] is Map<String, dynamic>) {
-      final generativeSummaryObj =
-          json['generative_summary'] as Map<String, dynamic>;
-      if (generativeSummaryObj['overview'] is Map<String, dynamic>) {
+    final generativeSummaryField = json['generativeSummary'] ?? json['generative_summary'];
+    if (generativeSummaryField is Map<String, dynamic>) {
+      if (generativeSummaryField['overview'] is Map<String, dynamic>) {
         generativeSummary =
-            generativeSummaryObj['overview']['text'] as String? ?? '';
+            generativeSummaryField['overview']['text'] as String? ?? '';
       }
-      if (generativeSummaryObj['disclosure_text'] is Map<String, dynamic>) {
+      final disclosureTextField = generativeSummaryField['disclosureText'] ?? generativeSummaryField['disclosure_text'];
+      if (disclosureTextField is Map<String, dynamic>) {
         disclosureText =
-            generativeSummaryObj['disclosure_text']['text'] as String? ?? '';
+            disclosureTextField['text'] as String? ?? '';
       }
     }
 
@@ -79,20 +79,25 @@ class Place {
     final types = (json['types'] as List?)?.cast<String>() ?? const [];
 
     return Place(
-      placeId: json['place_id'] as String? ?? '',
+      placeId: (json['id'] ?? json['place_id']) as String? ?? '',
       displayName: displayName,
       displayNameLanguageCode: displayNameLanguageCode,
-      formattedAddress: json['formatted_address'] as String? ?? '',
-      googleMapsUri: json['google_maps_uri'] as String? ?? '',
-      websiteUri: json['website_uri'] as String?,
+      formattedAddress: (json['formattedAddress'] ?? json['formatted_address']) as String? ?? '',
+      googleMapsUri: (json['googleMapsUri'] ?? json['google_maps_uri']) as String? ?? '',
+      websiteUri: (json['websiteUri'] ?? json['website_uri']) as String?,
       types: types,
       rating: (json['rating'] as num?)?.toDouble(),
-      userRatingCount: json['user_rating_count'] as int?,
+      userRatingCount: (json['userRatingCount'] ?? json['user_rating_count']) as int?,
       location: json['location'] == null
           ? const Location(lat: 0, lng: 0)
           : Location.fromJson(json['location'] as Map<String, dynamic>),
-      openingHours:
-          (json['opening_hours'] as List?)?.cast<String>() ?? const [],
+      openingHours: () {
+          if (json['currentOpeningHours'] is Map<String, dynamic> && 
+              json['currentOpeningHours']['weekdayDescriptions'] is List) {
+            return (json['currentOpeningHours']['weekdayDescriptions'] as List).cast<String>();
+          }
+          return (json['opening_hours'] as List?)?.cast<String>() ?? const [];
+        }(),
       generativeSummary: generativeSummary,
       disclosureText: disclosureText,
       photos: () {
