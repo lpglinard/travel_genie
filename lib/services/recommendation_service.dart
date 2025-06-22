@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:developer' as developer;
-import 'dart:io';
 
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
 import '../models/paginated_places.dart';
@@ -14,7 +10,11 @@ class RecommendationService {
     : _client = client ?? http.Client();
   final http.Client _client;
 
-  Future<PaginatedPlaces> search(String name, {String? languageCode, String? pageToken}) async {
+  Future<PaginatedPlaces> search(
+    String name, {
+    String? languageCode,
+    String? pageToken,
+  }) async {
     final queryParams = <String, String>{
       'query': "atrações turísticas em " + name,
       'languageCode': languageCode ?? 'en',
@@ -84,18 +84,14 @@ class RecommendationService {
           if (listEntry.value is List) {
             data = listEntry.value as List<dynamic>;
           } else {
-            throw Exception(
-              'Could not find a list of places in the response',
-            );
+            throw Exception('Could not find a list of places in the response');
           }
         }
       } else if (jsonData is List<dynamic>) {
         // If the response is already a List, use it directly
         data = jsonData;
       } else {
-        throw Exception(
-          'Unexpected response format: ${jsonData.runtimeType}',
-        );
+        throw Exception('Unexpected response format: ${jsonData.runtimeType}');
       }
 
       // Extract places from the data
@@ -106,34 +102,23 @@ class RecommendationService {
       // Extract nextPageToken if available
       String? nextPageToken;
       if (jsonData is Map<String, dynamic>) {
-        // Log the entire response for debugging
-        developer.log('API Response: $jsonData');
-
         if (jsonData.containsKey('nextPageToken')) {
           nextPageToken = jsonData['nextPageToken'] as String?;
-          developer.log('nextPageToken from API: $nextPageToken');
 
           // If nextPageToken is null or empty, treat it as null (no more pages)
           if (nextPageToken == null || nextPageToken.isEmpty) {
-            developer.log('Null or empty nextPageToken, setting to null');
             nextPageToken = null;
           }
 
           // According to the issue description, the API doesn't return a nextPageToken after 60 results
           // If we already have 60 or more places, set nextPageToken to null to prevent further loadMore calls
           if (places.length >= 60) {
-            developer.log('Already have 60 or more places, setting nextPageToken to null');
             nextPageToken = null;
           }
-        } else {
-          developer.log('No nextPageToken field in API response');
         }
       }
 
-      return PaginatedPlaces(
-        places: places,
-        nextPageToken: nextPageToken,
-      );
+      return PaginatedPlaces(places: places, nextPageToken: nextPageToken);
     } catch (parseError) {
       throw Exception('Failed to parse places response: $parseError');
     }

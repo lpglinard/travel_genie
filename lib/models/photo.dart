@@ -1,12 +1,7 @@
-import 'package:logging/logging.dart';
-
 import 'author_attribution.dart';
 
 /// A class representing a photo from Google Places API.
 class Photo {
-  /// Creates a logger for the Photo class
-  static final _logger = Logger('Photo');
-
   /// Creates a new Photo instance.
   ///
   /// [reference] is the photo reference from Google Places API.
@@ -26,14 +21,6 @@ class Photo {
     this.googleMapsUri,
   });
 
-  /// Logs the creation of a Photo instance.
-  /// This is separate from the constructor to maintain const constructor.
-  static void logCreation(Photo photo) {
-    _logger.fine(
-      'Photo created with reference: ${photo.reference}, width: ${photo.width}, height: ${photo.height}, url: ${photo.url ?? "null"}',
-    );
-  }
-
   final String reference;
   final int? width;
   final int? height;
@@ -46,17 +33,12 @@ class Photo {
   /// present, it is returned as is. Otherwise the URL is constructed following
   /// the Google Places photo API format.
   String urlWithKey(String apiKey) {
-    _logger.fine(
-      'urlWithKey called with apiKey: ${apiKey.length > 10 ? apiKey.substring(0, 10) + '...' : apiKey}',
-    );
-
     final result =
         url ??
         'https://places.googleapis.com/v1/$reference/media'
             '?key=$apiKey'
             '&maxWidthPx=800';
 
-    _logger.fine('urlWithKey returning: $result');
     return result;
   }
 
@@ -71,14 +53,14 @@ class Photo {
   /// - flag_content_uri: String (optional)
   /// - google_maps_uri: String (optional)
   factory Photo.fromJson(Map<String, dynamic> json) {
-    _logger.fine('Photo.fromJson called with: $json');
-
     final reference = (json['name'] ?? json['reference']) as String? ?? '';
     final width = (json['widthPx'] ?? json['width']) as int?;
     final height = (json['heightPx'] ?? json['height']) as int?;
     final url = json['url'] as String?;
-    final flagContentUri = (json['flagContentUri'] ?? json['flag_content_uri']) as String?;
-    final googleMapsUri = (json['googleMapsUri'] ?? json['google_maps_uri']) as String?;
+    final flagContentUri =
+        (json['flagContentUri'] ?? json['flag_content_uri']) as String?;
+    final googleMapsUri =
+        (json['googleMapsUri'] ?? json['google_maps_uri']) as String?;
 
     // Parse author attributions
     final authorAttributionsList =
@@ -86,10 +68,6 @@ class Photo {
             ?.map((e) => AuthorAttribution.fromJson(e as Map<String, dynamic>))
             .toList() ??
         const [];
-
-    _logger.fine(
-      'Photo.fromJson parsed values - reference: $reference, width: $width, height: $height, url: ${url ?? "null"}',
-    );
 
     return Photo(
       reference: reference,

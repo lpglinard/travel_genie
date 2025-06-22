@@ -94,9 +94,8 @@ class _ImageCarouselState extends State<ImageCarousel> {
                                   .map((attr) => attr.displayName)
                                   .join(", "),
                             ),
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                              color: Colors.white,
-                            ),
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(color: Colors.white),
                             textAlign: TextAlign.end,
                           ),
                         ),

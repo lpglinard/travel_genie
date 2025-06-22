@@ -1,14 +1,11 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../core/config/config.dart';
 import '../l10n/app_localizations.dart';
 import '../models/place.dart';
-import '../models/place_type.dart';
 import '../providers/user_providers.dart';
 import '../widgets/place_detail/action_buttons.dart';
 import '../widgets/place_detail/additional_info_section.dart';
@@ -52,7 +49,6 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       }
     } catch (e) {
       // Firebase might not be initialized in tests
-      print('Firebase not initialized: $e');
     }
   }
 
@@ -80,23 +76,18 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
         setState(() {
           _isLoading = false;
         });
-        print('Error checking if place is saved: $e');
       }
     } catch (e) {
       // Firebase might not be initialized in tests
-      print('Firebase not initialized: $e');
     }
   }
-
 
   void _openGallery(BuildContext context, int index) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => PhotoGallery(
-          place: widget.place,
-          initialIndex: index,
-        ),
+        builder: (context) =>
+            PhotoGallery(place: widget.place, initialIndex: index),
       ),
     );
   }
@@ -126,13 +117,13 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
             content: Text(
               '${AppLocalizations.of(context).logout} required',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? Theme.of(context).colorScheme.onPrimary 
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                ? Theme.of(context).colorScheme.primaryContainer 
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.primaryContainer
                 : Theme.of(context).colorScheme.primaryContainer,
             duration: const Duration(seconds: 3),
           ),
@@ -168,13 +159,13 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                   ? 'Place saved to your favorites'
                   : 'Place removed from your favorites',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? Theme.of(context).colorScheme.onPrimary 
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                ? Theme.of(context).colorScheme.primaryContainer 
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.primaryContainer
                 : Theme.of(context).colorScheme.primaryContainer,
             duration: const Duration(seconds: 2),
           ),
@@ -190,22 +181,20 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
             content: Text(
               'Error saving place',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? Theme.of(context).colorScheme.onPrimary 
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.onPrimaryContainer,
               ),
             ),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                ? Theme.of(context).colorScheme.primaryContainer 
+            backgroundColor: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.primaryContainer
                 : Theme.of(context).colorScheme.primaryContainer,
             duration: const Duration(seconds: 3),
           ),
         );
-        print('Error toggling saved place: $e');
       }
     } catch (e) {
       // Firebase might not be initialized in tests
-      print('Firebase not initialized: $e');
 
       // Just toggle the state for tests
       setState(() {
@@ -279,7 +268,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                         // If can't pop, go to explore with the query if available
                         final uri = GoRouterState.of(context).uri;
                         final query = uri.queryParameters['query'] ?? '';
-                        context.go('/explore${query.isNotEmpty ? "?query=$query" : ""}');
+                        context.go(
+                          '/explore${query.isNotEmpty ? "?query=$query" : ""}',
+                        );
                       }
                     },
                   ),
@@ -301,7 +292,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                         ImageCarousel(
                           place: widget.place,
                           heroTagIndex: widget.heroTagIndex,
-                          onGalleryOpen: (index) => _openGallery(context, index),
+                          onGalleryOpen: (index) =>
+                              _openGallery(context, index),
                         ),
 
                       Padding(
@@ -344,5 +336,4 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       ),
     );
   }
-
 }

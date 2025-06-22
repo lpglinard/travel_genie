@@ -1,10 +1,5 @@
-import 'package:logging/logging.dart';
-
 /// A class representing an author attribution for a photo.
 class AuthorAttribution {
-  /// Creates a logger for the AuthorAttribution class
-  static final _logger = Logger('AuthorAttribution');
-
   const AuthorAttribution({required this.displayName, this.uri, this.photoUri});
 
   final String displayName;
@@ -12,10 +7,9 @@ class AuthorAttribution {
   final String? photoUri;
 
   factory AuthorAttribution.fromJson(Map<String, dynamic> json) {
-    _logger.fine('AuthorAttribution.fromJson called with: $json');
-
     return AuthorAttribution(
-      displayName: (json['displayName'] ?? json['display_name']) as String? ?? '',
+      displayName:
+          (json['displayName'] ?? json['display_name']) as String? ?? '',
       uri: json['uri'] as String?,
       photoUri: (json['photoUri'] ?? json['photo_uri']) as String?,
     );

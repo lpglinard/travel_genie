@@ -11,7 +11,7 @@ class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateChangesProvider);
-    
+
     return AppBar(
       title: Text(
         AppLocalizations.of(context).navHome,

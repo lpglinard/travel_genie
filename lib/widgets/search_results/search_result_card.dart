@@ -37,17 +37,14 @@ class SearchResultCard extends StatelessWidget {
         : AppLocalizations.of(context).defaultPlaceType;
 
     // Extract location from formatted address (simplified)
-    String location =
-        place.formattedAddress.split(',').length > 1
+    String location = place.formattedAddress.split(',').length > 1
         ? place.formattedAddress.split(',')[1].trim()
         : '';
 
     return Card(
       clipBehavior: Clip.antiAlias,
       margin: const EdgeInsets.only(bottom: 16.0),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
       child: InkWell(
         onTap: () {
@@ -69,50 +66,32 @@ class SearchResultCard extends StatelessWidget {
                       children: [
                         Positioned.fill(
                           child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.only(
-                                  topLeft: Radius.circular(
-                                    12,
-                                  ),
-                                  topRight: Radius.circular(
-                                    12,
-                                  ),
-                                ),
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              topRight: Radius.circular(12),
+                            ),
                             child: Hero(
-                              tag:
-                                  'place-image-${place.placeId}-$index',
+                              tag: 'place-image-${place.placeId}-$index',
                               child: CachedNetworkImage(
-                                imageUrl: place.photos.first
-                                    .urlWithKey(
-                                      googlePlacesApiKey,
-                                    ),
+                                imageUrl: place.photos.first.urlWithKey(
+                                  googlePlacesApiKey,
+                                ),
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 height: double.infinity,
-                                placeholder: (context, url) =>
-                                    Container(
-                                      color: Colors
-                                          .grey
-                                          .shade300,
-                                      child: const Center(
-                                        child:
-                                            CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                errorWidget:
-                                    (
-                                      context,
-                                      url,
-                                      error,
-                                    ) => Container(
-                                      color: Colors
-                                          .grey
-                                          .shade300,
-                                      child: const Icon(
-                                        Icons.broken_image,
-                                        size: 40,
-                                      ),
-                                    ),
+                                placeholder: (context, url) => Container(
+                                  color: Colors.grey.shade300,
+                                  child: const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  color: Colors.grey.shade300,
+                                  child: const Icon(
+                                    Icons.broken_image,
+                                    size: 40,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -123,10 +102,7 @@ class SearchResultCard extends StatelessWidget {
                     )
                   : Container(
                       color: Colors.grey.shade300,
-                      child: const Icon(
-                        Icons.image,
-                        size: 40,
-                      ),
+                      child: const Icon(Icons.image, size: 40),
                     ),
             ),
 
@@ -140,9 +116,13 @@ class SearchResultCard extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).brightness == Brightness.light
+                          color:
+                              Theme.of(context).brightness == Brightness.light
                               ? place.category.lightColor
                               : place.category.darkColor,
                           borderRadius: BorderRadius.circular(12),
@@ -158,10 +138,11 @@ class SearchResultCard extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               place.category.name,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                           ],
                         ),
@@ -182,12 +163,9 @@ class SearchResultCard extends StatelessWidget {
                   // Title
                   Text(
                     place.displayName,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge
-                        ?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
 
                   const SizedBox(height: 8),
@@ -220,29 +198,20 @@ class SearchResultCard extends StatelessWidget {
                   if (place.rating != null)
                     Row(
                       children: [
-                        const Icon(
-                          Icons.star,
-                          size: 16,
-                          color: Colors.amber,
-                        ),
+                        const Icon(Icons.star, size: 16, color: Colors.amber),
                         const SizedBox(width: 4),
                         Text(
                           AppLocalizations.of(
                             context,
                           ).stars(place.rating!.toString()),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         if (place.userRatingCount != null) ...[
                           const SizedBox(width: 4),
                           Text(
-                            AppLocalizations.of(
-                              context,
-                            ).reviews(
-                              _formatRatingCount(
-                                place.userRatingCount!,
-                              ),
+                            AppLocalizations.of(context).reviews(
+                              _formatRatingCount(place.userRatingCount!),
                             ),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),

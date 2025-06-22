@@ -22,9 +22,6 @@ class GreetingSection extends ConsumerWidget {
       }
     });
 
-    return Text(
-      greeting, 
-      style: Theme.of(context).textTheme.headlineSmall,
-    );
+    return Text(greeting, style: Theme.of(context).textTheme.headlineSmall);
   }
 }

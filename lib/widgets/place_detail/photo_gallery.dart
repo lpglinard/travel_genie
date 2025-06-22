@@ -38,13 +38,12 @@ class _PhotoGalleryState extends State<PhotoGallery> {
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
         title: Text(
-          AppLocalizations.of(context).imageCount(
-            '${currentIndex + 1}',
-            '${widget.place.photos.length}',
-          ),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Colors.white,
-          ),
+          AppLocalizations.of(
+            context,
+          ).imageCount('${currentIndex + 1}', '${widget.place.photos.length}'),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(color: Colors.white),
         ),
       ),
       body: Stack(
@@ -74,9 +73,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                 ),
               ),
             ),
-            backgroundDecoration: const BoxDecoration(
-              color: Colors.black,
-            ),
+            backgroundDecoration: const BoxDecoration(color: Colors.black),
             pageController: PageController(initialPage: widget.initialIndex),
             onPageChanged: (i) {
               setState(() {
@@ -84,11 +81,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
               });
             },
           ),
-          if (widget
-              .place
-              .photos[currentIndex]
-              .authorAttributions
-              .isNotEmpty)
+          if (widget.place.photos[currentIndex].authorAttributions.isNotEmpty)
             Positioned(
               bottom: 0,
               right: 0,
@@ -105,10 +98,7 @@ class _PhotoGalleryState extends State<PhotoGallery> {
                         .map((attr) => attr.displayName)
                         .join(", "),
                   ),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                   textAlign: TextAlign.center,
                 ),
               ),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -33,7 +31,6 @@ class _SearchSectionState extends ConsumerState<SearchSection> {
 
   void _submitSearch(String value) {
     if (value.isNotEmpty) {
-      log('Search form submitted with value: $value');
       ref.read(autocompleteProvider.notifier).search('');
       // Use go_router to navigate to the explore page with the query parameter
       context.go('/explore?query=$value');
@@ -50,7 +47,6 @@ class _SearchSectionState extends ConsumerState<SearchSection> {
             controller: searchController,
             hintText: AppLocalizations.of(context).searchPlaceholder,
             onChanged: (value) {
-              log('HomePage search field changed: $value');
               ref.read(autocompleteProvider.notifier).search(value);
             },
             onSubmitted: _submitSearch,

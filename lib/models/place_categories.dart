@@ -4,20 +4,28 @@ import 'place_category.dart';
 
 /// Utility class for working with place categories
 class PlaceCategories {
-
   /// Transportation category
   static const PlaceCategory transportation = PlaceCategory(
     id: 1,
     name: 'Transportation',
     types: [
-      'airport', 'bus_station', 'train_station', 'subway_station', 
-      'transit_station', 'light_rail_station', 'taxi_stand', 
-      'parking', 'car_rental', 'gas_station', 'rv_park'
+      'airport',
+      'bus_station',
+      'train_station',
+      'subway_station',
+      'transit_station',
+      'light_rail_station',
+      'taxi_stand',
+      'parking',
+      'car_rental',
+      'gas_station',
+      'rv_park',
     ],
     icon: Icons.directions_transit,
     lightColor: Color(0xFF2196F3),
     darkColor: Color(0xFF1976D2),
-    description: 'Airports, stations, and services to get you moving between destinations.',
+    description:
+        'Airports, stations, and services to get you moving between destinations.',
   );
 
   /// Accommodation category
@@ -28,7 +36,8 @@ class PlaceCategories {
     icon: Icons.hotel,
     lightColor: Color(0xFF3F51B5),
     darkColor: Color(0xFF303F9F),
-    description: 'Places to stay – hotels, inns, or campsites along your journey.',
+    description:
+        'Places to stay – hotels, inns, or campsites along your journey.',
   );
 
   /// Food & Drink category
@@ -36,8 +45,13 @@ class PlaceCategories {
     id: 3,
     name: 'Food & Drink',
     types: [
-      'restaurant', 'cafe', 'bar', 'bakery', 
-      'meal_delivery', 'meal_takeaway', 'liquor_store'
+      'restaurant',
+      'cafe',
+      'bar',
+      'bakery',
+      'meal_delivery',
+      'meal_takeaway',
+      'liquor_store',
     ],
     icon: Icons.restaurant_menu,
     lightColor: Color(0xFFFF9800),
@@ -50,13 +64,21 @@ class PlaceCategories {
     id: 4,
     name: 'Attractions & Culture',
     types: [
-      'tourist_attraction', 'museum', 'art_gallery', 'zoo', 
-      'aquarium', 'park', 'stadium', 'amusement_park', 'movie_theater'
+      'tourist_attraction',
+      'museum',
+      'art_gallery',
+      'zoo',
+      'aquarium',
+      'park',
+      'stadium',
+      'amusement_park',
+      'movie_theater',
     ],
     icon: Icons.camera_alt,
     lightColor: Color(0xFFE91E63),
     darkColor: Color(0xFFC2185B),
-    description: 'Explore must-see sights and cultural gems of your destination.',
+    description:
+        'Explore must-see sights and cultural gems of your destination.',
   );
 
   /// Shopping & Local Goods category
@@ -64,10 +86,23 @@ class PlaceCategories {
     id: 5,
     name: 'Shopping & Local Goods',
     types: [
-      'shopping_mall', 'store', 'department_store', 'clothing_store', 
-      'shoe_store', 'supermarket', 'convenience_store', 'electronics_store', 
-      'book_store', 'furniture_store', 'hardware_store', 'jewelry_store', 
-      'home_goods_store', 'bicycle_store', 'pet_store', 'florist', 'liquor_store'
+      'shopping_mall',
+      'store',
+      'department_store',
+      'clothing_store',
+      'shoe_store',
+      'supermarket',
+      'convenience_store',
+      'electronics_store',
+      'book_store',
+      'furniture_store',
+      'hardware_store',
+      'jewelry_store',
+      'home_goods_store',
+      'bicycle_store',
+      'pet_store',
+      'florist',
+      'liquor_store',
     ],
     icon: Icons.shopping_cart,
     lightColor: Color(0xFF4CAF50),
@@ -80,9 +115,17 @@ class PlaceCategories {
     id: 6,
     name: 'Health & Wellness',
     types: [
-      'hospital', 'doctor', 'dentist', 'pharmacy', 'drugstore', 
-      'gym', 'spa', 'physiotherapist', 'veterinary_care', 
-      'beauty_salon', 'hair_care'
+      'hospital',
+      'doctor',
+      'dentist',
+      'pharmacy',
+      'drugstore',
+      'gym',
+      'spa',
+      'physiotherapist',
+      'veterinary_care',
+      'beauty_salon',
+      'hair_care',
     ],
     icon: Icons.health_and_safety,
     lightColor: Color(0xFF9C27B0),
@@ -95,23 +138,29 @@ class PlaceCategories {
     id: 7,
     name: 'Navigation & Assistance',
     types: [
-      'travel_agency', 'atm', 'bank', 'police', 'post_office', 
-      'embassy', 'local_government_office', 'city_hall', 
-      'courthouse', 'insurance_agency'
+      'travel_agency',
+      'atm',
+      'bank',
+      'police',
+      'post_office',
+      'embassy',
+      'local_government_office',
+      'city_hall',
+      'courthouse',
+      'insurance_agency',
     ],
     icon: Icons.support_agent,
     lightColor: Color(0xFF607D8B),
     darkColor: Color(0xFF455A64),
-    description: 'Essential services and help when navigating unfamiliar places.',
+    description:
+        'Essential services and help when navigating unfamiliar places.',
   );
 
   /// Spiritual & Religious Sites category
   static const PlaceCategory spiritualAndReligiousSites = PlaceCategory(
     id: 8,
     name: 'Spiritual & Religious Sites',
-    types: [
-      'church', 'hindu_temple', 'mosque', 'synagogue', 'cemetery'
-    ],
+    types: ['church', 'hindu_temple', 'mosque', 'synagogue', 'cemetery'],
     icon: Icons.temple_buddhist,
     lightColor: Color(0xFFFFC107),
     darkColor: Color(0xFFFFA000),
@@ -123,25 +172,45 @@ class PlaceCategories {
     id: 9,
     name: 'Local Services',
     types: [
-      'car_dealer', 'car_repair', 'car_wash', 'electrician', 'plumber', 
-      'painter', 'laundry', 'locksmith', 'funeral_home', 'roofing_contractor', 
-      'storage', 'moving_company', 'accounting', 'lawyer', 'real_estate_agency', 
-      'school', 'university', 'primary_school', 'secondary_school', 'library'
+      'car_dealer',
+      'car_repair',
+      'car_wash',
+      'electrician',
+      'plumber',
+      'painter',
+      'laundry',
+      'locksmith',
+      'funeral_home',
+      'roofing_contractor',
+      'storage',
+      'moving_company',
+      'accounting',
+      'lawyer',
+      'real_estate_agency',
+      'school',
+      'university',
+      'primary_school',
+      'secondary_school',
+      'library',
     ],
     icon: Icons.build,
     lightColor: Color(0xFF795548),
     darkColor: Color(0xFF5D4037),
-    description: 'Useful infrastructure and support services, more relevant for longer stays.',
+    description:
+        'Useful infrastructure and support services, more relevant for longer stays.',
   );
 
   /// Miscellaneous category for places that don't fit into other categories
   static const PlaceCategory miscellaneous = PlaceCategory(
     id: 10,
     name: 'Miscellaneous',
-    types: [], // Empty list since this is for places that don't match other categories
+    types: [],
+    // Empty list since this is for places that don't match other categories
     icon: Icons.more_horiz,
-    lightColor: Color(0xFF9E9E9E), // Gray color
-    darkColor: Color(0xFF616161), // Dark gray
+    lightColor: Color(0xFF9E9E9E),
+    // Gray color
+    darkColor: Color(0xFF616161),
+    // Dark gray
     description: 'Other places that don\'t fit into specific categories.',
   );
 
@@ -206,9 +275,9 @@ class PlaceCategories {
 
   /// Get all categories that match any of the given types
   static List<PlaceCategory> getCategoriesForTypes(List<String> types) {
-    return all.where((category) => 
-      types.any((type) => category.types.contains(type))
-    ).toList();
+    return all
+        .where((category) => types.any((type) => category.types.contains(type)))
+        .toList();
   }
 
   /// Get all categories that a place belongs to

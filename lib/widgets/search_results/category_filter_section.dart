@@ -41,9 +41,7 @@ class CategoryFilterSection extends StatelessWidget {
                 backgroundColor: isSelected
                     ? Theme.of(context).primaryColor
                     : Colors.grey.shade200,
-                foregroundColor: isSelected
-                    ? Colors.white
-                    : Colors.black87,
+                foregroundColor: isSelected ? Colors.white : Colors.black87,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),

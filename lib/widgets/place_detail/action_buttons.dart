@@ -47,9 +47,7 @@ class ActionButtons extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onPrimary,
                       ),
                     )
-                  : Icon(
-                      isSaved ? Icons.bookmark : Icons.bookmark_border,
-                    ),
+                  : Icon(isSaved ? Icons.bookmark : Icons.bookmark_border),
               label: Text(
                 isLoading
                     ? AppLocalizations.of(context).close
@@ -80,19 +78,17 @@ class ActionButtons extends StatelessWidget {
               label: Text(
                 AppLocalizations.of(context).addToItinerary,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: Theme.of(context).brightness == Brightness.dark 
-                      ? Theme.of(context).colorScheme.primary 
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.onPrimary,
                 ),
               ),
               style: OutlinedButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).brightness == Brightness.dark 
-                    ? Theme.of(context).colorScheme.surface 
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.surface
                     : Theme.of(context).colorScheme.primary,
-                side: BorderSide(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                side: BorderSide(color: Theme.of(context).colorScheme.primary),
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),

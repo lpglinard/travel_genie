@@ -4,10 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 
 class LocationMapSection extends StatelessWidget {
-  const LocationMapSection({
-    super.key,
-    required this.place,
-  });
+  const LocationMapSection({super.key, required this.place});
 
   final Place place;
 
@@ -18,8 +15,9 @@ class LocationMapSection extends StatelessWidget {
       children: [
         Text(
           AppLocalizations.of(context).location,
-          style: Theme.of(context).textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
         ClipRRect(
@@ -31,11 +29,7 @@ class LocationMapSection extends StatelessWidget {
             child: Stack(
               children: [
                 Center(
-                  child: Icon(
-                    Icons.map,
-                    size: 64,
-                    color: Colors.grey.shade700,
-                  ),
+                  child: Icon(Icons.map, size: 64, color: Colors.grey.shade700),
                 ),
                 Positioned(
                   bottom: 0,
@@ -46,21 +40,12 @@ class LocationMapSection extends StatelessWidget {
                       vertical: 8,
                       horizontal: 16,
                     ),
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.primary,
                     child: Text(
-                      AppLocalizations.of(
-                        context,
-                      ).openInMaps,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimary,
-                          ),
+                      AppLocalizations.of(context).openInMaps,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   ),

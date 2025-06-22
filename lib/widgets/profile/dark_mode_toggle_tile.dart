@@ -6,9 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/user_providers.dart';
 
 class DarkModeToggleTile extends ConsumerWidget {
-  const DarkModeToggleTile({
-    super.key,
-  });
+  const DarkModeToggleTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,16 +25,10 @@ class DarkModeToggleTile extends ConsumerWidget {
               ? ThemeMode.dark
               : ThemeMode.light;
           if (user != null && !user.isAnonymous) {
-            await service.upsertUser(
-              user,
-              locale: locale,
-              darkMode: value,
-            );
+            await service.upsertUser(user, locale: locale, darkMode: value);
           }
           final prefs = await ref.read(preferencesServiceProvider.future);
-          await prefs.setThemeMode(
-            value ? ThemeMode.dark : ThemeMode.light,
-          );
+          await prefs.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
         },
       ),
     );

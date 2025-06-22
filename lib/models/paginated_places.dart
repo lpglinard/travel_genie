@@ -9,11 +9,9 @@ class PaginatedPlaces {
   final String? nextPageToken;
 
   /// Creates a new [PaginatedPlaces] instance.
-  const PaginatedPlaces({
-    required this.places,
-    this.nextPageToken,
-  });
+  const PaginatedPlaces({required this.places, this.nextPageToken});
 
   /// Creates a new [PaginatedPlaces] instance with empty places.
-  factory PaginatedPlaces.empty() => const PaginatedPlaces(places: [], nextPageToken: null);
+  factory PaginatedPlaces.empty() =>
+      const PaginatedPlaces(places: [], nextPageToken: null);
 }

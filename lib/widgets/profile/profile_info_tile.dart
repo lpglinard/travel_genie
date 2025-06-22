@@ -4,11 +4,7 @@ import 'package:flutter/material.dart';
 import '../../models/user_data.dart';
 
 class ProfileInfoTile extends StatelessWidget {
-  const ProfileInfoTile({
-    super.key,
-    required this.user,
-    this.userData,
-  });
+  const ProfileInfoTile({super.key, required this.user, this.userData});
 
   final User user;
   final UserData? userData;
@@ -18,12 +14,10 @@ class ProfileInfoTile extends StatelessWidget {
     if (user.isAnonymous) {
       return const SizedBox.shrink();
     }
-    
+
     return ListTile(
       leading: const Icon(Icons.person),
-      title: Text(
-        userData?.name ?? user.displayName ?? user.email ?? 'User',
-      ),
+      title: Text(userData?.name ?? user.displayName ?? user.email ?? 'User'),
       subtitle: userData?.email != null ? Text(userData!.email!) : null,
     );
   }

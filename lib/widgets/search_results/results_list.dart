@@ -1,18 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../models/place.dart';
 import '../../providers/search_results_provider.dart';
 import 'search_result_card.dart';
 
 class ResultsList extends ConsumerStatefulWidget {
-  const ResultsList({
-    super.key,
-    required this.query,
-  });
+  const ResultsList({super.key, required this.query});
 
   final String query;
 
@@ -37,16 +31,16 @@ class _ResultsListState extends ConsumerState<ResultsList> {
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       final resultsState = ref.read(searchResultsProvider);
 
       // Only load more if we have a non-empty nextPageToken and we're not already loading
       // If nextPageToken is null, it means there are no more pages to fetch
-      if (resultsState.nextPageToken != null && 
-          resultsState.nextPageToken!.isNotEmpty && 
-          !resultsState.isLoadingMore && 
+      if (resultsState.nextPageToken != null &&
+          resultsState.nextPageToken!.isNotEmpty &&
+          !resultsState.isLoadingMore &&
           !resultsState.isLoading) {
-        log('Reached end of list, loading more results');
         ref.read(searchResultsProvider.notifier).loadMore();
       }
     }
@@ -58,9 +52,7 @@ class _ResultsListState extends ConsumerState<ResultsList> {
 
     // Show loading indicator for initial load
     if (resultsState.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     // Show error if there is one

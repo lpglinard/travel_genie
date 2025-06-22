@@ -6,9 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../providers/user_providers.dart';
 
 class LanguageSettingsTile extends ConsumerWidget {
-  const LanguageSettingsTile({
-    super.key,
-  });
+  const LanguageSettingsTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -7,10 +7,7 @@ import 'info_item.dart';
 import 'opening_hours_bottom_sheet.dart';
 
 class AdditionalInfoSection extends StatelessWidget {
-  const AdditionalInfoSection({
-    super.key,
-    required this.place,
-  });
+  const AdditionalInfoSection({super.key, required this.place});
 
   final Place place;
 
@@ -21,8 +18,9 @@ class AdditionalInfoSection extends StatelessWidget {
       children: [
         Text(
           AppLocalizations.of(context).additionalInfo,
-          style: Theme.of(context).textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 16),
 
@@ -53,16 +51,10 @@ class AdditionalInfoSection extends StatelessWidget {
             icon: Icons.language,
             title: AppLocalizations.of(context).website,
             subtitle: AppLocalizations.of(context).visitWebsite,
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-              size: 16,
-            ),
+            trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
               final uri = Uri.parse(place.websiteUri!);
-              launchUrl(
-                uri,
-                mode: LaunchMode.externalApplication,
-              );
+              launchUrl(uri, mode: LaunchMode.externalApplication);
             },
           ),
           const Divider(),
@@ -73,16 +65,10 @@ class AdditionalInfoSection extends StatelessWidget {
           icon: Icons.map,
           title: AppLocalizations.of(context).viewOnGoogleMaps,
           subtitle: AppLocalizations.of(context).openInExternalApp,
-          trailing: const Icon(
-            Icons.arrow_forward_ios,
-            size: 16,
-          ),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
           onTap: () {
             final uri = Uri.parse(place.googleMapsUri);
-            launchUrl(
-              uri,
-              mode: LaunchMode.externalApplication,
-            );
+            launchUrl(uri, mode: LaunchMode.externalApplication);
           },
         ),
         const Divider(),
@@ -102,7 +88,8 @@ class AdditionalInfoSection extends StatelessWidget {
   void _showOpeningHours(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => OpeningHoursBottomSheet(openingHours: place.openingHours),
+      builder: (context) =>
+          OpeningHoursBottomSheet(openingHours: place.openingHours),
     );
   }
 }

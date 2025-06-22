@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/paginated_places.dart';
 import '../models/place.dart';
 import '../services/recommendation_service.dart';
 import './user_providers.dart';
@@ -36,10 +33,11 @@ class SearchResultsState {
   factory SearchResultsState.empty() => const SearchResultsState();
 
   /// Creates a loading state
-  factory SearchResultsState.loading() => const SearchResultsState(isLoading: true);
+  factory SearchResultsState.loading() =>
+      const SearchResultsState(isLoading: true);
 
   /// Creates a state with the given error
-  factory SearchResultsState.error(Object error) => 
+  factory SearchResultsState.error(Object error) =>
       SearchResultsState(error: error);
 
   /// Creates a copy of this state with the given fields replaced
@@ -106,8 +104,10 @@ class SearchResultsNotifier extends StateNotifier<SearchResultsState> {
   /// Loads more search results using the nextPageToken
   Future<void> loadMore() async {
     // Return if there's no nextPageToken or if it's empty or if we're already loading more
-    if (state.nextPageToken == null || state.nextPageToken!.isEmpty || _isLoadingMore || _isSearching) {
-      log('Skipping loadMore: nextPageToken=${state.nextPageToken}, _isLoadingMore=$_isLoadingMore, _isSearching=$_isSearching');
+    if (state.nextPageToken == null ||
+        state.nextPageToken!.isEmpty ||
+        _isLoadingMore ||
+        _isSearching) {
       return;
     }
 
@@ -115,7 +115,6 @@ class SearchResultsNotifier extends StateNotifier<SearchResultsState> {
     state = state.copyWith(isLoadingMore: true);
 
     try {
-      log('Loading more results with pageToken: ${state.nextPageToken}');
       final results = await _service.search(
         _lastQuery,
         languageCode: _locale,
@@ -125,8 +124,6 @@ class SearchResultsNotifier extends StateNotifier<SearchResultsState> {
       // Append new places to existing ones
       final updatedPlaces = [...state.places, ...results.places];
 
-      log('Loaded ${results.places.length} more places. New nextPageToken: ${results.nextPageToken}');
-
       // If nextPageToken is null or empty, it means there are no more pages to fetch
       // We should update the state with null nextPageToken to prevent further loadMore calls
       state = state.copyWith(
@@ -135,11 +132,7 @@ class SearchResultsNotifier extends StateNotifier<SearchResultsState> {
         isLoadingMore: false,
       );
     } catch (e) {
-      log('Error loading more results: $e');
-      state = state.copyWith(
-        error: e,
-        isLoadingMore: false,
-      );
+      state = state.copyWith(error: e, isLoadingMore: false);
     } finally {
       _isLoadingMore = false;
     }
@@ -147,11 +140,9 @@ class SearchResultsNotifier extends StateNotifier<SearchResultsState> {
 }
 
 /// Provider for search results
-final searchResultsProvider = StateNotifierProvider<SearchResultsNotifier, SearchResultsState>(
-  (ref) {
-    final service = ref.watch(recommendationServiceProvider);
-    final locale = ref.watch(localeProvider);
-    return SearchResultsNotifier(service, locale?.languageCode);
-  },
-  name: 'searchResultsProvider',
-);
+final searchResultsProvider =
+    StateNotifierProvider<SearchResultsNotifier, SearchResultsState>((ref) {
+      final service = ref.watch(recommendationServiceProvider);
+      final locale = ref.watch(localeProvider);
+      return SearchResultsNotifier(service, locale?.languageCode);
+    }, name: 'searchResultsProvider');

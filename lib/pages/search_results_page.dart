@@ -1,12 +1,6 @@
-import 'dart:developer';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../core/config/config.dart';
-import '../core/extensions/string_extension.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/search_results_provider.dart';
 import '../widgets/search_field.dart';
@@ -54,9 +48,8 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
       // Check if we need to perform a new search:
       // 1. If there are no existing results, or
       // 2. If the query is different from the last search query and not empty
-      if (currentResults.places.isEmpty || 
+      if (currentResults.places.isEmpty ||
           (widget.query != lastQuery && widget.query.isNotEmpty)) {
-        log('SearchResultsPage - Performing initial search for query: ${widget.query}');
         ref.read(searchResultsProvider.notifier).search(widget.query);
       }
     });
@@ -91,10 +84,6 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
   Widget build(BuildContext context) {
     final resultsState = ref.watch(searchResultsProvider);
 
-    // Log the current state for debugging
-    log('SearchResultsPage - Building with state: isLoading=${resultsState.isLoading}, ' +
-        'places=${resultsState.places.length}');
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -120,16 +109,11 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
             ),
 
             // Results list
-            Expanded(
-              child: ResultsList(
-                query: _searchController.text,
-              ),
-            ),
+            Expanded(child: ResultsList(query: _searchController.text)),
           ],
         ),
       ),
       // Bottom navigation is now handled by the ScaffoldWithNavBar in router.dart
     );
   }
-
 }

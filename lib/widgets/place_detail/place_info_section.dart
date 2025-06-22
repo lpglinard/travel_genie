@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 import '../../models/place_type.dart';
 
 class PlaceInfoSection extends StatelessWidget {
-  const PlaceInfoSection({
-    super.key,
-    required this.place,
-  });
+  const PlaceInfoSection({super.key, required this.place});
 
   final Place place;
 
@@ -20,8 +16,9 @@ class PlaceInfoSection extends StatelessWidget {
         // Place name
         Text(
           place.displayName,
-          style: Theme.of(context).textTheme.headlineMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
 
         const SizedBox(height: 8),
@@ -50,11 +47,7 @@ class PlaceInfoSection extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    place.category.icon,
-                    color: Colors.white,
-                    size: 16,
-                  ),
+                  Icon(place.category.icon, color: Colors.white, size: 16),
                   const SizedBox(width: 4),
                   Text(
                     place.category.name,
@@ -80,7 +73,9 @@ class PlaceInfoSection extends StatelessWidget {
                       PlaceType.getLocalizedName(context, type),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceVariant,
                     labelStyle: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
@@ -96,11 +91,7 @@ class PlaceInfoSection extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 16,
-                  ),
+                  const Icon(Icons.star, color: Colors.amber, size: 16),
                   const SizedBox(width: 4),
                   Text(
                     place.rating!.toString(),
@@ -110,9 +101,7 @@ class PlaceInfoSection extends StatelessWidget {
                     const SizedBox(width: 4),
                     Text(
                       '(${place.userRatingCount} reviews)',
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ],

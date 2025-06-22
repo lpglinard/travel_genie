@@ -1,8 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../l10n/app_localizations.dart';
 import '../models/destination.dart';
 import '../services/firestore_service.dart';
 import '../widgets/home/greeting_section.dart';
@@ -15,7 +14,9 @@ final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);
 });
 
-final recommendedDestinationsProvider = StreamProvider<List<Destination>>((ref) {
+final recommendedDestinationsProvider = StreamProvider<List<Destination>>((
+  ref,
+) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return firestoreService.streamRecommendedDestinations();
 });
@@ -26,7 +27,9 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     const heroImage = 'images/odsy_main.png';
-    final recommendedDestinationsAsync = ref.watch(recommendedDestinationsProvider);
+    final recommendedDestinationsAsync = ref.watch(
+      recommendedDestinationsProvider,
+    );
 
     return Scaffold(
       appBar: const HomeAppBar(),
@@ -41,9 +44,11 @@ class MyHomePage extends ConsumerWidget {
             const SearchSection(),
             const SizedBox(height: 24),
             recommendedDestinationsAsync.when(
-              data: (destinations) => PopularDestinationsSection(destinations: destinations),
+              data: (destinations) =>
+                  PopularDestinationsSection(destinations: destinations),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => Text('Error loading destinations: $error'),
+              error: (error, stackTrace) =>
+                  Text('Error loading destinations: $error'),
             ),
           ],
         ),

@@ -44,21 +44,25 @@ class SearchField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         prefixIcon: const Icon(Icons.search),
-        suffixIcon: suffixIcon ?? IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            controller.clear();
-            if (onClear != null) {
-              onClear!();
-            }
-          },
-        ),
+        suffixIcon:
+            suffixIcon ??
+            IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () {
+                controller.clear();
+                if (onClear != null) {
+                  onClear!();
+                }
+              },
+            ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(30),
           borderSide: BorderSide.none,
         ),
         filled: true,
-        fillColor: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
+        fillColor: Theme.of(
+          context,
+        ).colorScheme.inverseSurface.withOpacity(0.2),
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
       ),
       onSubmitted: onSubmitted,

@@ -4,10 +4,7 @@ import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 
 class DescriptionSection extends StatelessWidget {
-  const DescriptionSection({
-    super.key,
-    required this.place,
-  });
+  const DescriptionSection({super.key, required this.place});
 
   final Place place;
 
@@ -22,8 +19,9 @@ class DescriptionSection extends StatelessWidget {
       children: [
         Text(
           AppLocalizations.of(context).description,
-          style: Theme.of(context).textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         Text(
@@ -34,13 +32,10 @@ class DescriptionSection extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             place.disclosureText,
-            style: Theme.of(context).textTheme.bodySmall
-                ?.copyWith(
-                  fontStyle: FontStyle.italic,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant,
-                ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
         const SizedBox(height: 24),

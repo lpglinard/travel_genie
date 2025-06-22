@@ -7,10 +7,7 @@ import '../../models/destination.dart';
 import '../../providers/autocomplete_provider.dart';
 
 class PopularDestinationsSection extends StatelessWidget {
-  const PopularDestinationsSection({
-    super.key,
-    required this.destinations,
-  });
+  const PopularDestinationsSection({super.key, required this.destinations});
 
   final List<Destination> destinations;
 
@@ -42,9 +39,7 @@ class PopularDestinationsSection extends StatelessWidget {
 }
 
 class _DestinationItem extends ConsumerWidget {
-  const _DestinationItem({
-    required this.destination,
-  });
+  const _DestinationItem({required this.destination});
 
   final Destination destination;
 
@@ -70,10 +65,7 @@ class _DestinationItem extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(
-            destination.name,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(destination.name, style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

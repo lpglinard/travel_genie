@@ -109,7 +109,7 @@ class PlaceType {
   static Map<String, String> get typeToReadableName {
     // Generate the map dynamically from the list of types
     return Map.fromEntries(
-      allTypes.map((type) => MapEntry(type, _capitalizeFirstLetter(type)))
+      allTypes.map((type) => MapEntry(type, _capitalizeFirstLetter(type))),
     );
   }
 
@@ -133,9 +133,9 @@ class PlaceType {
     // Try to get the localized string using the localization key
     try {
       // Use a simple approach to access the localized string
-      return _getLocalizedString(appLocalizations, localizationKey) ?? 
-             // Fall back to a capitalized version of the type
-             _capitalizeFirstLetter(type);
+      return _getLocalizedString(appLocalizations, localizationKey) ??
+          // Fall back to a capitalized version of the type
+          _capitalizeFirstLetter(type);
     } catch (e) {
       // If there's an error, fall back to a capitalized version of the type
       return _capitalizeFirstLetter(type);
@@ -148,12 +148,17 @@ class PlaceType {
     if (type.isEmpty) return '';
 
     // Convert snake_case to camelCase
-    final camelCase = type.split('_').asMap().entries.map((entry) {
-      final word = entry.value;
-      if (entry.key == 0) return word;
-      if (word.isEmpty) return '';
-      return word[0].toUpperCase() + word.substring(1);
-    }).join('');
+    final camelCase = type
+        .split('_')
+        .asMap()
+        .entries
+        .map((entry) {
+          final word = entry.value;
+          if (entry.key == 0) return word;
+          if (word.isEmpty) return '';
+          return word[0].toUpperCase() + word.substring(1);
+        })
+        .join('');
 
     // Add the 'placeType' prefix
     return 'placeType${camelCase[0].toUpperCase()}${camelCase.substring(1)}';
@@ -161,107 +166,207 @@ class PlaceType {
 
   /// Gets a localized string from the AppLocalizations instance using a key.
   /// Returns null if the key doesn't exist.
-  static String? _getLocalizedString(AppLocalizations appLocalizations, String key) {
+  static String? _getLocalizedString(
+    AppLocalizations appLocalizations,
+    String key,
+  ) {
     // This is a simplified approach that handles the most common place types
     // without using a large switch statement
     switch (key) {
-      case 'placeTypeRestaurant': return appLocalizations.placeTypeRestaurant;
-      case 'placeTypeAirport': return appLocalizations.placeTypeAirport;
-      case 'placeTypeAmusementPark': return appLocalizations.placeTypeAmusementPark;
-      case 'placeTypeAquarium': return appLocalizations.placeTypeAquarium;
-      case 'placeTypeArtGallery': return appLocalizations.placeTypeArtGallery;
-      case 'placeTypeAtm': return appLocalizations.placeTypeAtm;
-      case 'placeTypeBakery': return appLocalizations.placeTypeBakery;
-      case 'placeTypeBank': return appLocalizations.placeTypeBank;
-      case 'placeTypeBar': return appLocalizations.placeTypeBar;
-      case 'placeTypeBeautySalon': return appLocalizations.placeTypeBeautySalon;
-      case 'placeTypeBicycleStore': return appLocalizations.placeTypeBicycleStore;
-      case 'placeTypeBookStore': return appLocalizations.placeTypeBookStore;
-      case 'placeTypeBowlingAlley': return appLocalizations.placeTypeBowlingAlley;
-      case 'placeTypeBusStation': return appLocalizations.placeTypeBusStation;
-      case 'placeTypeCafe': return appLocalizations.placeTypeCafe;
-      case 'placeTypeCampground': return appLocalizations.placeTypeCampground;
-      case 'placeTypeCarDealer': return appLocalizations.placeTypeCarDealer;
-      case 'placeTypeCarRental': return appLocalizations.placeTypeCarRental;
-      case 'placeTypeCarRepair': return appLocalizations.placeTypeCarRepair;
-      case 'placeTypeCarWash': return appLocalizations.placeTypeCarWash;
-      case 'placeTypeCasino': return appLocalizations.placeTypeCasino;
-      case 'placeTypeCemetery': return appLocalizations.placeTypeCemetery;
-      case 'placeTypeChurch': return appLocalizations.placeTypeChurch;
-      case 'placeTypeCityHall': return appLocalizations.placeTypeCityHall;
-      case 'placeTypeClothingStore': return appLocalizations.placeTypeClothingStore;
-      case 'placeTypeConvenienceStore': return appLocalizations.placeTypeConvenienceStore;
-      case 'placeTypeCourthouse': return appLocalizations.placeTypeCourthouse;
-      case 'placeTypeDentist': return appLocalizations.placeTypeDentist;
-      case 'placeTypeDepartmentStore': return appLocalizations.placeTypeDepartmentStore;
-      case 'placeTypeDoctor': return appLocalizations.placeTypeDoctor;
-      case 'placeTypeDrugstore': return appLocalizations.placeTypeDrugstore;
-      case 'placeTypeElectrician': return appLocalizations.placeTypeElectrician;
-      case 'placeTypeElectronicsStore': return appLocalizations.placeTypeElectronicsStore;
-      case 'placeTypeEmbassy': return appLocalizations.placeTypeEmbassy;
-      case 'placeTypeFireStation': return appLocalizations.placeTypeFireStation;
-      case 'placeTypeFlorist': return appLocalizations.placeTypeFlorist;
-      case 'placeTypeFuneralHome': return appLocalizations.placeTypeFuneralHome;
-      case 'placeTypeFurnitureStore': return appLocalizations.placeTypeFurnitureStore;
-      case 'placeTypeGasStation': return appLocalizations.placeTypeGasStation;
-      case 'placeTypeGym': return appLocalizations.placeTypeGym;
-      case 'placeTypeHairCare': return appLocalizations.placeTypeHairCare;
-      case 'placeTypeHardwareStore': return appLocalizations.placeTypeHardwareStore;
-      case 'placeTypeHinduTemple': return appLocalizations.placeTypeHinduTemple;
-      case 'placeTypeHomeGoodsStore': return appLocalizations.placeTypeHomeGoodsStore;
-      case 'placeTypeHospital': return appLocalizations.placeTypeHospital;
-      case 'placeTypeInsuranceAgency': return appLocalizations.placeTypeInsuranceAgency;
-      case 'placeTypeJewelryStore': return appLocalizations.placeTypeJewelryStore;
-      case 'placeTypeLaundry': return appLocalizations.placeTypeLaundry;
-      case 'placeTypeLawyer': return appLocalizations.placeTypeLawyer;
-      case 'placeTypeLibrary': return appLocalizations.placeTypeLibrary;
-      case 'placeTypeLightRailStation': return appLocalizations.placeTypeLightRailStation;
-      case 'placeTypeLiquorStore': return appLocalizations.placeTypeLiquorStore;
-      case 'placeTypeLocalGovernmentOffice': return appLocalizations.placeTypeLocalGovernmentOffice;
-      case 'placeTypeLocksmith': return appLocalizations.placeTypeLocksmith;
-      case 'placeTypeLodging': return appLocalizations.placeTypeLodging;
-      case 'placeTypeMealDelivery': return appLocalizations.placeTypeMealDelivery;
-      case 'placeTypeMealTakeaway': return appLocalizations.placeTypeMealTakeaway;
-      case 'placeTypeMosque': return appLocalizations.placeTypeMosque;
-      case 'placeTypeMovieRental': return appLocalizations.placeTypeMovieRental;
-      case 'placeTypeMovieTheater': return appLocalizations.placeTypeMovieTheater;
-      case 'placeTypeMovingCompany': return appLocalizations.placeTypeMovingCompany;
-      case 'placeTypeMuseum': return appLocalizations.placeTypeMuseum;
-      case 'placeTypeNightClub': return appLocalizations.placeTypeNightClub;
-      case 'placeTypePainter': return appLocalizations.placeTypePainter;
-      case 'placeTypePark': return appLocalizations.placeTypePark;
-      case 'placeTypeParking': return appLocalizations.placeTypeParking;
-      case 'placeTypePetStore': return appLocalizations.placeTypePetStore;
-      case 'placeTypePharmacy': return appLocalizations.placeTypePharmacy;
-      case 'placeTypePhysiotherapist': return appLocalizations.placeTypePhysiotherapist;
-      case 'placeTypePlumber': return appLocalizations.placeTypePlumber;
-      case 'placeTypePolice': return appLocalizations.placeTypePolice;
-      case 'placeTypePostOffice': return appLocalizations.placeTypePostOffice;
-      case 'placeTypePrimarySchool': return appLocalizations.placeTypePrimarySchool;
-      case 'placeTypeRealEstateAgency': return appLocalizations.placeTypeRealEstateAgency;
-      case 'placeTypeAccounting': return appLocalizations.placeTypeAccounting;
-      case 'placeTypeRoofingContractor': return appLocalizations.placeTypeRoofingContractor;
-      case 'placeTypeRvPark': return appLocalizations.placeTypeRvPark;
-      case 'placeTypeSchool': return appLocalizations.placeTypeSchool;
-      case 'placeTypeSecondarySchool': return appLocalizations.placeTypeSecondarySchool;
-      case 'placeTypeShoeStore': return appLocalizations.placeTypeShoeStore;
-      case 'placeTypeShoppingMall': return appLocalizations.placeTypeShoppingMall;
-      case 'placeTypeSpa': return appLocalizations.placeTypeSpa;
-      case 'placeTypeStadium': return appLocalizations.placeTypeStadium;
-      case 'placeTypeStorage': return appLocalizations.placeTypeStorage;
-      case 'placeTypeStore': return appLocalizations.placeTypeStore;
-      case 'placeTypeSubwayStation': return appLocalizations.placeTypeSubwayStation;
-      case 'placeTypeSupermarket': return appLocalizations.placeTypeSupermarket;
-      case 'placeTypeSynagogue': return appLocalizations.placeTypeSynagogue;
-      case 'placeTypeTaxiStand': return appLocalizations.placeTypeTaxiStand;
-      case 'placeTypeTouristAttraction': return appLocalizations.placeTypeTouristAttraction;
-      case 'placeTypeTrainStation': return appLocalizations.placeTypeTrainStation;
-      case 'placeTypeTransitStation': return appLocalizations.placeTypeTransitStation;
-      case 'placeTypeTravelAgency': return appLocalizations.placeTypeTravelAgency;
-      case 'placeTypeUniversity': return appLocalizations.placeTypeUniversity;
-      case 'placeTypeVeterinaryCare': return appLocalizations.placeTypeVeterinaryCare;
-      case 'placeTypeZoo': return appLocalizations.placeTypeZoo;
-      default: return null;
+      case 'placeTypeRestaurant':
+        return appLocalizations.placeTypeRestaurant;
+      case 'placeTypeAirport':
+        return appLocalizations.placeTypeAirport;
+      case 'placeTypeAmusementPark':
+        return appLocalizations.placeTypeAmusementPark;
+      case 'placeTypeAquarium':
+        return appLocalizations.placeTypeAquarium;
+      case 'placeTypeArtGallery':
+        return appLocalizations.placeTypeArtGallery;
+      case 'placeTypeAtm':
+        return appLocalizations.placeTypeAtm;
+      case 'placeTypeBakery':
+        return appLocalizations.placeTypeBakery;
+      case 'placeTypeBank':
+        return appLocalizations.placeTypeBank;
+      case 'placeTypeBar':
+        return appLocalizations.placeTypeBar;
+      case 'placeTypeBeautySalon':
+        return appLocalizations.placeTypeBeautySalon;
+      case 'placeTypeBicycleStore':
+        return appLocalizations.placeTypeBicycleStore;
+      case 'placeTypeBookStore':
+        return appLocalizations.placeTypeBookStore;
+      case 'placeTypeBowlingAlley':
+        return appLocalizations.placeTypeBowlingAlley;
+      case 'placeTypeBusStation':
+        return appLocalizations.placeTypeBusStation;
+      case 'placeTypeCafe':
+        return appLocalizations.placeTypeCafe;
+      case 'placeTypeCampground':
+        return appLocalizations.placeTypeCampground;
+      case 'placeTypeCarDealer':
+        return appLocalizations.placeTypeCarDealer;
+      case 'placeTypeCarRental':
+        return appLocalizations.placeTypeCarRental;
+      case 'placeTypeCarRepair':
+        return appLocalizations.placeTypeCarRepair;
+      case 'placeTypeCarWash':
+        return appLocalizations.placeTypeCarWash;
+      case 'placeTypeCasino':
+        return appLocalizations.placeTypeCasino;
+      case 'placeTypeCemetery':
+        return appLocalizations.placeTypeCemetery;
+      case 'placeTypeChurch':
+        return appLocalizations.placeTypeChurch;
+      case 'placeTypeCityHall':
+        return appLocalizations.placeTypeCityHall;
+      case 'placeTypeClothingStore':
+        return appLocalizations.placeTypeClothingStore;
+      case 'placeTypeConvenienceStore':
+        return appLocalizations.placeTypeConvenienceStore;
+      case 'placeTypeCourthouse':
+        return appLocalizations.placeTypeCourthouse;
+      case 'placeTypeDentist':
+        return appLocalizations.placeTypeDentist;
+      case 'placeTypeDepartmentStore':
+        return appLocalizations.placeTypeDepartmentStore;
+      case 'placeTypeDoctor':
+        return appLocalizations.placeTypeDoctor;
+      case 'placeTypeDrugstore':
+        return appLocalizations.placeTypeDrugstore;
+      case 'placeTypeElectrician':
+        return appLocalizations.placeTypeElectrician;
+      case 'placeTypeElectronicsStore':
+        return appLocalizations.placeTypeElectronicsStore;
+      case 'placeTypeEmbassy':
+        return appLocalizations.placeTypeEmbassy;
+      case 'placeTypeFireStation':
+        return appLocalizations.placeTypeFireStation;
+      case 'placeTypeFlorist':
+        return appLocalizations.placeTypeFlorist;
+      case 'placeTypeFuneralHome':
+        return appLocalizations.placeTypeFuneralHome;
+      case 'placeTypeFurnitureStore':
+        return appLocalizations.placeTypeFurnitureStore;
+      case 'placeTypeGasStation':
+        return appLocalizations.placeTypeGasStation;
+      case 'placeTypeGym':
+        return appLocalizations.placeTypeGym;
+      case 'placeTypeHairCare':
+        return appLocalizations.placeTypeHairCare;
+      case 'placeTypeHardwareStore':
+        return appLocalizations.placeTypeHardwareStore;
+      case 'placeTypeHinduTemple':
+        return appLocalizations.placeTypeHinduTemple;
+      case 'placeTypeHomeGoodsStore':
+        return appLocalizations.placeTypeHomeGoodsStore;
+      case 'placeTypeHospital':
+        return appLocalizations.placeTypeHospital;
+      case 'placeTypeInsuranceAgency':
+        return appLocalizations.placeTypeInsuranceAgency;
+      case 'placeTypeJewelryStore':
+        return appLocalizations.placeTypeJewelryStore;
+      case 'placeTypeLaundry':
+        return appLocalizations.placeTypeLaundry;
+      case 'placeTypeLawyer':
+        return appLocalizations.placeTypeLawyer;
+      case 'placeTypeLibrary':
+        return appLocalizations.placeTypeLibrary;
+      case 'placeTypeLightRailStation':
+        return appLocalizations.placeTypeLightRailStation;
+      case 'placeTypeLiquorStore':
+        return appLocalizations.placeTypeLiquorStore;
+      case 'placeTypeLocalGovernmentOffice':
+        return appLocalizations.placeTypeLocalGovernmentOffice;
+      case 'placeTypeLocksmith':
+        return appLocalizations.placeTypeLocksmith;
+      case 'placeTypeLodging':
+        return appLocalizations.placeTypeLodging;
+      case 'placeTypeMealDelivery':
+        return appLocalizations.placeTypeMealDelivery;
+      case 'placeTypeMealTakeaway':
+        return appLocalizations.placeTypeMealTakeaway;
+      case 'placeTypeMosque':
+        return appLocalizations.placeTypeMosque;
+      case 'placeTypeMovieRental':
+        return appLocalizations.placeTypeMovieRental;
+      case 'placeTypeMovieTheater':
+        return appLocalizations.placeTypeMovieTheater;
+      case 'placeTypeMovingCompany':
+        return appLocalizations.placeTypeMovingCompany;
+      case 'placeTypeMuseum':
+        return appLocalizations.placeTypeMuseum;
+      case 'placeTypeNightClub':
+        return appLocalizations.placeTypeNightClub;
+      case 'placeTypePainter':
+        return appLocalizations.placeTypePainter;
+      case 'placeTypePark':
+        return appLocalizations.placeTypePark;
+      case 'placeTypeParking':
+        return appLocalizations.placeTypeParking;
+      case 'placeTypePetStore':
+        return appLocalizations.placeTypePetStore;
+      case 'placeTypePharmacy':
+        return appLocalizations.placeTypePharmacy;
+      case 'placeTypePhysiotherapist':
+        return appLocalizations.placeTypePhysiotherapist;
+      case 'placeTypePlumber':
+        return appLocalizations.placeTypePlumber;
+      case 'placeTypePolice':
+        return appLocalizations.placeTypePolice;
+      case 'placeTypePostOffice':
+        return appLocalizations.placeTypePostOffice;
+      case 'placeTypePrimarySchool':
+        return appLocalizations.placeTypePrimarySchool;
+      case 'placeTypeRealEstateAgency':
+        return appLocalizations.placeTypeRealEstateAgency;
+      case 'placeTypeAccounting':
+        return appLocalizations.placeTypeAccounting;
+      case 'placeTypeRoofingContractor':
+        return appLocalizations.placeTypeRoofingContractor;
+      case 'placeTypeRvPark':
+        return appLocalizations.placeTypeRvPark;
+      case 'placeTypeSchool':
+        return appLocalizations.placeTypeSchool;
+      case 'placeTypeSecondarySchool':
+        return appLocalizations.placeTypeSecondarySchool;
+      case 'placeTypeShoeStore':
+        return appLocalizations.placeTypeShoeStore;
+      case 'placeTypeShoppingMall':
+        return appLocalizations.placeTypeShoppingMall;
+      case 'placeTypeSpa':
+        return appLocalizations.placeTypeSpa;
+      case 'placeTypeStadium':
+        return appLocalizations.placeTypeStadium;
+      case 'placeTypeStorage':
+        return appLocalizations.placeTypeStorage;
+      case 'placeTypeStore':
+        return appLocalizations.placeTypeStore;
+      case 'placeTypeSubwayStation':
+        return appLocalizations.placeTypeSubwayStation;
+      case 'placeTypeSupermarket':
+        return appLocalizations.placeTypeSupermarket;
+      case 'placeTypeSynagogue':
+        return appLocalizations.placeTypeSynagogue;
+      case 'placeTypeTaxiStand':
+        return appLocalizations.placeTypeTaxiStand;
+      case 'placeTypeTouristAttraction':
+        return appLocalizations.placeTypeTouristAttraction;
+      case 'placeTypeTrainStation':
+        return appLocalizations.placeTypeTrainStation;
+      case 'placeTypeTransitStation':
+        return appLocalizations.placeTypeTransitStation;
+      case 'placeTypeTravelAgency':
+        return appLocalizations.placeTypeTravelAgency;
+      case 'placeTypeUniversity':
+        return appLocalizations.placeTypeUniversity;
+      case 'placeTypeVeterinaryCare':
+        return appLocalizations.placeTypeVeterinaryCare;
+      case 'placeTypeZoo':
+        return appLocalizations.placeTypeZoo;
+      default:
+        return null;
     }
   }
 
@@ -273,9 +378,12 @@ class PlaceType {
     final withSpaces = text.replaceAll('_', ' ');
 
     // Capitalize first letter of each word
-    return withSpaces.split(' ').map((word) {
-      if (word.isEmpty) return word;
-      return word[0].toUpperCase() + word.substring(1);
-    }).join(' ');
+    return withSpaces
+        .split(' ')
+        .map((word) {
+          if (word.isEmpty) return word;
+          return word[0].toUpperCase() + word.substring(1);
+        })
+        .join(' ');
   }
 }

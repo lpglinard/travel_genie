@@ -82,7 +82,9 @@ class FirestoreService {
 
   // Get recommended destinations from Firestore
   Future<List<Destination>> getRecommendedDestinations() async {
-    final snapshot = await _firestore.collection('recommendedDestinations').get();
+    final snapshot = await _firestore
+        .collection('recommendedDestinations')
+        .get();
     return snapshot.docs
         .map((doc) => Destination.fromFirestore(doc.data()))
         .toList();
@@ -90,7 +92,10 @@ class FirestoreService {
 
   // Stream recommended destinations from Firestore
   Stream<List<Destination>> streamRecommendedDestinations() {
-    return _firestore.collection('recommendedDestinations').snapshots().map(
+    return _firestore
+        .collection('recommendedDestinations')
+        .snapshots()
+        .map(
           (snapshot) => snapshot.docs
               .map((doc) => Destination.fromFirestore(doc.data()))
               .toList(),
