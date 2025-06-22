@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:developer';
+import 'dart:developer' as developer;
 import 'dart:io';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -14,7 +16,7 @@ class RecommendationService {
 
   Future<PaginatedPlaces> search(String name, {String? languageCode, String? pageToken}) async {
     final queryParams = <String, String>{
-      'textQuery': name,
+      'query': "atrações turísticas em " + name,
       'languageCode': languageCode ?? 'en',
       // Always include languageCode, default to 'en' if not provided
     };
@@ -25,7 +27,7 @@ class RecommendationService {
     }
 
     final uri = Uri.parse(
-      'https://recommendations-1052236350369.us-east1.run.app/places',
+      'https://sophisticated-chimera-1052236350369.us-central1.run.app/places-recommendations',
     ).replace(queryParameters: queryParams);
 
     try {
@@ -40,47 +42,6 @@ class RecommendationService {
       return _parsePlacesResponse(response.body);
     } catch (e) {
       rethrow;
-    }
-  }
-
-  /// Fetches sample place data from the /sample endpoint
-  Future<PaginatedPlaces> getSampleData() async {
-    final uri = Uri.parse(
-      'https://recommendations-1052236350369.us-east1.run.app/sample',
-    );
-
-    try {
-      final response = await _client.get(uri);
-
-      if (response.statusCode != 200) {
-        throw Exception(
-          'Failed to fetch sample data: Status ${response.statusCode}',
-        );
-      }
-
-      return _parsePlacesResponse(response.body);
-    } catch (e) {
-      // If the API call fails, try to load sample data from the local file
-      return loadSampleDataFromAsset();
-    }
-  }
-
-  /// Loads sample place data from the places.json asset file
-  Future<PaginatedPlaces> loadSampleDataFromAsset() async {
-    try {
-      // Load the JSON file from the assets
-      final jsonString = await rootBundle.loadString('places.json');
-      return _parsePlacesResponse(jsonString);
-    } catch (e) {
-      // If loading from assets fails, try to load from the file system
-      try {
-        final file = File('places.json');
-        final jsonString = await file.readAsString();
-        return _parsePlacesResponse(jsonString);
-      } catch (e) {
-        // If all attempts fail, return an empty result
-        return PaginatedPlaces.empty();
-      }
     }
   }
 
@@ -144,8 +105,29 @@ class RecommendationService {
 
       // Extract nextPageToken if available
       String? nextPageToken;
-      if (jsonData is Map<String, dynamic> && jsonData.containsKey('nextPageToken')) {
-        nextPageToken = jsonData['nextPageToken'] as String?;
+      if (jsonData is Map<String, dynamic>) {
+        // Log the entire response for debugging
+        developer.log('API Response: $jsonData');
+
+        if (jsonData.containsKey('nextPageToken')) {
+          nextPageToken = jsonData['nextPageToken'] as String?;
+          developer.log('nextPageToken from API: $nextPageToken');
+
+          // If nextPageToken is null or empty, treat it as null (no more pages)
+          if (nextPageToken == null || nextPageToken.isEmpty) {
+            developer.log('Null or empty nextPageToken, setting to null');
+            nextPageToken = null;
+          }
+
+          // According to the issue description, the API doesn't return a nextPageToken after 60 results
+          // If we already have 60 or more places, set nextPageToken to null to prevent further loadMore calls
+          if (places.length >= 60) {
+            developer.log('Already have 60 or more places, setting nextPageToken to null');
+            nextPageToken = null;
+          }
+        } else {
+          developer.log('No nextPageToken field in API response');
+        }
       }
 
       return PaginatedPlaces(
