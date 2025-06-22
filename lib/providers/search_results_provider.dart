@@ -112,7 +112,7 @@ class SearchResultsNotifier extends StateNotifier<SearchResultsState> {
     }
 
     _isLoadingMore = true;
-    state = state.copyWith(isLoadingMore: true);
+    state = state.copyWith(isLoadingMore: true, nextPageToken: state.nextPageToken);
 
     try {
       final results = await _service.search(
