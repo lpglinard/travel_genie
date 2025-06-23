@@ -245,4 +245,35 @@ class FirestoreService {
     await batch.commit();
   }
 
+  Future<void> reorderPlacesWithinDay({
+    required String tripId,
+    required String dayId,
+    required int oldIndex,
+    required int newIndex,
+  }) async {
+    final placesRef = _firestore
+        .collection('trips')
+        .doc(tripId)
+        .collection('itinerary_days')
+        .doc(dayId)
+        .collection('places');
+
+    final snapshot = await placesRef.orderBy('order').get();
+    final docs = snapshot.docs;
+
+    if (oldIndex < 0 || oldIndex >= docs.length || newIndex < 0 || newIndex >= docs.length) {
+      return;
+    }
+
+    final movedDoc = docs.removeAt(oldIndex);
+    docs.insert(newIndex, movedDoc);
+
+    final batch = _firestore.batch();
+    for (int i = 0; i < docs.length; i++) {
+      batch.update(docs[i].reference, {'order': i});
+    }
+
+    await batch.commit();
+  }
+
 }

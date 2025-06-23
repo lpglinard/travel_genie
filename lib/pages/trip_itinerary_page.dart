@@ -56,67 +56,44 @@ class TripItineraryPage extends ConsumerWidget {
                       orElse: () => <Place>[],                    )
                 };
 
-                final listItems = buildItineraryList(
-                  savedPlaces: savedPlaces,
-                  days: days,
-                  placesByDay: placesByDay,
-                );
-
-                return ListView.builder(
-                  itemCount: listItems.length,
-                  itemBuilder: (context, index) {
-                    final item = listItems[index];
-
-                    if (item is SavedPlaceItem) {
-                      return LongPressDraggable<Place>(
-                        data: item.place,
-                        feedback: Material(
-                          elevation: 6,
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(maxWidth: 300),
-                            child: ListTile(
-                              tileColor: Colors.white,
-                              title: Text(item.place.displayName),
-                              subtitle: Text(item.place.formattedAddress),
-                            ),
-                          ),
-                        ),
-                        child: ListTile(
-                          leading: const Icon(Icons.place_outlined),
-                          title: Text(item.place.displayName),
-                          subtitle: Text(item.place.formattedAddress),
-                        ),
-                      );
-                    } else if (item is DayHeaderItem) {
-                      return DragTarget<Place>(
-                        onWillAccept: (place) => true,
-                        onAccept: (place) async {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.all(16),
+                        child: Text('Saved Places', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      ),
+                      SavedPlacesBin(
+                        places: savedPlaces,
+                        onPlaceDragged: (place, targetDayId) async {
                           final tripService = ref.read(tripServiceProvider);
-                          await tripService.addPlaceToDay(
-                            tripId: tripId,
-                            dayId: item.day.id,
-                            place: place,
-                          );
+                          await tripService.addPlaceToDay(tripId: tripId, dayId: targetDayId, place: place);
                         },
-                        builder: (context, candidateData, rejectedData) {
-                          final isActive = candidateData.isNotEmpty;
-                          return ListTile(
-                            tileColor: isActive ? Colors.green.shade100 : Colors.grey.shade200,
-                            leading: const Icon(Icons.calendar_today),
-                            title: Text('Day ${days.indexOf(item.day) + 1} - ${_formatDate(item.day.date)}'),
-                          );
-                        },
-                      );
-                    } else if (item is DayPlaceItem) {
-                      return ListTile(
-                        leading: const Icon(Icons.place),
-                        title: Text(item.place.displayName),
-                        subtitle: Text(item.place.formattedAddress),
-                      );
-                    }
-
-                    return const SizedBox.shrink();
-                  },
+                      ),
+                      const Divider(height: 32),
+                      ...days.map((day) {
+                        final places = placesByDay[day.id] ?? [];
+                        return DayItem(
+                          day: day,
+                          places: places,
+                          onReorder: (oldIndex, newIndex) async {
+                            final tripService = ref.read(tripServiceProvider);
+                            await tripService.reorderPlacesWithinDay(
+                              tripId: tripId,
+                              dayId: day.id,
+                              oldIndex: oldIndex,
+                              newIndex: newIndex,
+                            );
+                          },
+                          onPlaceAccepted: (place) async {
+                            final tripService = ref.read(tripServiceProvider);
+                            await tripService.addPlaceToDay(tripId: tripId, dayId: day.id, place: place);
+                          },
+                        );
+                      }).toList(),
+                    ],
+                  ),
                 );
               },
             );
@@ -171,4 +148,114 @@ class DayPlaceItem extends ItineraryListItem {
   final Place place;
   final String dayId;
   DayPlaceItem(this.place, this.dayId);
+}
+
+// --- New Widgets ---
+
+class SavedPlacesBin extends StatelessWidget {
+  final List<Place> places;
+  final Future<void> Function(Place place, String targetDayId) onPlaceDragged;
+
+  const SavedPlacesBin({
+    super.key,
+    required this.places,
+    required this.onPlaceDragged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: places.map((place) {
+          return LongPressDraggable<Place>(
+            data: place,
+            feedback: Material(
+              elevation: 6,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 250),
+                child: ListTile(
+                  tileColor: Colors.white,
+                  title: Text(place.displayName),
+                  subtitle: Text(place.formattedAddress),
+                ),
+              ),
+            ),
+            child: Chip(
+              label: Text(place.displayName),
+              avatar: const Icon(Icons.place_outlined, size: 18),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class DayItem extends StatelessWidget {
+  final ItineraryDay day;
+  final List<Place> places;
+  final Future<void> Function(int oldIndex, int newIndex) onReorder;
+  final Future<void> Function(Place place) onPlaceAccepted;
+
+  const DayItem({
+    super.key,
+    required this.day,
+    required this.places,
+    required this.onReorder,
+    required this.onPlaceAccepted,
+  });
+
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      child: DragTarget<Place>(
+        onWillAccept: (place) => true,
+        onAccept: (place) async {
+          await onPlaceAccepted(place);
+        },
+        builder: (context, candidateData, rejectedData) {
+          final isActive = candidateData.isNotEmpty;
+          return Card(
+            color: isActive ? Colors.green.shade100 : Colors.grey.shade100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.calendar_today),
+                  title: Text('Day ${day.order ?? ''} - ${_formatDate(day.date)}'),
+                ),
+                ReorderableListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: places.length,
+                  onReorder: (oldIndex, newIndex) async {
+                    // Remove the gap at end
+                    if (newIndex > oldIndex) newIndex -= 1;
+                    await onReorder(oldIndex, newIndex);
+                  },
+                  itemBuilder: (context, index) {
+                    final place = places[index];
+                    return ListTile(
+                      key: ValueKey(place.displayName),
+                      leading: const Icon(Icons.place),
+                      title: Text(place.displayName),
+                      subtitle: Text(place.formattedAddress),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
 }

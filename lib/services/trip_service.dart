@@ -79,4 +79,13 @@ class TripService {
       place: place,
     );
   }
+
+  Future<void> reorderPlacesWithinDay({required String tripId, required String dayId, required int oldIndex, required int newIndex}) async {
+    return _firestoreService.reorderPlacesWithinDay(
+      tripId: tripId,
+      dayId: dayId,
+      oldIndex: oldIndex,
+      newIndex: newIndex,
+    );
+  }
 }
