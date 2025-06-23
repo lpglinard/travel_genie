@@ -70,7 +70,7 @@ class Place {
     final types = (json['types'] as List?)?.cast<String>() ?? const [];
 
     return Place(
-      placeId: (json['id'] ?? json['place_id']) as String? ?? '',
+      placeId: (json['placeId'] ?? json['id'] ?? json['place_id']) as String? ?? '',
       displayName: displayName,
       displayNameLanguageCode: displayNameLanguageCode,
       formattedAddress: (json['formattedAddress'] ?? json['formatted_address']) as String? ?? '',
@@ -105,6 +105,8 @@ class Place {
   Map<String, dynamic> toMap() {
     return {
       'placeId': placeId,
+      'id': placeId,
+      'place_id': placeId,
       'displayName': {
         'text': displayName,
         'languageCode': displayNameLanguageCode,

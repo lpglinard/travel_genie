@@ -45,6 +45,12 @@ class FirestoreService {
   }
 
   Future<void> savePlace(String userId, Place place) async {
+    // Check if placeId is empty to avoid Firestore error
+    if (place.placeId.isEmpty) {
+      print('Warning: Attempted to save a place with empty placeId');
+      return;
+    }
+
     final savedPlacesRef = _savedPlacesCollection(userId);
     String? reference;
     if (place.photos.isNotEmpty && place.photos.first.reference.isNotEmpty) {
@@ -62,10 +68,20 @@ class FirestoreService {
   }
 
   Future<void> removePlace(String userId, String placeId) async {
+    // Check if placeId is empty to avoid Firestore error
+    if (placeId.isEmpty) {
+      print('Warning: Attempted to remove a place with empty placeId');
+      return;
+    }
     await _savedPlacesCollection(userId).doc(placeId).delete();
   }
 
   Future<bool> isPlaceSaved(String userId, String placeId) async {
+    // Check if placeId is empty to avoid Firestore error
+    if (placeId.isEmpty) {
+      print('Warning: Attempted to check if a place with empty placeId is saved');
+      return false;
+    }
     final docSnapshot = await _savedPlacesCollection(userId).doc(placeId).get();
     return docSnapshot.exists;
   }
@@ -234,6 +250,12 @@ class FirestoreService {
     required Place place,
     int? position,
   }) async {
+    // Check if placeId is empty to avoid Firestore error
+    if (place.placeId.isEmpty) {
+      print('Warning: Attempted to add a place with empty placeId');
+      return;
+    }
+
     final userId = FirebaseAuth.instance.currentUser?.uid;
     final placesRef = _firestore
         .collection('trips')
@@ -318,6 +340,12 @@ class FirestoreService {
     required String dayId,
     required Place place,
   }) async {
+    // Check if placeId is empty to avoid Firestore error
+    if (place.placeId.isEmpty) {
+      print('Warning: Attempted to remove a place with empty placeId');
+      return;
+    }
+
     final placesRef = _firestore
         .collection('trips')
         .doc(tripId)
