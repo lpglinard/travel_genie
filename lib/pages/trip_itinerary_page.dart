@@ -150,8 +150,6 @@ class DayPlaceItem extends ItineraryListItem {
   DayPlaceItem(this.place, this.dayId);
 }
 
-// --- New Widgets ---
-
 class SavedPlacesBin extends StatelessWidget {
   final List<Place> places;
   final Future<void> Function(Place place, String targetDayId) onPlaceDragged;
