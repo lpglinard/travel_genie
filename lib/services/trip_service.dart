@@ -72,11 +72,13 @@ class TripService {
     required String tripId,
     required String dayId,
     required Place place,
+    required int position,
   }) {
     return _firestoreService.addPlaceToDay(
       tripId: tripId,
       dayId: dayId,
       place: place,
+      position: position,
     );
   }
 
@@ -86,6 +88,14 @@ class TripService {
       dayId: dayId,
       oldIndex: oldIndex,
       newIndex: newIndex,
+    );
+  }
+
+  Future<void> removePlaceFromDay({required String tripId, required String dayId, required Place place}) async {
+    return _firestoreService.removePlaceFromDay(
+      tripId: tripId,
+      dayId: dayId,
+      place: place,
     );
   }
 }

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,6 +6,12 @@ import '../models/itinerary_day.dart';
 import '../models/place.dart';
 import '../providers/itinerary_providers.dart';
 import '../providers/trip_service_provider.dart';
+// Helper class for drag-and-drop
+class DraggedPlaceData {
+  final Place place;
+  final String? fromDayId;
+  DraggedPlaceData({required this.place, this.fromDayId});
+}
 
 class TripItineraryPage extends ConsumerWidget {
   final String tripId;
@@ -66,10 +73,6 @@ class TripItineraryPage extends ConsumerWidget {
                       ),
                       SavedPlacesBin(
                         places: savedPlaces,
-                        onPlaceDragged: (place, targetDayId) async {
-                          final tripService = ref.read(tripServiceProvider);
-                          await tripService.addPlaceToDay(tripId: tripId, dayId: targetDayId, place: place);
-                        },
                       ),
                       const Divider(height: 32),
                       ...days.map((day) {
@@ -77,18 +80,36 @@ class TripItineraryPage extends ConsumerWidget {
                         return DayItem(
                           day: day,
                           places: places,
-                          onReorder: (oldIndex, newIndex) async {
+                          onPlaceAccepted: (DraggedPlaceData data, int insertIndex) async {
                             final tripService = ref.read(tripServiceProvider);
-                            await tripService.reorderPlacesWithinDay(
-                              tripId: tripId,
-                              dayId: day.id,
-                              oldIndex: oldIndex,
-                              newIndex: newIndex,
-                            );
-                          },
-                          onPlaceAccepted: (place) async {
-                            final tripService = ref.read(tripServiceProvider);
-                            await tripService.addPlaceToDay(tripId: tripId, dayId: day.id, place: place);
+                            // Remove from previous day if needed
+                            if (data.fromDayId != null && data.fromDayId != day.id) {
+                              await tripService.removePlaceFromDay(
+                                tripId: tripId,
+                                dayId: data.fromDayId!,
+                                place: data.place,
+                              );
+                            }
+                            if (data.fromDayId == day.id) {
+                              // Reorder within the same day
+                              final oldIndex = places.indexWhere((p) => p == data.place);
+                              if (oldIndex != -1 && oldIndex != insertIndex) {
+                                await tripService.reorderPlacesWithinDay(
+                                  tripId: tripId,
+                                  dayId: day.id,
+                                  oldIndex: oldIndex,
+                                  newIndex: insertIndex,
+                                );
+                              }
+                            } else if (!places.contains(data.place)) {
+                              // Insert at the correct position
+                              await tripService.addPlaceToDay(
+                                tripId: tripId,
+                                dayId: day.id,
+                                place: data.place,
+                                position: insertIndex,
+                              );
+                            }
                           },
                         );
                       }).toList(),
@@ -152,12 +173,10 @@ class DayPlaceItem extends ItineraryListItem {
 
 class SavedPlacesBin extends StatelessWidget {
   final List<Place> places;
-  final Future<void> Function(Place place, String targetDayId) onPlaceDragged;
 
   const SavedPlacesBin({
     super.key,
     required this.places,
-    required this.onPlaceDragged,
   });
 
   @override
@@ -168,8 +187,8 @@ class SavedPlacesBin extends StatelessWidget {
         spacing: 8,
         runSpacing: 4,
         children: places.map((place) {
-          return LongPressDraggable<Place>(
-            data: place,
+          return LongPressDraggable<DraggedPlaceData>(
+            data: DraggedPlaceData(place: place, fromDayId: null),
             feedback: Material(
               elevation: 6,
               child: ConstrainedBox(
@@ -195,14 +214,12 @@ class SavedPlacesBin extends StatelessWidget {
 class DayItem extends StatelessWidget {
   final ItineraryDay day;
   final List<Place> places;
-  final Future<void> Function(int oldIndex, int newIndex) onReorder;
-  final Future<void> Function(Place place) onPlaceAccepted;
+  final Future<void> Function(DraggedPlaceData data, int insertIndex) onPlaceAccepted;
 
   const DayItem({
     super.key,
     required this.day,
     required this.places,
-    required this.onReorder,
     required this.onPlaceAccepted,
   });
 
@@ -214,46 +231,100 @@ class DayItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      child: DragTarget<Place>(
-        onWillAccept: (place) => true,
-        onAccept: (place) async {
-          await onPlaceAccepted(place);
-        },
-        builder: (context, candidateData, rejectedData) {
-          final isActive = candidateData.isNotEmpty;
-          return Card(
-            color: isActive ? Colors.green.shade100 : Colors.grey.shade100,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.calendar_today),
-                  title: Text('Day ${day.order ?? ''} - ${_formatDate(day.date)}'),
-                ),
-                ReorderableListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: places.length,
-                  onReorder: (oldIndex, newIndex) async {
-                    // Remove the gap at end
-                    if (newIndex > oldIndex) newIndex -= 1;
-                    await onReorder(oldIndex, newIndex);
-                  },
-                  itemBuilder: (context, index) {
-                    final place = places[index];
-                    return ListTile(
+      child: Card(
+        color: Colors.grey.shade100,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.calendar_today),
+              title: Text('Day ${day.order ?? ''} - ${_formatDate(day.date)}'),
+            ),
+            // Insert DragTarget before first item
+            _DragTargetSlot(
+              onPlaceAccepted: (data) => onPlaceAccepted(data, 0),
+            ),
+            ...List.generate(places.length, (index) {
+              final place = places[index];
+              return Column(
+                children: [
+                  _PlaceDraggable(
+                    place: place,
+                    fromDayId: day.id,
+                    child: ListTile(
                       key: ValueKey(place.displayName),
                       leading: const Icon(Icons.place),
                       title: Text(place.displayName),
                       subtitle: Text(place.formattedAddress),
-                    );
-                  },
-                ),
-              ],
-            ),
-          );
-        },
+                    ),
+                  ),
+                  _DragTargetSlot(
+                    onPlaceAccepted: (data) => onPlaceAccepted(data, index + 1),
+                  ),
+                ],
+              );
+            }),
+          ],
+        ),
       ),
+    );
+  }
+}
+
+class _PlaceDraggable extends StatelessWidget {
+  final Place place;
+  final String fromDayId;
+  final Widget child;
+  const _PlaceDraggable({
+    required this.place,
+    required this.fromDayId,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LongPressDraggable<DraggedPlaceData>(
+      data: DraggedPlaceData(place: place, fromDayId: fromDayId),
+      feedback: Material(
+        elevation: 6,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 250),
+          child: ListTile(
+            tileColor: Colors.white,
+            leading: const Icon(Icons.place),
+            title: Text(place.displayName),
+            subtitle: Text(place.formattedAddress),
+          ),
+        ),
+      ),
+      child: child,
+      childWhenDragging: Opacity(opacity: 0.5, child: child),
+    );
+  }
+}
+
+class _DragTargetSlot extends StatelessWidget {
+  final Future<void> Function(DraggedPlaceData data) onPlaceAccepted;
+  const _DragTargetSlot({required this.onPlaceAccepted});
+
+  @override
+  Widget build(BuildContext context) {
+    return DragTarget<DraggedPlaceData>(
+      onWillAccept: (data) => data != null,
+      onAccept: (data) async {
+        await onPlaceAccepted(data);
+      },
+      builder: (context, candidateData, rejectedData) {
+        final isActive = candidateData.isNotEmpty;
+        return Container(
+          height: 16,
+          margin: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: isActive ? Colors.green.shade200 : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+        );
+      },
     );
   }
 }

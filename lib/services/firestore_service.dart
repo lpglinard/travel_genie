@@ -10,6 +10,7 @@ import '../models/place.dart';
 import '../models/trip.dart';
 import '../models/user_data.dart';
 
+
 class FirestoreService {
   FirestoreService(this._firestore);
 
@@ -37,7 +38,9 @@ class FirestoreService {
     return doc.set(data, SetOptions(merge: true));
   }
 
-  CollectionReference<Map<String, dynamic>> _savedPlacesCollection(String userId) {
+  CollectionReference<Map<String, dynamic>> _savedPlacesCollection(
+    String userId,
+  ) {
     return _users.doc(userId).collection('saved_places');
   }
 
@@ -68,22 +71,29 @@ class FirestoreService {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> streamSavedPlaces(String userId) {
-    return _savedPlacesCollection(userId)
-        .orderBy('savedDate', descending: true)
-        .snapshots();
+    return _savedPlacesCollection(
+      userId,
+    ).orderBy('savedDate', descending: true).snapshots();
   }
 
   Future<List<Destination>> getRecommendedDestinations() async {
-    final snapshot = await _firestore.collection('recommendedDestinations').get();
-    return snapshot.docs.map((doc) => Destination.fromFirestore(doc.data())).toList();
+    final snapshot = await _firestore
+        .collection('recommendedDestinations')
+        .get();
+    return snapshot.docs
+        .map((doc) => Destination.fromFirestore(doc.data()))
+        .toList();
   }
 
   Stream<List<Destination>> streamRecommendedDestinations() {
-    return _firestore.collection('recommendedDestinations').snapshots().map(
+    return _firestore
+        .collection('recommendedDestinations')
+        .snapshots()
+        .map(
           (snapshot) => snapshot.docs
-          .map((doc) => Destination.fromFirestore(doc.data()))
-          .toList(),
-    );
+              .map((doc) => Destination.fromFirestore(doc.data()))
+              .toList(),
+        );
   }
 
   Stream<List<Place>> streamSavedPlacesAsPlaces(String userId) {
@@ -119,9 +129,11 @@ class FirestoreService {
         .collection('itinerary_days')
         .orderBy('order')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => ItineraryDay.fromFirestore(doc))
-        .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => ItineraryDay.fromFirestore(doc))
+              .toList(),
+        );
   }
 
   // Stream lugares de um dia
@@ -136,16 +148,17 @@ class FirestoreService {
         .collection('places')
         .orderBy('order')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => Place.fromJson(doc.data()))
-        .toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList(),
+        );
   }
 
   CollectionReference<Map<String, dynamic>> get _trips =>
       _firestore.collection('trips');
 
   /// Stream trips for a user
-  /// 
+  ///
   /// Returns a stream of trips where the user is either the owner or a participant
   Stream<List<Trip>> streamUserTrips(String userId, String? userEmail) {
     // If no user email is provided, just query by userId
@@ -154,8 +167,10 @@ class FirestoreService {
           .where('userId', isEqualTo: userId)
           .orderBy('startDate', descending: true)
           .snapshots()
-          .map((snapshot) => 
-              snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList());
+          .map(
+            (snapshot) =>
+                snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList(),
+          );
     }
 
     // Query trips where the user is either the owner or a participant
@@ -168,8 +183,10 @@ class FirestoreService {
         )
         .orderBy('startDate', descending: true)
         .snapshots()
-        .map((snapshot) => 
-            snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList(),
+        );
   }
 
   Future<String> createTrip({
@@ -197,9 +214,11 @@ class FirestoreService {
 
     final itineraryRef = tripRef.collection('itinerary_days');
     int order = 0;
-    for (DateTime date = startDate;
-    !date.isAfter(endDate);
-    date = date.add(const Duration(days: 1))) {
+    for (
+      DateTime date = startDate;
+      !date.isAfter(endDate);
+      date = date.add(const Duration(days: 1))
+    ) {
       await itineraryRef.add({
         'date': Timestamp.fromDate(date),
         'order': order++,
@@ -213,12 +232,9 @@ class FirestoreService {
     required String tripId,
     required String dayId,
     required Place place,
+    int? position,
   }) async {
     final userId = FirebaseAuth.instance.currentUser?.uid;
-    if (userId == null) return;
-
-    final batch = _firestore.batch();
-
     final placesRef = _firestore
         .collection('trips')
         .doc(tripId)
@@ -226,21 +242,39 @@ class FirestoreService {
         .doc(dayId)
         .collection('places');
 
-    final snapshot = await placesRef.orderBy('order', descending: true).limit(1).get();
-    final lastOrder = snapshot.docs.isNotEmpty
-        ? (snapshot.docs.first.data()['order'] as int? ?? -1)
-        : -1;
-
-    final newOrder = lastOrder + 1;
+    final snapshot = await placesRef.orderBy('order').get();
+    final docs = snapshot.docs;
 
     final placeRef = placesRef.doc(place.placeId);
-    batch.set(placeRef, {
-      ...place.toMap(),
-      'order': newOrder,
-    });
 
-    final savedRef = _savedPlacesCollection(userId).doc(place.placeId);
-    batch.delete(savedRef);
+    final batch = _firestore.batch();
+
+    // Inserir no final se posição não for informada
+    final insertIndex = position ?? docs.length;
+
+    // Set the new place with the correct order
+    final newData = {
+      ...place.toMap(),
+      'order': insertIndex,
+    };
+    batch.set(placeRef, newData);
+
+    // Update the order of existing places that need to be shifted
+    for (int i = 0; i < docs.length; i++) {
+      final doc = docs[i];
+      final currentOrder = doc.data()['order'] as int? ?? i;
+
+      // Only update documents that need to be shifted
+      if (currentOrder >= insertIndex) {
+        batch.update(doc.reference, {'order': currentOrder + 1});
+      }
+    }
+
+    // Remove dos salvos, se estiver logado
+    if (userId != null) {
+      final savedRef = _savedPlacesCollection(userId).doc(place.placeId);
+      batch.delete(savedRef);
+    }
 
     await batch.commit();
   }
@@ -261,7 +295,10 @@ class FirestoreService {
     final snapshot = await placesRef.orderBy('order').get();
     final docs = snapshot.docs;
 
-    if (oldIndex < 0 || oldIndex >= docs.length || newIndex < 0 || newIndex >= docs.length) {
+    if (oldIndex < 0 ||
+        oldIndex >= docs.length ||
+        newIndex < 0 ||
+        newIndex >= docs.length) {
       return;
     }
 
@@ -276,4 +313,33 @@ class FirestoreService {
     await batch.commit();
   }
 
+  Future<void> removePlaceFromDay({
+    required String tripId,
+    required String dayId,
+    required Place place,
+  }) async {
+    final placesRef = _firestore
+        .collection('trips')
+        .doc(tripId)
+        .collection('itinerary_days')
+        .doc(dayId)
+        .collection('places');
+
+    final placeRef = placesRef.doc(place.placeId);
+
+    final doc = await placeRef.get();
+    if (!doc.exists) return;
+
+    await placeRef.delete();
+
+    // Reordenar os restantes
+    final snapshot = await placesRef.orderBy('order').get();
+    final batch = _firestore.batch();
+
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      batch.update(snapshot.docs[i].reference, {'order': i});
+    }
+
+    await batch.commit();
+  }
 }
