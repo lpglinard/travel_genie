@@ -115,4 +115,30 @@ class Place {
       // Category will be automatically determined based on types
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'placeId': placeId,
+      'displayName': {
+        'text': displayName,
+        'languageCode': displayNameLanguageCode,
+      },
+      'formattedAddress': formattedAddress,
+      'googleMapsUri': googleMapsUri,
+      if (websiteUri != null) 'websiteUri': websiteUri,
+      'types': types,
+      if (rating != null) 'rating': rating,
+      if (userRatingCount != null) 'userRatingCount': userRatingCount,
+      'location': location.toMap(),
+      'openingHours': openingHours,
+      'photos': photos.map((p) => p.toMap()).toList(),
+      if (generativeSummary.isNotEmpty || disclosureText.isNotEmpty)
+        'generativeSummary': {
+          'overview': {'text': generativeSummary},
+          'disclosureText': {'text': disclosureText},
+        },
+      'category': category.id, // or category.name if it's a string
+    };
+  }
+
 }

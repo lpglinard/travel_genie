@@ -79,4 +79,17 @@ class Photo {
       googleMapsUri: googleMapsUri,
     );
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'reference': reference,
+      if (width != null) 'width': width,
+      if (height != null) 'height': height,
+      if (url != null) 'url': url,
+      if (authorAttributions.isNotEmpty)
+        'authorAttributions':
+        authorAttributions.map((e) => e.toMap()).toList(),
+      if (flagContentUri != null) 'flagContentUri': flagContentUri,
+      if (googleMapsUri != null) 'googleMapsUri': googleMapsUri,
+    };
+  }
 }

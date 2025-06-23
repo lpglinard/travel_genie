@@ -8,10 +8,13 @@ import 'package:go_router/go_router.dart';
 
 import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
+import 'pages/create_trip_page.dart';
 import 'pages/home_page.dart';
+import 'pages/my_trips_page.dart';
 import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
 import 'pages/search_results_page.dart';
+import 'pages/trip_itinerary_page.dart';
 import 'providers/user_providers.dart';
 import 'services/analytics_service.dart';
 
@@ -67,20 +70,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               );
             },
           ),
-          // Trips route (placeholder)
+          // Trips route
           GoRoute(
             path: '/trips',
             name: AppRoute.trips.name,
             pageBuilder: (context, state) => NoTransitionPage(
               key: state.pageKey,
-              child: Scaffold(
-                body: Center(
-                  child: Text(
-                    'My Trips',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-              ),
+              child: const MyTripsPage(),
             ),
           ),
           // Groups route (placeholder)
@@ -152,6 +148,37 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
+      // New Trip screen route (outside the shell)
+      GoRoute(
+        path: '/new-trip',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const CreateTripPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+
+      // Trip Itinerary screen route (outside the shell)
+      GoRoute(
+        path: '/trip/:id',
+        pageBuilder: (context, state) {
+          final tripId = state.pathParameters['id']!;
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: TripItineraryPage(tripId: tripId),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+
       // Sign-in screen route (outside the shell)
       GoRoute(
         path: '/signin',

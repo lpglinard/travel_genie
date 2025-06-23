@@ -10,4 +10,12 @@ class Location {
       lng: ((json['longitude'] ?? json['lng']) as num?)?.toDouble() ?? 0.0,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'lat': lat,
+      'lng': lng,
+    };
+  }
+
 }
