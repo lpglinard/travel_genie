@@ -36,9 +36,9 @@ class TripItineraryPage extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Trip Itinerary'),
+          title: Text('Trip Itinerary', style: Theme.of(context).appBarTheme.titleTextStyle),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
             onPressed: () {
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
@@ -67,14 +67,21 @@ class TripItineraryPage extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Text('Saved Places', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          'Saved Places', 
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                       ),
                       SavedPlacesBin(
                         places: savedPlaces,
                       ),
-                      const Divider(height: 32),
+                      Divider(
+                        height: 32,
+                        thickness: 1,
+                        color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+                      ),
                       ...days.map((day) {
                         final places = placesByDay[day.id] ?? [];
                         return DayItem(
@@ -194,15 +201,16 @@ class SavedPlacesBin extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 250),
                 child: ListTile(
-                  tileColor: Colors.white,
-                  title: Text(place.displayName),
-                  subtitle: Text(place.formattedAddress),
+                  tileColor: Theme.of(context).colorScheme.surface,
+                  title: Text(place.displayName, style: Theme.of(context).textTheme.bodyMedium),
+                  subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
                 ),
               ),
             ),
             child: Chip(
-              label: Text(place.displayName),
-              avatar: const Icon(Icons.place_outlined, size: 18),
+              label: Text(place.displayName, style: Theme.of(context).textTheme.labelMedium),
+              avatar: Icon(Icons.place_outlined, size: 18, color: Theme.of(context).colorScheme.primary),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
             ),
           );
         }).toList(),
@@ -232,13 +240,24 @@ class DayItem extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       child: Card(
-        color: Colors.grey.shade100,
+        elevation: 2,
+        color: Theme.of(context).colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
+            width: 1,
+          ),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              leading: const Icon(Icons.calendar_today),
-              title: Text('Day ${day.order ?? ''} - ${_formatDate(day.date)}'),
+              leading: Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
+              title: Text(
+                'Day ${day.order ?? ''} - ${_formatDate(day.date)}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
             ),
             // Insert DragTarget before first item
             _DragTargetSlot(
@@ -253,9 +272,10 @@ class DayItem extends StatelessWidget {
                     fromDayId: day.id,
                     child: ListTile(
                       key: ValueKey(place.displayName),
-                      leading: const Icon(Icons.place),
-                      title: Text(place.displayName),
-                      subtitle: Text(place.formattedAddress),
+                      leading: Icon(Icons.place, color: Theme.of(context).colorScheme.secondary),
+                      title: Text(place.displayName, style: Theme.of(context).textTheme.bodyLarge),
+                      subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
+                      tileColor: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                   _DragTargetSlot(
@@ -287,13 +307,14 @@ class _PlaceDraggable extends StatelessWidget {
       data: DraggedPlaceData(place: place, fromDayId: fromDayId),
       feedback: Material(
         elevation: 6,
+        borderRadius: BorderRadius.circular(8),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 250),
           child: ListTile(
-            tileColor: Colors.white,
-            leading: const Icon(Icons.place),
-            title: Text(place.displayName),
-            subtitle: Text(place.formattedAddress),
+            tileColor: Theme.of(context).colorScheme.surface,
+            leading: Icon(Icons.place, color: Theme.of(context).colorScheme.secondary),
+            title: Text(place.displayName, style: Theme.of(context).textTheme.bodyLarge),
+            subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
           ),
         ),
       ),
@@ -316,12 +337,21 @@ class _DragTargetSlot extends StatelessWidget {
       },
       builder: (context, candidateData, rejectedData) {
         final isActive = candidateData.isNotEmpty;
-        return Container(
-          height: 16,
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: isActive ? 24 : 16,
           margin: const EdgeInsets.symmetric(horizontal: 12),
           decoration: BoxDecoration(
-            color: isActive ? Colors.green.shade200 : Colors.transparent,
-            borderRadius: BorderRadius.circular(6),
+            color: isActive 
+              ? Theme.of(context).colorScheme.secondaryContainer 
+              : Colors.transparent,
+            borderRadius: BorderRadius.circular(8),
+            border: isActive 
+              ? Border.all(
+                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
+                  width: 1,
+                )
+              : null,
           ),
         );
       },
