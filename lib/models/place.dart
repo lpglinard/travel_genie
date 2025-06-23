@@ -19,6 +19,7 @@ class Place {
     this.photos = const [],
     this.generativeSummary = '',
     this.disclosureText = '',
+    this.order = 0,
     PlaceCategory? category,
   }) : category = category ?? PlaceCategories.determineCategoryFromTypes(types);
 
@@ -36,69 +37,55 @@ class Place {
   final List<Photo> photos;
   final String generativeSummary;
   final String disclosureText;
+  final int order;
   final PlaceCategory category;
 
   factory Place.fromJson(Map<String, dynamic> json) {
-    // Parse display_name which is now an object with text and language_code
     String displayName = '';
     String displayNameLanguageCode = '';
     final displayNameField = json['displayName'] ?? json['display_name'];
     if (displayNameField is Map<String, dynamic>) {
       displayName = displayNameField['text'] as String? ?? '';
       displayNameLanguageCode =
-          ((displayNameField['languageCode'] ??
-                  displayNameField['language_code'])
-              as String?) ??
-          '';
+          ((displayNameField['languageCode'] ?? displayNameField['language_code']) as String?) ?? '';
     } else if (displayNameField is String) {
-      // For backward compatibility
       displayName = displayNameField;
-      displayNameLanguageCode = 'en'; // Default to English
+      displayNameLanguageCode = 'en';
     }
 
-    // Parse generative_summary which is an object with overview and disclosure_text
     String generativeSummary = '';
     String disclosureText = '';
-    final generativeSummaryField =
-        json['generativeSummary'] ?? json['generative_summary'];
+    final generativeSummaryField = json['generativeSummary'] ?? json['generative_summary'];
     if (generativeSummaryField is Map<String, dynamic>) {
       if (generativeSummaryField['overview'] is Map<String, dynamic>) {
-        generativeSummary =
-            generativeSummaryField['overview']['text'] as String? ?? '';
+        generativeSummary = generativeSummaryField['overview']['text'] as String? ?? '';
       }
       final disclosureTextField =
-          generativeSummaryField['disclosureText'] ??
-          generativeSummaryField['disclosure_text'];
+          generativeSummaryField['disclosureText'] ?? generativeSummaryField['disclosure_text'];
       if (disclosureTextField is Map<String, dynamic>) {
         disclosureText = disclosureTextField['text'] as String? ?? '';
       }
     }
 
-    // Extract types for category determination
     final types = (json['types'] as List?)?.cast<String>() ?? const [];
 
     return Place(
       placeId: (json['id'] ?? json['place_id']) as String? ?? '',
       displayName: displayName,
       displayNameLanguageCode: displayNameLanguageCode,
-      formattedAddress:
-          (json['formattedAddress'] ?? json['formatted_address']) as String? ??
-          '',
-      googleMapsUri:
-          (json['googleMapsUri'] ?? json['google_maps_uri']) as String? ?? '',
+      formattedAddress: (json['formattedAddress'] ?? json['formatted_address']) as String? ?? '',
+      googleMapsUri: (json['googleMapsUri'] ?? json['google_maps_uri']) as String? ?? '',
       websiteUri: (json['websiteUri'] ?? json['website_uri']) as String?,
       types: types,
       rating: (json['rating'] as num?)?.toDouble(),
-      userRatingCount:
-          (json['userRatingCount'] ?? json['user_rating_count']) as int?,
+      userRatingCount: (json['userRatingCount'] ?? json['user_rating_count']) as int?,
       location: json['location'] == null
           ? const Location(lat: 0, lng: 0)
           : Location.fromJson(json['location'] as Map<String, dynamic>),
       openingHours: () {
         if (json['currentOpeningHours'] is Map<String, dynamic> &&
             json['currentOpeningHours']['weekdayDescriptions'] is List) {
-          return (json['currentOpeningHours']['weekdayDescriptions'] as List)
-              .cast<String>();
+          return (json['currentOpeningHours']['weekdayDescriptions'] as List).cast<String>();
         }
         return (json['opening_hours'] as List?)?.cast<String>() ?? const [];
       }(),
@@ -109,10 +96,9 @@ class Place {
           final photo = Photo.fromJson(e as Map<String, dynamic>);
           return photo;
         }).toList();
-
         return photosList ?? const [];
       }(),
-      // Category will be automatically determined based on types
+      order: (json['order'] as int?) ?? 0,
     );
   }
 
@@ -137,8 +123,8 @@ class Place {
           'overview': {'text': generativeSummary},
           'disclosureText': {'text': disclosureText},
         },
-      'category': category.id, // or category.name if it's a string
+      'category': category.id,
+      'order': order,
     };
   }
-
 }

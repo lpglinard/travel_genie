@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../models/destination.dart';
+import '../models/itinerary_day.dart';
 import '../models/location.dart';
 import '../models/photo.dart';
 import '../models/place.dart';
@@ -111,6 +112,35 @@ class FirestoreService {
     });
   }
 
+  // Stream dias da viagem (itinerary_days)
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
+    return _trips
+        .doc(tripId)
+        .collection('itinerary_days')
+        .orderBy('order')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => ItineraryDay.fromFirestore(doc))
+        .toList());
+  }
+
+  // Stream lugares de um dia
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  }) {
+    return _trips
+        .doc(tripId)
+        .collection('itinerary_days')
+        .doc(dayId)
+        .collection('places')
+        .orderBy('order')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => Place.fromJson(doc.data()))
+        .toList());
+  }
+
   CollectionReference<Map<String, dynamic>> get _trips =>
       _firestore.collection('trips');
 
@@ -142,50 +172,40 @@ class FirestoreService {
             snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList());
   }
 
-  /// Create a new trip
-  /// 
-  /// Returns the ID of the created trip
   Future<String> createTrip({
-    required String userId,
-    required String? userEmail,
     required String title,
     required String description,
     required DateTime startDate,
     required DateTime endDate,
-    String coverImageUrl = '',
-    bool isArchived = false,
+    required String userId,
+    required String? userEmail,
+    required bool isArchived,
+    required String coverImageUrl,
   }) async {
-    if (userEmail == null) {
-      throw Exception('User email is required to create a trip');
-    }
-
-    // Generate itinerary with days between start and end dates
-    final itinerary = <Map<String, dynamic>>[];
-    for (
-      DateTime date = startDate;
-      !date.isAfter(endDate);
-      date = date.add(const Duration(days: 1))
-    ) {
-      itinerary.add({'date': Timestamp.fromDate(date), 'places': []});
-    }
-
-    // Create trip data
-    final tripData = {
+    final tripRef = await _firestore.collection('trips').add({
       'title': title,
       'description': description,
       'startDate': Timestamp.fromDate(startDate),
       'endDate': Timestamp.fromDate(endDate),
-      'coverImageUrl': coverImageUrl,
+      'coverImageUrl': '',
       'userId': userId,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
-      'isArchived': isArchived,
-      'participants': [userEmail], // Include creator's email in participants
-      'itinerary': itinerary,
-    };
+      'isArchived': false,
+      'participants': userEmail != null ? [userEmail] : [],
+    });
 
-    // Add to Firestore
-    final docRef = await _trips.add(tripData);
-    return docRef.id;
+    final itineraryRef = tripRef.collection('itinerary_days');
+    int order = 0;
+    for (DateTime date = startDate;
+    !date.isAfter(endDate);
+    date = date.add(const Duration(days: 1))) {
+      await itineraryRef.add({
+        'date': Timestamp.fromDate(date),
+        'order': order++,
+      });
+    }
+
+    return tripRef.id;
   }
 }

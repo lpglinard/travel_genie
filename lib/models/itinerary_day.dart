@@ -1,28 +1,49 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:travel_genie/models/place.dart';
+import 'place.dart';
 
 class ItineraryDay {
   ItineraryDay({
+    required this.id,
     required this.date,
-    required this.places,
+    required this.order,
+    this.places = const [],
   });
 
+  final String id;
   final DateTime date;
+  final int order;
   final List<Place> places;
 
-  factory ItineraryDay.fromMap(Map<String, dynamic> map) {
+  factory ItineraryDay.fromFirestore(
+      DocumentSnapshot<Map<String, dynamic>> doc,
+      ) {
+    final data = doc.data() ?? {};
     return ItineraryDay(
-      date: (map['date'] as Timestamp).toDate(),
-      places: (map['places'] as List<dynamic>)
-          .map((e) => Place.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      id: doc.id,
+      date: (data['date'] as Timestamp).toDate(),
+      order: data['order'] as int? ?? 0,
+      places: const [], // será carregado separadamente por stream
     );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toFirestore() {
     return {
       'date': Timestamp.fromDate(date),
-      'places': places.map((e) => e.toMap()).toList(),
+      'order': order,
     };
+  }
+
+  ItineraryDay copyWith({
+    String? id,
+    DateTime? date,
+    int? order,
+    List<Place>? places,
+  }) {
+    return ItineraryDay(
+      id: id ?? this.id,
+      date: date ?? this.date,
+      order: order ?? this.order,
+      places: places ?? this.places,
+    );
   }
 }

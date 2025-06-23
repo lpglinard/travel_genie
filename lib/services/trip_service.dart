@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../models/itinerary_day.dart';
+import '../models/place.dart';
 import '../models/trip.dart';
 import 'firestore_service.dart';
 
@@ -47,4 +49,21 @@ class TripService {
   }
 
   // Add other trip-related methods here
-}
+  // Delegando acesso aos dados reativos do Firestore
+
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
+    return _firestoreService.streamItineraryDays(tripId);
+  }
+
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  }) {
+    return _firestoreService.streamPlacesForDay(tripId: tripId, dayId: dayId);
+  }
+
+  Stream<List<Place>> streamSavedPlacesForCurrentUser() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return const Stream.empty();
+    return _firestoreService.streamSavedPlacesAsPlaces(user.uid);
+  }}
