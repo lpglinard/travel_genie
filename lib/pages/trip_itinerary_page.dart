@@ -45,62 +45,80 @@ class TripItineraryPage extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Error: $e')),
           data: (days) {
-            return ListView(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('Saved Places', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                savedPlacesAsync.when(
-                  loading: () => const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text('Erro ao carregar lugares salvos: $e'),
-                  ),
-                  data: (savedPlaces) => Column(
-                    children: savedPlaces.map((place) => ListTile(
-                      leading: const Icon(Icons.place_outlined),
-                      title: Text(place.displayName),
-                      subtitle: Text(place.formattedAddress),
-                    )).toList(),
-                  ),
-                ),
-                const Divider(height: 32),
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('Itinerary Days', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                ),
-                ...days.map((day) {
-                  final placesAsync = ref.watch(placesForDayProvider((tripId: tripId, dayId: day.id)));
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        leading: const Icon(Icons.calendar_today),
-                        title: Text('Day ${days.indexOf(day) + 1} - ${_formatDate(day.date)}'),
-                      ),
-                      placesAsync.when(
-                        loading: () => const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 16),
-                          child: LinearProgressIndicator(),
+            return savedPlacesAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, _) => Center(child: Text('Erro ao carregar lugares salvos: $e')),
+              data: (savedPlaces) {
+                final placesByDay = {
+                  for (final day in days)
+                    day.id: ref.watch(placesForDayProvider((tripId: tripId, dayId: day.id))).maybeWhen(
+                      data: (places) => places,
+                      orElse: () => <Place>[],                    )
+                };
+
+                final listItems = buildItineraryList(
+                  savedPlaces: savedPlaces,
+                  days: days,
+                  placesByDay: placesByDay,
+                );
+
+                return ListView.builder(
+                  itemCount: listItems.length,
+                  itemBuilder: (context, index) {
+                    final item = listItems[index];
+
+                    if (item is SavedPlaceItem) {
+                      return LongPressDraggable<Place>(
+                        data: item.place,
+                        feedback: Material(
+                          elevation: 6,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: ListTile(
+                              tileColor: Colors.white,
+                              title: Text(item.place.displayName),
+                              subtitle: Text(item.place.formattedAddress),
+                            ),
+                          ),
                         ),
-                        error: (e, _) => Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text('Erro ao carregar lugares do dia: $e'),
+                        child: ListTile(
+                          leading: const Icon(Icons.place_outlined),
+                          title: Text(item.place.displayName),
+                          subtitle: Text(item.place.formattedAddress),
                         ),
-                        data: (places) => Column(
-                          children: places.map((place) => ListTile(
-                            leading: const Icon(Icons.place),
-                            title: Text(place.displayName),
-                            subtitle: Text(place.formattedAddress),
-                          )).toList(),
-                        ),
-                      ),
-                      const Divider(),
-                    ],
-                  );
-                }),
-              ],
+                      );
+                    } else if (item is DayHeaderItem) {
+                      return DragTarget<Place>(
+                        onWillAccept: (place) => true,
+                        onAccept: (place) async {
+                          final tripService = ref.read(tripServiceProvider);
+                          await tripService.addPlaceToDay(
+                            tripId: tripId,
+                            dayId: item.day.id,
+                            place: place,
+                          );
+                        },
+                        builder: (context, candidateData, rejectedData) {
+                          final isActive = candidateData.isNotEmpty;
+                          return ListTile(
+                            tileColor: isActive ? Colors.green.shade100 : Colors.grey.shade200,
+                            leading: const Icon(Icons.calendar_today),
+                            title: Text('Day ${days.indexOf(item.day) + 1} - ${_formatDate(item.day.date)}'),
+                          );
+                        },
+                      );
+                    } else if (item is DayPlaceItem) {
+                      return ListTile(
+                        leading: const Icon(Icons.place),
+                        title: Text(item.place.displayName),
+                        subtitle: Text(item.place.formattedAddress),
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                );
+              },
             );
           },
         ),

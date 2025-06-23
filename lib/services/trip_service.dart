@@ -66,4 +66,17 @@ class TripService {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) return const Stream.empty();
     return _firestoreService.streamSavedPlacesAsPlaces(user.uid);
-  }}
+  }
+
+  Future<void> addPlaceToDay({
+    required String tripId,
+    required String dayId,
+    required Place place,
+  }) {
+    return _firestoreService.addPlaceToDay(
+      tripId: tripId,
+      dayId: dayId,
+      place: place,
+    );
+  }
+}

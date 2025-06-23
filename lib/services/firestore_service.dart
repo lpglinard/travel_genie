@@ -208,4 +208,41 @@ class FirestoreService {
 
     return tripRef.id;
   }
+
+  Future<void> addPlaceToDay({
+    required String tripId,
+    required String dayId,
+    required Place place,
+  }) async {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) return;
+
+    final batch = _firestore.batch();
+
+    final placesRef = _firestore
+        .collection('trips')
+        .doc(tripId)
+        .collection('itinerary_days')
+        .doc(dayId)
+        .collection('places');
+
+    final snapshot = await placesRef.orderBy('order', descending: true).limit(1).get();
+    final lastOrder = snapshot.docs.isNotEmpty
+        ? (snapshot.docs.first.data()['order'] as int? ?? -1)
+        : -1;
+
+    final newOrder = lastOrder + 1;
+
+    final placeRef = placesRef.doc(place.placeId);
+    batch.set(placeRef, {
+      ...place.toMap(),
+      'order': newOrder,
+    });
+
+    final savedRef = _savedPlacesCollection(userId).doc(place.placeId);
+    batch.delete(savedRef);
+
+    await batch.commit();
+  }
+
 }
