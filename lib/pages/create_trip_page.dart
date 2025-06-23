@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/trip.dart';
+import '../services/trip_provider.dart';
 
 class CreateTripPage extends ConsumerStatefulWidget {
   const CreateTripPage({super.key});
@@ -67,37 +66,17 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
     });
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception('User not logged in');
-      }
+      // Use the TripService from the provider to create the trip
+      final tripService = ref.read(tripProvider);
 
-      final tripsCollection = FirebaseFirestore.instance.collection('trips');
-
-      // Gera uma lista de dias entre startDate e endDate
-      final itinerary = <Map<String, dynamic>>[];
-      for (
-        DateTime date = _startDate;
-        !date.isAfter(_endDate);
-        date = date.add(const Duration(days: 1))
-      ) {
-        itinerary.add({'date': Timestamp.fromDate(date), 'places': []});
-      }
-
-      // Create a new trip document
-      await tripsCollection.add({
-        'title': _titleController.text.trim(),
-        'description': _descriptionController.text.trim(),
-        'startDate': Timestamp.fromDate(_startDate),
-        'endDate': Timestamp.fromDate(_endDate),
-        'coverImageUrl': '', // Empty for now, could add image upload later
-        'userId': user.uid,
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-        'isArchived': false,
-        'participants': [user.email], // Include creator's email in participants
-        'itinerary': itinerary,
-      });
+      await tripService.createTrip(
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
+        startDate: _startDate,
+        endDate: _endDate,
+        coverImageUrl: '', // Empty for now, could add image upload later
+        isArchived: false,
+      );
 
       if (mounted) {
         // Show success message and navigate back

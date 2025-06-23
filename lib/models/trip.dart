@@ -14,9 +14,9 @@ class Trip {
     required this.createdAt,
     required this.updatedAt,
     this.isArchived = false,
-    this.places = const [],
     this.participants = const [],
-    this.itinerary = const [],
+    this.places,
+    this.itinerary,
   });
 
   final String id;
@@ -29,22 +29,14 @@ class Trip {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isArchived;
-  final List<Place> places;
   final List<String> participants;
-  final List<ItineraryDay> itinerary;
+
+  /// Dados carregados separadamente das subcoleções:
+  final List<Place>? places;
+  final List<ItineraryDay>? itinerary;
 
   factory Trip.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
-    final data = doc.data() as Map<String, dynamic>;
-
-    // Parse participants if they exist
-    List<String> participants = [];
-    if (data['participants'] != null && data['participants'] is List) {
-      participants = (data['participants'] as List).cast<String>();
-    }
-    final rawItinerary = data['itinerary'] as List<dynamic>? ?? [];
-    final itinerary = rawItinerary
-        .map((e) => ItineraryDay.fromMap(e as Map<String, dynamic>))
-        .toList();
+    final data = doc.data() ?? {};
 
     return Trip(
       id: doc.id,
@@ -57,40 +49,9 @@ class Trip {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isArchived: data['isArchived'] as bool? ?? false,
-      places: const [], // Places are now stored in a sub-collection
-      participants: participants,
-      itinerary: itinerary,
-    );
-  }
-
-  // Create a copy of this Trip with the given fields replaced
-  Trip copyWith({
-    String? id,
-    String? title,
-    String? description,
-    DateTime? startDate,
-    DateTime? endDate,
-    String? coverImageUrl,
-    String? userId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    bool? isArchived,
-    List<Place>? places,
-    List<String>? participants,
-  }) {
-    return Trip(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
-      userId: userId ?? this.userId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isArchived: isArchived ?? this.isArchived,
-      places: places ?? this.places,
-      participants: participants ?? this.participants,
+      participants: (data['participants'] as List?)?.cast<String>() ?? const [],
+      places: null,     // serão carregados separadamente
+      itinerary: null,  // idem
     );
   }
 
@@ -106,7 +67,39 @@ class Trip {
       'updatedAt': Timestamp.fromDate(updatedAt),
       'isArchived': isArchived,
       'participants': participants,
-      // Não incluir 'places' aqui, pois são salvos na subcoleção
+      // NÃO incluir `places` ou `itinerary` aqui!
     };
+  }
+
+  Trip copyWith({
+    String? id,
+    String? title,
+    String? description,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? coverImageUrl,
+    String? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isArchived,
+    List<String>? participants,
+    List<Place>? places,
+    List<ItineraryDay>? itinerary,
+  }) {
+    return Trip(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
+      userId: userId ?? this.userId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isArchived: isArchived ?? this.isArchived,
+      participants: participants ?? this.participants,
+      places: places ?? this.places,
+      itinerary: itinerary ?? this.itinerary,
+    );
   }
 }

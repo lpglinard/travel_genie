@@ -5,6 +5,7 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/pages/trip_itinerary_page.dart';
 
 import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
@@ -14,7 +15,6 @@ import 'pages/my_trips_page.dart';
 import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
 import 'pages/search_results_page.dart';
-import 'pages/trip_itinerary_page.dart';
 import 'providers/user_providers.dart';
 import 'services/analytics_service.dart';
 
