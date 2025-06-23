@@ -198,19 +198,93 @@ class SavedPlacesBin extends StatelessWidget {
             data: DraggedPlaceData(place: place, fromDayId: null),
             feedback: Material(
               elevation: 6,
+              borderRadius: BorderRadius.circular(8),
+              color: Theme.of(context).brightness == Brightness.light 
+                ? place.category.lightColor.withOpacity(0.8)
+                : place.category.darkColor.withOpacity(0.8),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 250),
-                child: ListTile(
-                  tileColor: Theme.of(context).colorScheme.surface,
-                  title: Text(place.displayName, style: Theme.of(context).textTheme.bodyMedium),
-                  subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        place.category.icon, 
+                        size: 24, 
+                        color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.white
+                          : Colors.black,
+                      ),
+                      const SizedBox(width: 8),
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              place.displayName,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).brightness == Brightness.light
+                                  ? Colors.white
+                                  : Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            if (place.formattedAddress.isNotEmpty)
+                              Text(
+                                place.formattedAddress,
+                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                  color: Theme.of(context).brightness == Brightness.light
+                                    ? Colors.white.withOpacity(0.9)
+                                    : Colors.black.withOpacity(0.9),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            child: Chip(
-              label: Text(place.displayName, style: Theme.of(context).textTheme.labelMedium),
-              avatar: Icon(Icons.place_outlined, size: 18, color: Theme.of(context).colorScheme.primary),
-              backgroundColor: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.7),
+            child: Card(
+              elevation: 1,
+              color: Theme.of(context).brightness == Brightness.light 
+                ? place.category.lightColor.withOpacity(0.7)
+                : place.category.darkColor.withOpacity(0.7),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      place.category.icon, 
+                      size: 18, 
+                      color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.white
+                        : Colors.black,
+                    ),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        place.displayName,
+                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                          color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.white
+                            : Colors.black,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         }).toList(),
@@ -272,7 +346,12 @@ class DayItem extends StatelessWidget {
                     fromDayId: day.id,
                     child: ListTile(
                       key: ValueKey(place.displayName),
-                      leading: Icon(Icons.place, color: Theme.of(context).colorScheme.secondary),
+                      leading: Icon(
+                        place.category.icon, 
+                        color: Theme.of(context).brightness == Brightness.light
+                          ? place.category.lightColor
+                          : place.category.darkColor,
+                      ),
                       title: Text(place.displayName, style: Theme.of(context).textTheme.bodyLarge),
                       subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
                       tileColor: Theme.of(context).colorScheme.surface,
@@ -308,13 +387,54 @@ class _PlaceDraggable extends StatelessWidget {
       feedback: Material(
         elevation: 6,
         borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).brightness == Brightness.light 
+          ? place.category.lightColor.withOpacity(0.8)
+          : place.category.darkColor.withOpacity(0.8),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 250),
-          child: ListTile(
-            tileColor: Theme.of(context).colorScheme.surface,
-            leading: Icon(Icons.place, color: Theme.of(context).colorScheme.secondary),
-            title: Text(place.displayName, style: Theme.of(context).textTheme.bodyLarge),
-            subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  place.category.icon, 
+                  size: 24, 
+                  color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.white
+                    : Colors.black,
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        place.displayName,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.white
+                            : Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (place.formattedAddress.isNotEmpty)
+                        Text(
+                          place.formattedAddress,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.light
+                              ? Colors.white.withOpacity(0.9)
+                              : Colors.black.withOpacity(0.9),
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
