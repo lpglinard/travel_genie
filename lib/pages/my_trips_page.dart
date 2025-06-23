@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/trip.dart';
-import '../services/trip_provider.dart';
+import '../providers/trip_service_provider.dart';
 
 /// Main page for displaying user's trips
 class MyTripsPage extends ConsumerWidget {
@@ -13,7 +13,7 @@ class MyTripsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripsAsync = ref.watch(_tripsStreamProvider);
+    final tripsAsync = ref.watch(userTripsProvider);
 
     return Scaffold(
       appBar: AppBar(

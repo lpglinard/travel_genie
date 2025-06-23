@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/trip.dart';
-import '../services/trip_provider.dart';
+import '../providers/trip_service_provider.dart';
 
 class CreateTripPage extends ConsumerStatefulWidget {
   const CreateTripPage({super.key});
@@ -67,7 +67,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
 
     try {
       // Use the TripService from the provider to create the trip
-      final tripService = ref.read(tripProvider);
+      final tripService = ref.read(tripServiceProvider);
 
       await tripService.createTrip(
         title: _titleController.text.trim(),
