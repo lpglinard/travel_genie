@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import '../l10n/app_localizations.dart';
 import '../models/itinerary_day.dart';
 import '../models/place.dart';
 import '../providers/itinerary_providers.dart';
@@ -77,10 +79,13 @@ class TripItineraryPage extends ConsumerWidget {
                       SavedPlacesBin(
                         places: savedPlaces,
                       ),
-                      Divider(
-                        height: 32,
-                        thickness: 1,
-                        color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Divider(
+                          height: 32,
+                          thickness: 1,
+                          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+                        ),
                       ),
                       ...days.map((day) {
                         final places = placesByDay[day.id] ?? [];
@@ -132,7 +137,9 @@ class TripItineraryPage extends ConsumerWidget {
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    final dayFormat = DateFormat('EEEE'); // Full day name
+    final dateFormat = DateFormat('d MMM yyyy'); // Day, month, year
+    return '${dayFormat.format(date)}, ${dateFormat.format(date)}';
   }
 
   List<ItineraryListItem> buildItineraryList({
@@ -197,11 +204,11 @@ class SavedPlacesBin extends StatelessWidget {
           return LongPressDraggable<DraggedPlaceData>(
             data: DraggedPlaceData(place: place, fromDayId: null),
             feedback: Material(
-              elevation: 6,
-              borderRadius: BorderRadius.circular(8),
+              elevation: 2,
+              borderRadius: BorderRadius.circular(4),
               color: Theme.of(context).brightness == Brightness.light 
-                ? place.category.lightColor.withOpacity(0.8)
-                : place.category.darkColor.withOpacity(0.8),
+                ? place.category.lightColor.withOpacity(0.7)
+                : place.category.darkColor.withOpacity(0.7),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 250),
                 child: Padding(
@@ -250,39 +257,44 @@ class SavedPlacesBin extends StatelessWidget {
                 ),
               ),
             ),
-            child: Card(
-              elevation: 1,
-              color: Theme.of(context).brightness == Brightness.light 
-                ? place.category.lightColor.withOpacity(0.7)
-                : place.category.darkColor.withOpacity(0.7),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      place.category.icon, 
-                      size: 18, 
-                      color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.white
-                        : Colors.black,
-                    ),
-                    const SizedBox(width: 6),
-                    Flexible(
-                      child: Text(
-                        place.displayName,
-                        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.white
-                            : Colors.black,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+            child: GestureDetector(
+              onTap: () {
+                context.push('/place/${place.placeId}', extra: place);
+              },
+              child: Card(
+                elevation: 0,
+                color: Theme.of(context).brightness == Brightness.light 
+                  ? place.category.lightColor.withOpacity(0.6)
+                  : place.category.darkColor.withOpacity(0.6),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        place.category.icon, 
+                        size: 18, 
+                        color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.white
+                          : Colors.black,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          place.displayName,
+                          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.light
+                              ? Colors.white
+                              : Colors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -305,19 +317,23 @@ class DayItem extends StatelessWidget {
     required this.onPlaceAccepted,
   });
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  String formatDayDate(DateTime date, BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    final dayFormat = DateFormat('EEEE', locale); // Full day name
+    final dateFormat = DateFormat('d MMM yyyy', locale); // Day, month, year
+    return '${dayFormat.format(date)}, ${dateFormat.format(date)}';
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
       child: Card(
-        elevation: 2,
+        elevation: 0,
         color: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           side: BorderSide(
             color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
             width: 1,
@@ -326,11 +342,23 @@ class DayItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ListTile(
-              leading: Icon(Icons.calendar_today, color: Theme.of(context).colorScheme.primary),
-              title: Text(
-                'Day ${day.order ?? ''} - ${_formatDate(day.date)}',
-                style: Theme.of(context).textTheme.titleMedium,
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
+                ),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                title: Text(
+                  formatDayDate(day.date, context),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(day.summary ?? ''),
               ),
             ),
             // Insert DragTarget before first item
@@ -344,17 +372,57 @@ class DayItem extends StatelessWidget {
                   _PlaceDraggable(
                     place: place,
                     fromDayId: day.id,
-                    child: ListTile(
-                      key: ValueKey(place.displayName),
-                      leading: Icon(
-                        place.category.icon, 
-                        color: Theme.of(context).brightness == Brightness.light
-                          ? place.category.lightColor
-                          : place.category.darkColor,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      child: Card(
+                        elevation: 0,
+                        margin: EdgeInsets.zero,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4)
+                        ),
+                        child: ListTile(
+                          key: ValueKey(place.displayName),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          leading: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).brightness == Brightness.light
+                                ? place.category.lightColor.withOpacity(0.15)
+                                : place.category.darkColor.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Icon(
+                              place.category.icon,
+                              size: 24,
+                              color: Theme.of(context).brightness == Brightness.light
+                                ? place.category.lightColor
+                                : place.category.darkColor,
+                            ),
+                          ),
+                          title: Text(
+                            place.displayName,
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              place.formattedAddress,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                          tileColor: Theme.of(context).colorScheme.surface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          onTap: () {
+                            context.push('/place/${place.placeId}', extra: place);
+                          },
+                        ),
                       ),
-                      title: Text(place.displayName, style: Theme.of(context).textTheme.bodyLarge),
-                      subtitle: Text(place.formattedAddress, style: Theme.of(context).textTheme.bodySmall),
-                      tileColor: Theme.of(context).colorScheme.surface,
                     ),
                   ),
                   _DragTargetSlot(
@@ -385,26 +453,35 @@ class _PlaceDraggable extends StatelessWidget {
     return LongPressDraggable<DraggedPlaceData>(
       data: DraggedPlaceData(place: place, fromDayId: fromDayId),
       feedback: Material(
-        elevation: 6,
-        borderRadius: BorderRadius.circular(8),
+        elevation: 2,
+        borderRadius: BorderRadius.circular(4),
         color: Theme.of(context).brightness == Brightness.light 
-          ? place.category.lightColor.withOpacity(0.8)
-          : place.category.darkColor.withOpacity(0.8),
+          ? place.category.lightColor.withOpacity(0.7)
+          : place.category.darkColor.withOpacity(0.7),
         child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 250),
+          constraints: const BoxConstraints(maxWidth: 280),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  place.category.icon, 
-                  size: 24, 
-                  color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.white
-                    : Colors.black,
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.white.withOpacity(0.2)
+                      : Colors.black.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Icon(
+                    place.category.icon, 
+                    size: 24, 
+                    color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.white
+                      : Colors.black,
+                  ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Flexible(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -412,23 +489,26 @@ class _PlaceDraggable extends StatelessWidget {
                     children: [
                       Text(
                         place.displayName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                           color: Theme.of(context).brightness == Brightness.light
                             ? Colors.white
                             : Colors.black,
                           fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
+                      const SizedBox(height: 4),
                       if (place.formattedAddress.isNotEmpty)
                         Text(
                           place.formattedAddress,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: Theme.of(context).brightness == Brightness.light
                               ? Colors.white.withOpacity(0.9)
                               : Colors.black.withOpacity(0.9),
                           ),
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                     ],
                   ),
@@ -457,19 +537,26 @@ class _DragTargetSlot extends StatelessWidget {
       },
       builder: (context, candidateData, rejectedData) {
         final isActive = candidateData.isNotEmpty;
-        return AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: isActive ? 24 : 16,
-          margin: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: isActive 
-              ? Theme.of(context).colorScheme.secondaryContainer 
-              : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border: isActive 
-              ? Border.all(
-                  color: Theme.of(context).colorScheme.secondary.withOpacity(0.5),
-                  width: 1,
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            height: isActive ? 32 : 16,
+            margin: const EdgeInsets.symmetric(horizontal: 12),
+            decoration: BoxDecoration(
+              color: isActive 
+                ? Theme.of(context).colorScheme.secondaryContainer 
+                : Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(4),
+
+            ),
+            child: isActive 
+              ? Center(
+                  child: Icon(
+                    Icons.add,
+                    size: 16,
+                    color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  ),
                 )
               : null,
           ),

@@ -9,6 +9,7 @@ import 'package:travel_genie/pages/trip_itinerary_page.dart';
 
 import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
+import 'models/place.dart';
 import 'pages/create_trip_page.dart';
 import 'pages/home_page.dart';
 import 'pages/my_trips_page.dart';
@@ -104,16 +105,41 @@ final routerProvider = Provider<GoRouter>((ref) {
           // This is a placeholder - we'll need to update this to load the place
           // from the provider or pass it through state.extra
           final placeId = state.pathParameters['id']!;
-          final place = state.extra as Map<String, dynamic>?;
+          final extra = state.extra;
           final query = state.uri.queryParameters['query'] ?? '';
+
+          // Handle both cases: when extra is a Place object directly or a Map
+          Place? placeObj;
+          int? heroTagIndex;
+
+          if (extra is Place) {
+            // If extra is a Place object directly
+            placeObj = extra;
+          } else if (extra is Map<String, dynamic>) {
+            // If extra is a Map with a 'place' key
+            placeObj = extra['place'];
+            heroTagIndex = extra['heroTagIndex'];
+          }
 
           // In a real implementation, you would fetch the place data
           // or pass it through state.extra
           return CustomTransitionPage(
             key: state.pageKey,
-            child: PlaceDetailPage(
-              place: place?['place'],
-              heroTagIndex: place?['heroTagIndex'],
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
+                // Navigate back to the previous screen
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  // If can't pop, go to home
+                  context.go('/');
+                }
+              },
+              child: PlaceDetailPage(
+                place: placeObj!,
+                heroTagIndex: heroTagIndex,
+              ),
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {

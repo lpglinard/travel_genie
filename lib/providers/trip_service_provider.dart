@@ -5,6 +5,7 @@ import '../models/place.dart';
 import '../models/trip.dart';
 import '../services/trip_service.dart';
 import '../user_providers.dart';
+import 'day_summary_service_provider.dart';
 
 /// Provider for TripService
 /// 
@@ -13,7 +14,8 @@ import '../user_providers.dart';
 /// - Other trip-related functionality
 final tripServiceProvider = Provider<TripService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  return TripService(firestoreService);
+  final daySummaryService = ref.watch(daySummaryServiceProvider);
+  return TripService(firestoreService, daySummaryService);
 });
 
 /// Provider that exposes a stream of user trips
