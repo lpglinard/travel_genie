@@ -10,8 +10,9 @@ import 'firestore_service.dart';
 class TripService {
   final FirestoreService _firestoreService;
   final DaySummaryService _daySummaryService;
+  final String? _languageCode;
 
-  TripService(this._firestoreService, this._daySummaryService);
+  TripService(this._firestoreService, this._daySummaryService, this._languageCode);
 
   /// Stream trips for the current user
   Stream<List<Trip>> getUserTrips() {
@@ -87,7 +88,7 @@ class TripService {
       _daySummaryService.getDaySummary(
         tripId: tripId,
         dayId: dayId,
-        languageCode: 'en',
+        languageCode: _languageCode ?? 'en',
       ).then((value) {
         // Optionally, you can handle any post-removal logic here
         debugPrint('Day summary fetched after adding place: $value');
@@ -113,7 +114,7 @@ class TripService {
       _daySummaryService.getDaySummary(
         tripId: tripId,
         dayId: dayId,
-        languageCode: 'en',
+        languageCode: _languageCode ?? 'en',
       ).then((value) {
         // Optionally, you can handle any post-removal logic here
         debugPrint('Day summary fetched after reordering place: $value');
@@ -132,7 +133,7 @@ class TripService {
       _daySummaryService.getDaySummary(
         tripId: tripId,
         dayId: dayId,
-        languageCode: 'en',
+        languageCode: _languageCode ?? 'en',
       ).then((value) {
         // Optionally, you can handle any post-removal logic here
         debugPrint('Day summary fetched after removing place: $value');
