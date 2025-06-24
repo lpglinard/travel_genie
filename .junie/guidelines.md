@@ -31,9 +31,11 @@
    - Font files are located in the `fonts/` directory
 
 ### Build Commands
-- **Development build**: `flutter run`
+- **Development build**: `flutter run` (for running/launching the app)
 - **Release build**: `flutter build apk --release` (Android) or `flutter build ios --release` (iOS)
 - **Web build**: `flutter build web`
+
+**Important**: Use `flutter run` to launch and run the app for development. To test implementations, use `flutter test` instead (see Testing Information section below).
 
 ## Testing Information
 

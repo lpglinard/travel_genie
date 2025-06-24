@@ -264,41 +264,40 @@ class FirestoreService {
         .doc(dayId)
         .collection('places');
 
-    final snapshot = await placesRef.orderBy('order').get();
-    final docs = snapshot.docs;
+    await _firestore.runTransaction((transaction) async {
+      // Read current places within the transaction
+      final snapshot = await placesRef.orderBy('order').get();
+      final docs = snapshot.docs;
 
-    final placeRef = placesRef.doc(place.placeId);
+      final placeRef = placesRef.doc(place.placeId);
 
-    final batch = _firestore.batch();
+      // Inserir no final se posição não for informada
+      final insertIndex = position ?? docs.length;
 
-    // Inserir no final se posição não for informada
-    final insertIndex = position ?? docs.length;
+      // Set the new place with the correct order
+      final newData = {
+        ...place.toMap(),
+        'order': insertIndex,
+      };
+      transaction.set(placeRef, newData);
 
-    // Set the new place with the correct order
-    final newData = {
-      ...place.toMap(),
-      'order': insertIndex,
-    };
-    batch.set(placeRef, newData);
+      // Update the order of existing places that need to be shifted
+      for (int i = 0; i < docs.length; i++) {
+        final doc = docs[i];
+        final currentOrder = doc.data()['order'] as int? ?? i;
 
-    // Update the order of existing places that need to be shifted
-    for (int i = 0; i < docs.length; i++) {
-      final doc = docs[i];
-      final currentOrder = doc.data()['order'] as int? ?? i;
-
-      // Only update documents that need to be shifted
-      if (currentOrder >= insertIndex) {
-        batch.update(doc.reference, {'order': currentOrder + 1});
+        // Only update documents that need to be shifted
+        if (currentOrder >= insertIndex) {
+          transaction.update(doc.reference, {'order': currentOrder + 1});
+        }
       }
-    }
 
-    // Remove dos salvos, se estiver logado
-    if (userId != null) {
-      final savedRef = _savedPlacesCollection(userId).doc(place.placeId);
-      batch.delete(savedRef);
-    }
-
-    await batch.commit();
+      // Remove dos salvos, se estiver logado
+      if (userId != null) {
+        final savedRef = _savedPlacesCollection(userId).doc(place.placeId);
+        transaction.delete(savedRef);
+      }
+    });
   }
 
   Future<void> reorderPlacesWithinDay({
@@ -314,25 +313,26 @@ class FirestoreService {
         .doc(dayId)
         .collection('places');
 
-    final snapshot = await placesRef.orderBy('order').get();
-    final docs = snapshot.docs;
+    await _firestore.runTransaction((transaction) async {
+      // Read current places within the transaction
+      final snapshot = await placesRef.orderBy('order').get();
+      final docs = snapshot.docs;
 
-    if (oldIndex < 0 ||
-        oldIndex >= docs.length ||
-        newIndex < 0 ||
-        newIndex >= docs.length) {
-      return;
-    }
+      if (oldIndex < 0 ||
+          oldIndex >= docs.length ||
+          newIndex < 0 ||
+          newIndex >= docs.length) {
+        return;
+      }
 
-    final movedDoc = docs.removeAt(oldIndex);
-    docs.insert(newIndex, movedDoc);
+      final movedDoc = docs.removeAt(oldIndex);
+      docs.insert(newIndex, movedDoc);
 
-    final batch = _firestore.batch();
-    for (int i = 0; i < docs.length; i++) {
-      batch.update(docs[i].reference, {'order': i});
-    }
-
-    await batch.commit();
+      // Update all documents with new order
+      for (int i = 0; i < docs.length; i++) {
+        transaction.update(docs[i].reference, {'order': i});
+      }
+    });
   }
 
   Future<void> removePlaceFromDay({
@@ -353,21 +353,106 @@ class FirestoreService {
         .doc(dayId)
         .collection('places');
 
-    final placeRef = placesRef.doc(place.placeId);
+    await _firestore.runTransaction((transaction) async {
+      final placeRef = placesRef.doc(place.placeId);
 
-    final doc = await placeRef.get();
-    if (!doc.exists) return;
+      // Check if place exists within the transaction
+      final doc = await transaction.get(placeRef);
+      if (!doc.exists) return;
 
-    await placeRef.delete();
+      // Get all places before making changes
+      final snapshot = await placesRef.orderBy('order').get();
 
-    // Reordenar os restantes
-    final snapshot = await placesRef.orderBy('order').get();
-    final batch = _firestore.batch();
+      // Delete the place
+      transaction.delete(placeRef);
 
-    for (int i = 0; i < snapshot.docs.length; i++) {
-      batch.update(snapshot.docs[i].reference, {'order': i});
-    }
+      // Reorder remaining places
+      int newOrder = 0;
+      for (final doc in snapshot.docs) {
+        if (doc.id != place.placeId) {
+          transaction.update(doc.reference, {'order': newOrder++});
+        }
+      }
+    });
+  }
 
-    await batch.commit();
+  // Groups feedback related methods
+  CollectionReference<Map<String, dynamic>> get _groupsFeedback =>
+      _firestore.collection('groups_feedback');
+
+  Stream<Map<String, dynamic>?> streamGroupsFeedbackSummary() {
+    return _groupsFeedback
+        .doc('summary')
+        .snapshots()
+        .map((doc) => doc.exists ? doc.data() : null);
+  }
+
+  Stream<Map<String, dynamic>?> streamUserFeedback(String userId) {
+    return _groupsFeedback
+        .doc('users')
+        .collection('responses')
+        .doc(userId)
+        .snapshots()
+        .map((doc) => doc.exists ? doc.data() : null);
+  }
+
+  Future<void> submitGroupsFeedback({
+    required String userId,
+    required bool wantsGroupFeature,
+  }) async {
+    await _firestore.runTransaction((transaction) async {
+      // References
+      final summaryRef = _groupsFeedback.doc('summary');
+      final userRef = _groupsFeedback
+          .doc('users')
+          .collection('responses')
+          .doc(userId);
+
+      // Get current summary
+      final summaryDoc = await transaction.get(summaryRef);
+      final summaryData = summaryDoc.exists ? summaryDoc.data()! : <String, dynamic>{};
+
+      // Get current user response (to check if updating)
+      final userDoc = await transaction.get(userRef);
+      final hadPreviousResponse = userDoc.exists;
+      final previousResponse = hadPreviousResponse ? userDoc.data()!['wantsGroupFeature'] as bool? : null;
+
+      // Update user response
+      transaction.set(userRef, {
+        'wantsGroupFeature': wantsGroupFeature,
+        'timestamp': FieldValue.serverTimestamp(),
+        'userId': userId,
+      });
+
+      // Update summary counts
+      int yesCount = summaryData['yesCount'] ?? 0;
+      int noCount = summaryData['noCount'] ?? 0;
+      int totalResponses = summaryData['totalResponses'] ?? 0;
+
+      if (hadPreviousResponse && previousResponse != null) {
+        // User is changing their response
+        if (previousResponse) {
+          yesCount--;
+        } else {
+          noCount--;
+        }
+      } else {
+        // New response
+        totalResponses++;
+      }
+
+      if (wantsGroupFeature) {
+        yesCount++;
+      } else {
+        noCount++;
+      }
+
+      transaction.set(summaryRef, {
+        'yesCount': yesCount,
+        'noCount': noCount,
+        'totalResponses': totalResponses,
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
+    });
   }
 }

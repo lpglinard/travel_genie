@@ -154,5 +154,34 @@
   "placeTypeTravelAgency": "Agência de Viagens",
   "placeTypeUniversity": "Universidade",
   "placeTypeVeterinaryCare": "Veterinário",
-  "placeTypeZoo": "Zoológico"
+  "placeTypeZoo": "Zoológico",
+
+  "groupsTitle": "Grupos de Viagem",
+  "groupsSubtitle": "Ajude-nos a moldar o futuro do planejamento de viagens em grupo!",
+  "groupsFeedbackQuestion": "Gostaria de planejar viagens com outras pessoas?",
+  "groupsFeedbackDescription": "Estamos considerando adicionar um recurso que permite criar e planejar viagens junto com suas pessoas favoritas. Sua opinião nos ajuda a priorizar este desenvolvimento!",
+  "groupsFeedbackExamplesTitle": "Pense em planejar viagens com:",
+  "groupsFeedbackExampleFamily": "Familiares para reuniões ou férias",
+  "groupsFeedbackExampleFriends": "Amigos para escapadas de fim de semana ou aventuras",
+  "groupsFeedbackExampleColleagues": "Colegas para team building ou conferências",
+  "groupsFeedbackExamplePartner": "Seu parceiro(a) para escapadas românticas",
+  "groupsFeedbackYes": "Sim, adoraria isso!",
+  "groupsFeedbackNo": "Não é para mim",
+  "groupsFeedbackThanks": "Obrigado pelo seu feedback! 🙏",
+  "groupsFeedbackCurrentResponseYes": "Você disse sim para recursos de viagem em grupo",
+  "groupsFeedbackCurrentResponseNo": "Você não tem interesse em recursos de grupo",
+  "groupsFeedbackSummaryTitle": "Feedback da Comunidade",
+  "groupsFeedbackSummarySubtitle": "{count, plural, =0{Nenhuma resposta ainda} =1{1 resposta até agora} other{{count} respostas até agora}}",
+  "@groupsFeedbackSummarySubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupsFeedbackSummaryEmpty": "Seja o primeiro a compartilhar seus pensamentos!",
+  "groupsFeedbackEncouragingHigh": "Uau! A comunidade realmente quer recursos de viagem em grupo! 🎉",
+  "groupsFeedbackEncouragingMedium": "Grande interesse em viagens em grupo! Este recurso pode ser muito valioso. 👥",
+  "groupsFeedbackEncouragingLow": "Sentimentos mistos sobre recursos de viagem em grupo. Toda opinião importa! 🤔",
+  "groupsFeedbackEncouragingVeryLow": "Parece que recursos de grupo não são uma prioridade agora. Obrigado pelo feedback honesto! 💭"
 }

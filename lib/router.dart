@@ -11,6 +11,7 @@ import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
 import 'models/place.dart';
 import 'pages/create_trip_page.dart';
+import 'pages/groups_page.dart';
 import 'pages/home_page.dart';
 import 'pages/my_trips_page.dart';
 import 'pages/place_detail_page.dart';
@@ -80,20 +81,13 @@ final routerProvider = Provider<GoRouter>((ref) {
               child: const MyTripsPage(),
             ),
           ),
-          // Groups route (placeholder)
+          // Groups route
           GoRoute(
             path: '/groups',
             name: AppRoute.groups.name,
             pageBuilder: (context, state) => NoTransitionPage(
               key: state.pageKey,
-              child: Scaffold(
-                body: Center(
-                  child: Text(
-                    'Groups',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ),
-              ),
+              child: const GroupsPage(),
             ),
           ),
         ],

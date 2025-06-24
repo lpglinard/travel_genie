@@ -154,5 +154,34 @@
   "placeTypeTravelAgency": "Travel Agency",
   "placeTypeUniversity": "University",
   "placeTypeVeterinaryCare": "Veterinary Care",
-  "placeTypeZoo": "Zoo"
+  "placeTypeZoo": "Zoo",
+
+  "groupsTitle": "Travel Groups",
+  "groupsSubtitle": "Help us shape the future of group travel planning!",
+  "groupsFeedbackQuestion": "Would you like to plan trips with others?",
+  "groupsFeedbackDescription": "We're considering adding a feature that lets you create and plan trips together with your favorite people. Your input helps us prioritize this development!",
+  "groupsFeedbackExamplesTitle": "Think about planning trips with:",
+  "groupsFeedbackExampleFamily": "Family members for reunions or vacations",
+  "groupsFeedbackExampleFriends": "Friends for weekend getaways or adventures",
+  "groupsFeedbackExampleColleagues": "Colleagues for team building or conferences",
+  "groupsFeedbackExamplePartner": "Your significant other for romantic escapes",
+  "groupsFeedbackYes": "Yes, I'd love this!",
+  "groupsFeedbackNo": "Not for me",
+  "groupsFeedbackThanks": "Thanks for your feedback! 🙏",
+  "groupsFeedbackCurrentResponseYes": "You said yes to group travel features",
+  "groupsFeedbackCurrentResponseNo": "You're not interested in group features",
+  "groupsFeedbackSummaryTitle": "Community Feedback",
+  "groupsFeedbackSummarySubtitle": "{count, plural, =0{No responses yet} =1{1 response so far} other{{count} responses so far}}",
+  "@groupsFeedbackSummarySubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupsFeedbackSummaryEmpty": "Be the first to share your thoughts!",
+  "groupsFeedbackEncouragingHigh": "Wow! The community really wants group travel features! 🎉",
+  "groupsFeedbackEncouragingMedium": "Great interest in group travel! This feature could be really valuable. 👥",
+  "groupsFeedbackEncouragingLow": "Mixed feelings about group travel features. Every opinion matters! 🤔",
+  "groupsFeedbackEncouragingVeryLow": "Looks like group features aren't a priority right now. Thanks for the honest feedback! 💭"
 }
