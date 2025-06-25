@@ -183,5 +183,14 @@
   "groupsFeedbackEncouragingHigh": "Uau! A comunidade realmente quer recursos de viagem em grupo! 🎉",
   "groupsFeedbackEncouragingMedium": "Grande interesse em viagens em grupo! Este recurso pode ser muito valioso. 👥",
   "groupsFeedbackEncouragingLow": "Sentimentos mistos sobre recursos de viagem em grupo. Toda opinião importa! 🤔",
-  "groupsFeedbackEncouragingVeryLow": "Parece que recursos de grupo não são uma prioridade agora. Obrigado pelo feedback honesto! 💭"
+  "groupsFeedbackEncouragingVeryLow": "Parece que recursos de grupo não são uma prioridade agora. Obrigado pelo feedback honesto! 💭",
+
+  "badgesFirstTripName": "Primeira Viagem",
+  "badgesFirstTripDescription": "Criou sua primeira viagem",
+  "badgesFirstLoginName": "Bem-vindo",
+  "badgesFirstLoginDescription": "Fez seu primeiro login",
+  "badgesFirstInviteName": "Anfitrião",
+  "badgesFirstInviteDescription": "Convidou amigos para colaborar",
+  "badgesFirstAiCoverName": "Artista Digital",
+  "badgesFirstAiCoverDescription": "Gerou sua primeira capa personalizada via IA"
 }

@@ -9,6 +9,9 @@ import '../models/photo.dart';
 import '../models/place.dart';
 import '../models/trip.dart';
 import '../models/user_data.dart';
+import '../models/badge.dart' as badge_model;
+import '../models/challenge.dart';
+import '../models/travel_cover.dart';
 
 
 class FirestoreService {
@@ -452,5 +455,180 @@ class FirestoreService {
         'lastUpdated': FieldValue.serverTimestamp(),
       });
     });
+  }
+
+  // Profile-related methods
+
+  /// Get user badges
+  Stream<List<badge_model.Badge>> getUserBadges(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('badges')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => badge_model.Badge.fromFirestore(doc.data()))
+            .toList());
+  }
+
+  /// Get user travel cover collection
+  Stream<TravelCoverCollection?> getUserTravelCovers(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('travelCovers')
+        .doc('collection')
+        .snapshots()
+        .map((doc) => doc.exists 
+            ? TravelCoverCollection.fromFirestore(doc.data()!)
+            : null);
+  }
+
+  /// Get active challenges for user
+  Stream<List<Challenge>> getActiveChallenges(String userId) {
+    final now = DateTime.now();
+    return _firestore
+        .collection('challenges')
+        .where('isActive', isEqualTo: true)
+        .where('endDate', isGreaterThan: now.millisecondsSinceEpoch)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Challenge.fromFirestore(doc.data()))
+            .toList());
+  }
+
+  /// Get user's challenge progress
+  Stream<Map<String, int>> getUserChallengeProgress(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('challengeProgress')
+        .snapshots()
+        .map((snapshot) {
+          final Map<String, int> progress = {};
+          for (final doc in snapshot.docs) {
+            progress[doc.id] = doc.data()['progress'] as int? ?? 0;
+          }
+          return progress;
+        });
+  }
+
+  /// Initialize user profile with default badges and challenges
+  Future<void> initializeUserProfile(String userId) async {
+    final batch = _firestore.batch();
+
+    // Initialize badges
+    for (final badge in badge_model.PredefinedBadges.allBadges) {
+      final badgeRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('badges')
+          .doc(badge.id);
+      batch.set(badgeRef, badge.toFirestore());
+    }
+
+    // Initialize travel cover collection
+    final coverCollectionRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('travelCovers')
+        .doc('collection');
+
+    final emptyCollection = TravelCoverCollection(
+      userId: userId,
+      covers: [],
+      totalUnlocked: 0,
+    );
+    batch.set(coverCollectionRef, emptyCollection.toFirestore());
+
+    // Initialize challenge progress for current challenges
+    final weeklyChallenges = PredefinedChallenges.getWeeklyChallenges();
+    final monthlyChallenges = PredefinedChallenges.getMonthlyChallenges();
+
+    for (final challenge in [...weeklyChallenges, ...monthlyChallenges]) {
+      final progressRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('challengeProgress')
+          .doc(challenge.id);
+      batch.set(progressRef, {'progress': 0});
+    }
+
+    await batch.commit();
+    debugPrint('FirestoreService: Initialized profile for user $userId');
+  }
+
+  /// Unlock a badge for the user
+  Future<void> unlockBadge(String userId, String badgeId) async {
+    final badgeRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('badges')
+        .doc(badgeId);
+
+    await badgeRef.update({
+      'isUnlocked': true,
+      'unlockedAt': DateTime.now().millisecondsSinceEpoch,
+    });
+
+    debugPrint('FirestoreService: Unlocked badge $badgeId for user $userId');
+  }
+
+  /// Add a travel cover to user's collection
+  Future<void> addTravelCover(String userId, TravelCover cover) async {
+    final coverCollectionRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('travelCovers')
+        .doc('collection');
+
+    await _firestore.runTransaction((transaction) async {
+      final doc = await transaction.get(coverCollectionRef);
+
+      if (doc.exists) {
+        final collection = TravelCoverCollection.fromFirestore(doc.data()!);
+        final updatedCovers = [...collection.covers, cover];
+        final updatedCollection = collection.copyWith(
+          covers: updatedCovers,
+          totalUnlocked: cover.isUnlocked 
+              ? collection.totalUnlocked + 1 
+              : collection.totalUnlocked,
+        );
+        transaction.update(coverCollectionRef, updatedCollection.toFirestore());
+      } else {
+        final newCollection = TravelCoverCollection(
+          userId: userId,
+          covers: [cover],
+          totalUnlocked: cover.isUnlocked ? 1 : 0,
+        );
+        transaction.set(coverCollectionRef, newCollection.toFirestore());
+      }
+    });
+
+    debugPrint('FirestoreService: Added travel cover ${cover.id} for user $userId');
+  }
+
+  /// Update challenge progress
+  Future<void> updateChallengeProgress(String userId, String challengeId, int progress) async {
+    final progressRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('challengeProgress')
+        .doc(challengeId);
+
+    await progressRef.set({'progress': progress}, SetOptions(merge: true));
+    debugPrint('FirestoreService: Updated challenge $challengeId progress to $progress for user $userId');
+  }
+
+  /// Get challenge progress for a specific challenge
+  Future<int> getChallengeProgress(String userId, String challengeId) async {
+    final doc = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('challengeProgress')
+        .doc(challengeId)
+        .get();
+
+    return doc.exists ? (doc.data()?['progress'] as int? ?? 0) : 0;
   }
 }

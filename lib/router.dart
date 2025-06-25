@@ -17,7 +17,7 @@ import 'pages/my_trips_page.dart';
 import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
 import 'pages/search_results_page.dart';
-import 'providers/user_providers.dart';
+import 'user_providers.dart';
 import 'services/analytics_service.dart';
 
 // Navigation destinations

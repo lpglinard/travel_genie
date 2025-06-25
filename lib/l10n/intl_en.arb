@@ -183,5 +183,14 @@
   "groupsFeedbackEncouragingHigh": "Wow! The community really wants group travel features! 🎉",
   "groupsFeedbackEncouragingMedium": "Great interest in group travel! This feature could be really valuable. 👥",
   "groupsFeedbackEncouragingLow": "Mixed feelings about group travel features. Every opinion matters! 🤔",
-  "groupsFeedbackEncouragingVeryLow": "Looks like group features aren't a priority right now. Thanks for the honest feedback! 💭"
+  "groupsFeedbackEncouragingVeryLow": "Looks like group features aren't a priority right now. Thanks for the honest feedback! 💭",
+
+  "badgesFirstTripName": "First Trip",
+  "badgesFirstTripDescription": "Created your first trip",
+  "badgesFirstLoginName": "Welcome",
+  "badgesFirstLoginDescription": "Made your first login",
+  "badgesFirstInviteName": "Host",
+  "badgesFirstInviteDescription": "Invited friends to collaborate",
+  "badgesFirstAiCoverName": "Digital Artist",
+  "badgesFirstAiCoverDescription": "Generated your first personalized AI cover"
 }
