@@ -192,5 +192,50 @@
   "badgesFirstInviteName": "Anfitrião",
   "badgesFirstInviteDescription": "Convidou amigos para colaborar",
   "badgesFirstAiCoverName": "Artista Digital",
-  "badgesFirstAiCoverDescription": "Gerou sua primeira capa personalizada via IA"
+  "badgesFirstAiCoverDescription": "Gerou sua primeira capa personalizada via IA",
+
+  "travelerProfileTitle": "Perfil do Viajante",
+  "travelerProfileIntroduction": "Ajude-nos a entender melhor o seu estilo e preferências de viagem para recomendações personalizadas perfeitas para você!",
+  "travelerProfileSaved": "Preferências salvas com sucesso!",
+
+  "travelerProfileTravelCompanyTitle": "Com quem você costuma viajar?",
+  "travelerProfileTravelCompanySolo": "Sozinho(a)",
+  "travelerProfileTravelCompanyCouple": "Casal",
+  "travelerProfileTravelCompanyFamily": "Família com crianças",
+  "travelerProfileTravelCompanyFriends": "Grupo de amigos",
+
+  "travelerProfileBudgetTitle": "Qual seu orçamento habitual para viagens?",
+  "travelerProfileBudgetEconomic": "Econômico",
+  "travelerProfileBudgetModerate": "Moderado",
+  "travelerProfileBudgetLuxury": "Luxo",
+
+  "travelerProfileAccommodationTitle": "Que tipo de hospedagem você prefere?",
+  "travelerProfileAccommodationHostel": "Hostel/Albergue",
+  "travelerProfileAccommodationBudgetHotel": "Pousada/Hotel econômico",
+  "travelerProfileAccommodationComfortHotel": "Hotel conforto (3-4 estrelas)",
+  "travelerProfileAccommodationResort": "Resort/Luxo",
+  "travelerProfileAccommodationApartment": "Apartamento/Airbnb",
+
+  "travelerProfileInterestsTitle": "Quais atividades você mais gosta em suas viagens?",
+  "travelerProfileInterestsCulture": "Cultura e Museus",
+  "travelerProfileInterestsNature": "Natureza e Aventura",
+  "travelerProfileInterestsNightlife": "Vida Noturna",
+  "travelerProfileInterestsGastronomy": "Gastronomia",
+  "travelerProfileInterestsShopping": "Compras",
+  "travelerProfileInterestsRelaxation": "Relaxamento e Praia",
+
+  "travelerProfileGastronomicTitle": "Como é seu perfil gastronômico nas viagens?",
+  "travelerProfileGastronomicLocal": "Adoro provar comidas locais e de rua",
+  "travelerProfileGastronomicGourmet": "Prefiro restaurantes recomendados e culinária gourmet",
+  "travelerProfileGastronomicDietary": "Tenho restrições alimentares/especiais (vegetariano, vegano, alergias, etc.)",
+
+  "travelerProfileItineraryTitle": "Como você prefere organizar suas viagens?",
+  "travelerProfileItineraryDetailed": "Gosto de um roteiro detalhado",
+  "travelerProfileItinerarySpontaneous": "Prefiro descobrir espontaneamente durante a viagem",
+
+  "travelerProfileSaveButton": "Salvar preferências",
+  "travelerProfileSkipButton": "Pular esta etapa",
+  "travelerProfileEmptyDescription": "Complete seu perfil de viajante para receber recomendações personalizadas de acordo com seu estilo de viagem.",
+  "travelerProfileCreateButton": "Criar Perfil",
+  "profileEdit": "Editar"
 }

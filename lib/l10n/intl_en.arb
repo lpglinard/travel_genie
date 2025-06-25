@@ -192,5 +192,50 @@
   "badgesFirstInviteName": "Host",
   "badgesFirstInviteDescription": "Invited friends to collaborate",
   "badgesFirstAiCoverName": "Digital Artist",
-  "badgesFirstAiCoverDescription": "Generated your first personalized AI cover"
+  "badgesFirstAiCoverDescription": "Generated your first personalized AI cover",
+
+  "travelerProfileTitle": "Traveler Profile",
+  "travelerProfileIntroduction": "Help us understand your travel style and preferences better for perfect personalized recommendations for you!",
+  "travelerProfileSaved": "Preferences saved successfully!",
+
+  "travelerProfileTravelCompanyTitle": "Who do you usually travel with?",
+  "travelerProfileTravelCompanySolo": "Solo",
+  "travelerProfileTravelCompanyCouple": "Couple",
+  "travelerProfileTravelCompanyFamily": "Family with children",
+  "travelerProfileTravelCompanyFriends": "Group of friends",
+
+  "travelerProfileBudgetTitle": "What is your usual travel budget?",
+  "travelerProfileBudgetEconomic": "Economic",
+  "travelerProfileBudgetModerate": "Moderate",
+  "travelerProfileBudgetLuxury": "Luxury",
+
+  "travelerProfileAccommodationTitle": "What type of accommodation do you prefer?",
+  "travelerProfileAccommodationHostel": "Hostel/Backpacker",
+  "travelerProfileAccommodationBudgetHotel": "Budget Hotel/Inn",
+  "travelerProfileAccommodationComfortHotel": "Comfort Hotel (3-4 stars)",
+  "travelerProfileAccommodationResort": "Resort/Luxury",
+  "travelerProfileAccommodationApartment": "Apartment/Airbnb",
+
+  "travelerProfileInterestsTitle": "What activities do you enjoy most on your trips?",
+  "travelerProfileInterestsCulture": "Culture and Museums",
+  "travelerProfileInterestsNature": "Nature and Adventure",
+  "travelerProfileInterestsNightlife": "Nightlife",
+  "travelerProfileInterestsGastronomy": "Gastronomy",
+  "travelerProfileInterestsShopping": "Shopping",
+  "travelerProfileInterestsRelaxation": "Relaxation and Beach",
+
+  "travelerProfileGastronomicTitle": "What is your gastronomic profile when traveling?",
+  "travelerProfileGastronomicLocal": "I love trying local and street food",
+  "travelerProfileGastronomicGourmet": "I prefer recommended restaurants and gourmet cuisine",
+  "travelerProfileGastronomicDietary": "I have dietary restrictions/special needs (vegetarian, vegan, allergies, etc.)",
+
+  "travelerProfileItineraryTitle": "How do you prefer to organize your trips?",
+  "travelerProfileItineraryDetailed": "I like a detailed itinerary",
+  "travelerProfileItinerarySpontaneous": "I prefer to discover spontaneously during the trip",
+
+  "travelerProfileSaveButton": "Save preferences",
+  "travelerProfileSkipButton": "Skip this step",
+  "travelerProfileEmptyDescription": "Complete your traveler profile to get personalized recommendations tailored to your travel style.",
+  "travelerProfileCreateButton": "Create Profile",
+  "profileEdit": "Edit"
 }

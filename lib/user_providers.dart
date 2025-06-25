@@ -12,6 +12,7 @@ import 'services/places_service.dart';
 import 'services/preferences_service.dart';
 import 'services/profile_service.dart';
 import 'services/recommendation_service.dart';
+import 'services/traveler_profile_service.dart';
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);
@@ -59,4 +60,9 @@ final recommendationServiceProvider = Provider<RecommendationService>((ref) {
 final profileServiceProvider = Provider<ProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return ProfileService(firestoreService);
+});
+
+final travelerProfileServiceProvider = Provider<TravelerProfileService>((ref) {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return TravelerProfileService(firestoreService);
 });

@@ -17,6 +17,7 @@ import 'pages/my_trips_page.dart';
 import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
 import 'pages/search_results_page.dart';
+import 'pages/traveler_profile_page.dart';
 import 'user_providers.dart';
 import 'services/analytics_service.dart';
 
@@ -160,6 +161,32 @@ final routerProvider = Provider<GoRouter>((ref) {
                 }
               },
               child: const app_profile.ProfileScreen(),
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+      // Traveler Profile screen route (outside the shell)
+      GoRoute(
+        path: '/traveler-profile',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
+                // Navigate back to the previous screen
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  // If can't pop, go to home
+                  context.go('/');
+                }
+              },
+              child: const TravelerProfilePage(),
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {

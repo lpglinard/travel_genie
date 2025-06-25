@@ -12,15 +12,35 @@ import '../models/user_data.dart';
 import '../models/badge.dart' as badge_model;
 import '../models/challenge.dart';
 import '../models/travel_cover.dart';
-
+import '../models/traveler_profile.dart';
 
 class FirestoreService {
   FirestoreService(this._firestore);
 
   final FirebaseFirestore _firestore;
 
+  // ============================================================================
+  // PRIVATE COLLECTION REFERENCES
+  // ============================================================================
+
   CollectionReference<Map<String, dynamic>> get _users =>
       _firestore.collection('users');
+
+  CollectionReference<Map<String, dynamic>> get _trips =>
+      _firestore.collection('trips');
+
+  CollectionReference<Map<String, dynamic>> get _groupsFeedback =>
+      _firestore.collection('groups_feedback');
+
+  CollectionReference<Map<String, dynamic>> _savedPlacesCollection(
+    String userId,
+  ) {
+    return _users.doc(userId).collection('saved_places');
+  }
+
+  // ============================================================================
+  // USER MANAGEMENT
+  // ============================================================================
 
   Stream<UserData> streamUser(String uid) {
     return _users.doc(uid).snapshots().map(UserData.fromDoc);
@@ -41,11 +61,9 @@ class FirestoreService {
     return doc.set(data, SetOptions(merge: true));
   }
 
-  CollectionReference<Map<String, dynamic>> _savedPlacesCollection(
-    String userId,
-  ) {
-    return _users.doc(userId).collection('saved_places');
-  }
+  // ============================================================================
+  // SAVED PLACES MANAGEMENT
+  // ============================================================================
 
   Future<void> savePlace(String userId, Place place) async {
     // Check if placeId is empty to avoid Firestore error
@@ -95,26 +113,6 @@ class FirestoreService {
     ).orderBy('savedDate', descending: true).snapshots();
   }
 
-  Future<List<Destination>> getRecommendedDestinations() async {
-    final snapshot = await _firestore
-        .collection('recommendedDestinations')
-        .get();
-    return snapshot.docs
-        .map((doc) => Destination.fromFirestore(doc.data()))
-        .toList();
-  }
-
-  Stream<List<Destination>> streamRecommendedDestinations() {
-    return _firestore
-        .collection('recommendedDestinations')
-        .snapshots()
-        .map(
-          (snapshot) => snapshot.docs
-              .map((doc) => Destination.fromFirestore(doc.data()))
-              .toList(),
-        );
-  }
-
   Stream<List<Place>> streamSavedPlacesAsPlaces(String userId) {
     return streamSavedPlaces(userId).map((snapshot) {
       return snapshot.docs.map((doc) {
@@ -141,40 +139,33 @@ class FirestoreService {
     });
   }
 
-  // Stream dias da viagem (itinerary_days)
-  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
-    return _trips
-        .doc(tripId)
-        .collection('itinerary_days')
-        .orderBy('order')
+  // ============================================================================
+  // DESTINATIONS MANAGEMENT
+  // ============================================================================
+
+  Future<List<Destination>> getRecommendedDestinations() async {
+    final snapshot = await _firestore
+        .collection('recommendedDestinations')
+        .get();
+    return snapshot.docs
+        .map((doc) => Destination.fromFirestore(doc.data()))
+        .toList();
+  }
+
+  Stream<List<Destination>> streamRecommendedDestinations() {
+    return _firestore
+        .collection('recommendedDestinations')
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
-              .map((doc) => ItineraryDay.fromFirestore(doc))
+              .map((doc) => Destination.fromFirestore(doc.data()))
               .toList(),
         );
   }
 
-  // Stream lugares de um dia
-  Stream<List<Place>> streamPlacesForDay({
-    required String tripId,
-    required String dayId,
-  }) {
-    return _trips
-        .doc(tripId)
-        .collection('itinerary_days')
-        .doc(dayId)
-        .collection('places')
-        .orderBy('order')
-        .snapshots()
-        .map(
-          (snapshot) =>
-              snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList(),
-        );
-  }
-
-  CollectionReference<Map<String, dynamic>> get _trips =>
-      _firestore.collection('trips');
+  // ============================================================================
+  // TRIPS MANAGEMENT
+  // ============================================================================
 
   /// Stream trips for a user
   ///
@@ -377,9 +368,41 @@ class FirestoreService {
     });
   }
 
-  // Groups feedback related methods
-  CollectionReference<Map<String, dynamic>> get _groupsFeedback =>
-      _firestore.collection('groups_feedback');
+  // Stream itinerary days for a trip
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
+    return _trips
+        .doc(tripId)
+        .collection('itinerary_days')
+        .orderBy('order')
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => ItineraryDay.fromFirestore(doc))
+              .toList(),
+        );
+  }
+
+  // Stream places for a specific day
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  }) {
+    return _trips
+        .doc(tripId)
+        .collection('itinerary_days')
+        .doc(dayId)
+        .collection('places')
+        .orderBy('order')
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList(),
+        );
+  }
+
+  // ============================================================================
+  // GROUPS FEEDBACK MANAGEMENT
+  // ============================================================================
 
   Stream<Map<String, dynamic>?> streamGroupsFeedbackSummary() {
     return _groupsFeedback
@@ -457,61 +480,9 @@ class FirestoreService {
     });
   }
 
-  // Profile-related methods
-
-  /// Get user badges
-  Stream<List<badge_model.Badge>> getUserBadges(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('badges')
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => badge_model.Badge.fromFirestore(doc.data()))
-            .toList());
-  }
-
-  /// Get user travel cover collection
-  Stream<TravelCoverCollection?> getUserTravelCovers(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('travelCovers')
-        .doc('collection')
-        .snapshots()
-        .map((doc) => doc.exists 
-            ? TravelCoverCollection.fromFirestore(doc.data()!)
-            : null);
-  }
-
-  /// Get active challenges for user
-  Stream<List<Challenge>> getActiveChallenges(String userId) {
-    final now = DateTime.now();
-    return _firestore
-        .collection('challenges')
-        .where('isActive', isEqualTo: true)
-        .where('endDate', isGreaterThan: now.millisecondsSinceEpoch)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Challenge.fromFirestore(doc.data()))
-            .toList());
-  }
-
-  /// Get user's challenge progress
-  Stream<Map<String, int>> getUserChallengeProgress(String userId) {
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('challengeProgress')
-        .snapshots()
-        .map((snapshot) {
-          final Map<String, int> progress = {};
-          for (final doc in snapshot.docs) {
-            progress[doc.id] = doc.data()['progress'] as int? ?? 0;
-          }
-          return progress;
-        });
-  }
+  // ============================================================================
+  // USER PROFILE MANAGEMENT
+  // ============================================================================
 
   /// Initialize user profile with default badges and challenges
   Future<void> initializeUserProfile(String userId) async {
@@ -558,6 +529,22 @@ class FirestoreService {
     debugPrint('FirestoreService: Initialized profile for user $userId');
   }
 
+  // ============================================================================
+  // BADGES MANAGEMENT
+  // ============================================================================
+
+  /// Get user badges
+  Stream<List<badge_model.Badge>> getUserBadges(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('badges')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => badge_model.Badge.fromFirestore(doc.data()))
+            .toList());
+  }
+
   /// Unlock a badge for the user
   Future<void> unlockBadge(String userId, String badgeId) async {
     final badgeRef = _firestore
@@ -572,6 +559,23 @@ class FirestoreService {
     });
 
     debugPrint('FirestoreService: Unlocked badge $badgeId for user $userId');
+  }
+
+  // ============================================================================
+  // TRAVEL COVERS MANAGEMENT
+  // ============================================================================
+
+  /// Get user travel cover collection
+  Stream<TravelCoverCollection?> getUserTravelCovers(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('travelCovers')
+        .doc('collection')
+        .snapshots()
+        .map((doc) => doc.exists 
+            ? TravelCoverCollection.fromFirestore(doc.data()!)
+            : null);
   }
 
   /// Add a travel cover to user's collection
@@ -608,6 +612,39 @@ class FirestoreService {
     debugPrint('FirestoreService: Added travel cover ${cover.id} for user $userId');
   }
 
+  // ============================================================================
+  // CHALLENGES MANAGEMENT
+  // ============================================================================
+
+  /// Get active challenges for user
+  Stream<List<Challenge>> getActiveChallenges(String userId) {
+    final now = DateTime.now();
+    return _firestore
+        .collection('challenges')
+        .where('isActive', isEqualTo: true)
+        .where('endDate', isGreaterThan: now.millisecondsSinceEpoch)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Challenge.fromFirestore(doc.data()))
+            .toList());
+  }
+
+  /// Get user's challenge progress
+  Stream<Map<String, int>> getUserChallengeProgress(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('challengeProgress')
+        .snapshots()
+        .map((snapshot) {
+          final Map<String, int> progress = {};
+          for (final doc in snapshot.docs) {
+            progress[doc.id] = doc.data()['progress'] as int? ?? 0;
+          }
+          return progress;
+        });
+  }
+
   /// Update challenge progress
   Future<void> updateChallengeProgress(String userId, String challengeId, int progress) async {
     final progressRef = _firestore
@@ -630,5 +667,84 @@ class FirestoreService {
         .get();
 
     return doc.exists ? (doc.data()?['progress'] as int? ?? 0) : 0;
+  }
+
+  // ============================================================================
+  // TRAVELER PROFILE MANAGEMENT
+  // ============================================================================
+
+  /// Get user's traveler profile
+  Future<TravelerProfile?> getTravelerProfile(String userId) async {
+    final doc = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('profile')
+        .doc('traveler_profile')
+        .get();
+
+    if (!doc.exists) return null;
+
+    try {
+      return TravelerProfile.fromJson(doc.data()!);
+    } catch (e) {
+      debugPrint('FirestoreService: Error parsing traveler profile for user $userId: $e');
+      return null;
+    }
+  }
+
+  /// Stream user's traveler profile
+  Stream<TravelerProfile?> streamTravelerProfile(String userId) {
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('profile')
+        .doc('traveler_profile')
+        .snapshots()
+        .map((doc) {
+          if (!doc.exists) return null;
+
+          try {
+            return TravelerProfile.fromJson(doc.data()!);
+          } catch (e) {
+            debugPrint('FirestoreService: Error parsing traveler profile for user $userId: $e');
+            return null;
+          }
+        });
+  }
+
+  /// Save user's traveler profile
+  Future<void> saveTravelerProfile(String userId, TravelerProfile profile) async {
+    final profileRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('profile')
+        .doc('traveler_profile');
+
+    await profileRef.set(profile.toJson(), SetOptions(merge: true));
+    debugPrint('FirestoreService: Saved traveler profile for user $userId');
+  }
+
+  /// Delete user's traveler profile
+  Future<void> deleteTravelerProfile(String userId) async {
+    final profileRef = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('profile')
+        .doc('traveler_profile');
+
+    await profileRef.delete();
+    debugPrint('FirestoreService: Deleted traveler profile for user $userId');
+  }
+
+  /// Check if user has a traveler profile
+  Future<bool> hasTravelerProfile(String userId) async {
+    final doc = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('profile')
+        .doc('traveler_profile')
+        .get();
+
+    return doc.exists;
   }
 }

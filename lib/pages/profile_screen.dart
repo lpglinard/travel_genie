@@ -13,6 +13,7 @@ import '../widgets/profile/dark_mode_toggle_tile.dart';
 import '../widgets/profile/language_settings_tile.dart';
 import '../widgets/profile/logout_tile.dart';
 import '../widgets/profile/profile_info_tile.dart';
+import '../widgets/profile/traveler_profile_summary.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -43,6 +44,10 @@ class ProfileScreen extends ConsumerWidget {
             _buildLoginSection(context)
           else
             _buildUserIdentificationSection(context, user, userData),
+          const SizedBox(height: 24),
+
+          // Traveler Profile Summary Section
+          const TravelerProfileSummary(),
           const SizedBox(height: 24),
 
           // Badges and Achievements Section
