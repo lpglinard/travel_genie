@@ -152,12 +152,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             child: PopScope(
               canPop: false,
               onPopInvoked: (didPop) {
-                // Navigate back to the previous screen
-                if (context.canPop()) {
-                  context.pop();
-                } else {
-                  // If can't pop, go to home
-                  context.go('/');
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to home
+                    context.go('/');
+                  }
                 }
               },
               child: const app_profile.ProfileScreen(),
@@ -178,12 +181,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             child: PopScope(
               canPop: false,
               onPopInvoked: (didPop) {
-                // Navigate back to the previous screen
-                if (context.canPop()) {
-                  context.pop();
-                } else {
-                  // If can't pop, go to home
-                  context.go('/');
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to home
+                    context.go('/');
+                  }
                 }
               },
               child: const TravelerProfilePage(),
@@ -235,12 +241,15 @@ final routerProvider = Provider<GoRouter>((ref) {
             child: PopScope(
               canPop: false,
               onPopInvoked: (didPop) {
-                // Navigate back to the previous screen
-                if (context.canPop()) {
-                  context.pop();
-                } else {
-                  // If can't pop, go to home
-                  context.go('/');
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to home
+                    context.go('/');
+                  }
                 }
               },
               child: SignInScreen(
