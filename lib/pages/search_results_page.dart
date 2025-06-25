@@ -102,12 +102,6 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               ),
             ),
 
-            // Category filters
-            CategoryFilterSection(
-              selectedCategory: _selectedCategory,
-              onCategorySelected: _filterByCategory,
-            ),
-
             // Results list
             Expanded(child: ResultsList(query: _searchController.text)),
           ],
