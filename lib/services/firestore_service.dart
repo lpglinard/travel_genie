@@ -213,14 +213,12 @@ class FirestoreService {
     required String userId,
     required String? userEmail,
     required bool isArchived,
-    required String coverImageUrl,
   }) async {
     final tripRef = await _firestore.collection('trips').add({
       'title': title,
       'description': description,
       'startDate': Timestamp.fromDate(startDate),
       'endDate': Timestamp.fromDate(endDate),
-      'coverImageUrl': '',
       'userId': userId,
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),

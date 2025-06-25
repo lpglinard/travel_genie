@@ -52,8 +52,10 @@ class _ImageCarouselState extends State<ImageCarousel> {
                   children: [
                     Hero(
                       tag: widget.heroTagIndex != null
-                          ? 'place-image-${widget.place.placeId}-${widget.heroTagIndex}'
-                          : 'place-image-${widget.place.placeId}',
+                          ? (index == 0 
+                              ? 'place-image-${widget.place.placeId}-${widget.heroTagIndex}'
+                              : 'place-image-${widget.place.placeId}-${widget.heroTagIndex}-$index')
+                          : 'place-image-${widget.place.placeId}-$index',
                       child: CachedNetworkImage(
                         imageUrl: widget.place.photos[index].urlWithKey(
                           googlePlacesApiKey,

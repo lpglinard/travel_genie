@@ -86,8 +86,8 @@ class GroupsPage extends ConsumerWidget {
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [
-                            theme.colorScheme.primary.withOpacity(0.1),
-                            theme.colorScheme.secondary.withOpacity(0.1),
+                            theme.colorScheme.primary.withValues(alpha: 0.1),
+                            theme.colorScheme.secondary.withValues(alpha: 0.1),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(16),
@@ -112,7 +112,7 @@ class GroupsPage extends ConsumerWidget {
                           Text(
                             l10n.groupsSubtitle,
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onSurface.withOpacity(0.7),
+                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -168,7 +168,7 @@ class GroupsPage extends ConsumerWidget {
                   color: theme.colorScheme.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
+                      color: Colors.black.withValues(alpha: 0.1),
                       blurRadius: 8,
                       offset: const Offset(0, -2),
                     ),
@@ -184,7 +184,7 @@ class GroupsPage extends ConsumerWidget {
                           icon: const Icon(Icons.thumb_down_rounded),
                           label: Text(l10n.groupsFeedbackNo),
                           style: FilledButton.styleFrom(
-                            backgroundColor: theme.colorScheme.surfaceVariant,
+                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
                             foregroundColor: theme.colorScheme.onSurfaceVariant,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),

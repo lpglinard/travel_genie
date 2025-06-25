@@ -33,7 +33,6 @@ class TripService {
     required String description,
     required DateTime startDate,
     required DateTime endDate,
-    String coverImageUrl = '',
     bool isArchived = false,
   }) async {
     final user = FirebaseAuth.instance.currentUser;
@@ -48,7 +47,6 @@ class TripService {
       description: description,
       startDate: startDate,
       endDate: endDate,
-      coverImageUrl: coverImageUrl,
       isArchived: isArchived,
     );
   }

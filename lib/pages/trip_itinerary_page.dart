@@ -134,5 +134,4 @@ class TripItineraryPage extends ConsumerWidget {
       ),
     );
   }
-
 }

@@ -10,13 +10,13 @@ import '../../models/drag_drop_models.dart';
 class PlaceDraggable extends StatelessWidget {
   /// The place data associated with this draggable widget
   final Place place;
-  
+
   /// The ID of the day this place belongs to, if any
   final String fromDayId;
-  
+
   /// The child widget to make draggable
   final Widget child;
-  
+
   /// Creates a new [PlaceDraggable].
   /// 
   /// [place] is the place data that will be transferred during drag operations.
@@ -45,8 +45,8 @@ class PlaceDraggable extends StatelessWidget {
       elevation: 2,
       borderRadius: BorderRadius.circular(4),
       color: Theme.of(context).brightness == Brightness.light 
-        ? place.category.lightColor.withOpacity(0.7)
-        : place.category.darkColor.withOpacity(0.7),
+        ? place.category.lightColor.withValues(alpha: 0.7)
+        : place.category.darkColor.withValues(alpha: 0.7),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 280),
         child: Padding(
@@ -72,8 +72,8 @@ class PlaceDraggable extends StatelessWidget {
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.light
-          ? Colors.white.withOpacity(0.2)
-          : Colors.black.withOpacity(0.1),
+          ? Colors.white.withValues(alpha: 0.2)
+          : Colors.black.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Icon(
@@ -109,8 +109,8 @@ class PlaceDraggable extends StatelessWidget {
             place.formattedAddress,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white.withOpacity(0.9)
-                : Colors.black.withOpacity(0.9),
+                ? Colors.white.withValues(alpha: 0.9)
+                : Colors.black.withValues(alpha: 0.9),
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 2,

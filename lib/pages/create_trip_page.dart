@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../l10n/app_localizations.dart';
-import '../models/trip.dart';
 import '../providers/trip_service_provider.dart';
 
 class CreateTripPage extends ConsumerStatefulWidget {
@@ -74,7 +72,6 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
         description: _descriptionController.text.trim(),
         startDate: _startDate,
         endDate: _endDate,
-        coverImageUrl: '', // Empty for now, could add image upload later
         isArchived: false,
       );
 

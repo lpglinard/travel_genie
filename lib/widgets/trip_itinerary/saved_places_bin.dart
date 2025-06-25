@@ -47,8 +47,8 @@ class SavedPlacesBin extends StatelessWidget {
       elevation: 2,
       borderRadius: BorderRadius.circular(4),
       color: Theme.of(context).brightness == Brightness.light 
-        ? place.category.lightColor.withOpacity(0.7)
-        : place.category.darkColor.withOpacity(0.7),
+        ? place.category.lightColor.withValues(alpha: 0.7)
+        : place.category.darkColor.withValues(alpha: 0.7),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 250),
         child: Padding(
@@ -100,8 +100,8 @@ class SavedPlacesBin extends StatelessWidget {
             place.formattedAddress,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white.withOpacity(0.9)
-                : Colors.black.withOpacity(0.9),
+                ? Colors.white.withValues(alpha: 0.9)
+                : Colors.black.withValues(alpha: 0.9),
             ),
             overflow: TextOverflow.ellipsis,
           ),
@@ -139,8 +139,8 @@ class SavedPlacesBin extends StatelessWidget {
   /// Gets the appropriate color for the place chip
   Color _getChipColor(BuildContext context, Place place) {
     return Theme.of(context).brightness == Brightness.light 
-      ? place.category.lightColor.withOpacity(0.6)
-      : place.category.darkColor.withOpacity(0.6);
+      ? place.category.lightColor.withValues(alpha: 0.6)
+      : place.category.darkColor.withValues(alpha: 0.6);
   }
 
   /// Builds the icon for the place chip

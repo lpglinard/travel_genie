@@ -17,9 +17,7 @@ class AppTheme {
     onTertiaryContainer: Colors.black,
     error: Color(0xFFB3261E),
     onError: Colors.white,
-    background: Color(0xFFFFFFFF),
-    onBackground: Colors.black,
-    surface: Color(0xFFECEFF1),
+    surface: Color(0xFFFFFFFF),
     onSurface: Colors.black,
   );
 
@@ -39,9 +37,7 @@ class AppTheme {
     onTertiaryContainer: Colors.black,
     error: Color(0xFFCF6679),
     onError: Colors.black,
-    background: Color(0xFF121212),
-    onBackground: Colors.white,
-    surface: Color(0xFF232323),
+    surface: Color(0xFF121212),
     onSurface: Colors.white,
   );
 
@@ -155,7 +151,7 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: _lightColorScheme.surfaceVariant.withOpacity(0.1),
+      fillColor: _lightColorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
       alignLabelWithHint: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -297,7 +293,7 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: _darkColorScheme.surfaceVariant.withOpacity(0.2),
+      fillColor: _darkColorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
       alignLabelWithHint: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
