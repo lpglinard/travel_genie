@@ -20,7 +20,7 @@ class DaySummaryService {
     required String dayId,
     required String languageCode,
   }) async {
-    final uri = Uri.parse('https://sophisticated-chimera-1052236350369.us-central1.run.app/itinerary-summary/summary');
+    final uri = Uri.parse('https://sophisticated-chimera.odsy.to/itinerary-summary/summary');
 
     final requestBody = {
       'tripId': tripId,

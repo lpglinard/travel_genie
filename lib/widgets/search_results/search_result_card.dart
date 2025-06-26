@@ -91,9 +91,19 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
         if (_isSaved) {
           // Remove from saved places
           await firestoreService.removePlace(user.uid, widget.place.placeId);
+          ref.read(analyticsServiceProvider).logButtonTap(
+            buttonName: 'remove_from_favorites',
+            screenName: 'search_results',
+            context: 'place_card',
+          );
         } else {
           // Add to saved places
           await firestoreService.savePlace(user.uid, widget.place);
+          ref.read(analyticsServiceProvider).logButtonTap(
+            buttonName: 'add_to_favorites',
+            screenName: 'search_results',
+            context: 'place_card',
+          );
         }
 
         if (mounted) {
@@ -179,6 +189,11 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
       elevation: 2,
       child: InkWell(
         onTap: () {
+          ref.read(analyticsServiceProvider).logViewPlace(
+            placeId: widget.place.placeId,
+            placeName: widget.place.displayName,
+            category: widget.place.category.name,
+          );
           // Navigate to place detail using go_router with push
           context.push(
             '/place/${widget.place.placeId}?query=${Uri.encodeComponent(widget.query)}',

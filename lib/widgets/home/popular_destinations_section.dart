@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/destination.dart';
 import '../../providers/autocomplete_provider.dart';
+import '../../providers/user_providers.dart';
 
 class PopularDestinationsSection extends StatelessWidget {
   const PopularDestinationsSection({super.key, required this.destinations});
@@ -47,6 +48,11 @@ class _DestinationItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        ref.read(analyticsServiceProvider).logButtonTap(
+          buttonName: 'popular_destination',
+          screenName: 'home',
+          context: destination.name,
+        );
         // Clear autocomplete suggestions
         ref.read(autocompleteProvider.notifier).search('');
         // Navigate to explore page with destination name as query

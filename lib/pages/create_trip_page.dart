@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../providers/trip_service_provider.dart';
+import '../providers/user_providers.dart';
 
 class CreateTripPage extends ConsumerStatefulWidget {
   const CreateTripPage({super.key});
@@ -31,6 +32,12 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
   }
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
+    ref.read(analyticsServiceProvider).logButtonTap(
+      buttonName: isStartDate ? 'select_start_date' : 'select_end_date',
+      screenName: 'create_trip',
+      context: 'date_picker',
+    );
+
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: isStartDate ? _startDate : _endDate,
@@ -67,12 +74,17 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
       // Use the TripService from the provider to create the trip
       final tripService = ref.read(tripServiceProvider);
 
-      await tripService.createTrip(
+      final trip = await tripService.createTrip(
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
         startDate: _startDate,
         endDate: _endDate,
         isArchived: false,
+      );
+
+      ref.read(analyticsServiceProvider).logCreateItinerary(
+        id: trip,
+        destination: _titleController.text.trim(),
       );
 
       if (mounted) {

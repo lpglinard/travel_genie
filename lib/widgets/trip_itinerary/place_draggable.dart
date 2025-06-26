@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/place.dart';
 import '../../models/drag_drop_models.dart';
+import '../../providers/user_providers.dart';
 
 /// A draggable wrapper widget that makes any child widget draggable with place data.
 /// 
 /// This widget wraps a child widget and makes it draggable, providing visual feedback
 /// during the drag operation. It's designed specifically for dragging places in the
 /// trip itinerary interface.
-class PlaceDraggable extends StatelessWidget {
+class PlaceDraggable extends ConsumerWidget {
   /// The place data associated with this draggable widget
   final Place place;
 
@@ -30,12 +32,19 @@ class PlaceDraggable extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return LongPressDraggable<DraggedPlaceData>(
       data: DraggedPlaceData(place: place, fromDayId: fromDayId),
       feedback: _buildDragFeedback(context),
       child: child,
       childWhenDragging: Opacity(opacity: 0.5, child: child),
+      onDragStarted: () {
+        ref.read(analyticsServiceProvider).logDragStart(
+          itemType: 'place',
+          itemId: place.placeId,
+          fromLocation: fromDayId,
+        );
+      },
     );
   }
 

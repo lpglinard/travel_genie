@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/user_providers.dart';
 
 /// A reusable search field widget that adapts to the current theme.
-class SearchField extends StatelessWidget {
+class SearchField extends ConsumerWidget {
   /// Creates a search field widget.
   ///
   /// The [controller] is used to control the text being edited.
@@ -38,7 +40,7 @@ class SearchField extends StatelessWidget {
   final Widget? suffixIcon;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -49,6 +51,11 @@ class SearchField extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.clear),
               onPressed: () {
+                ref.read(analyticsServiceProvider).logSearchInteraction(
+                  action: 'clear',
+                  query: controller.text,
+                  screenName: 'search_field',
+                );
                 controller.clear();
                 if (onClear != null) {
                   onClear!();
@@ -65,8 +72,24 @@ class SearchField extends StatelessWidget {
         ).colorScheme.inverseSurface.withOpacity(0.2),
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
       ),
-      onSubmitted: onSubmitted,
-      onChanged: onChanged,
+      onSubmitted: onSubmitted != null ? (value) {
+        ref.read(analyticsServiceProvider).logSearchInteraction(
+          action: 'submit',
+          query: value,
+          screenName: 'search_field',
+        );
+        onSubmitted!(value);
+      } : null,
+      onChanged: onChanged != null ? (value) {
+        if (value.isNotEmpty) {
+          ref.read(analyticsServiceProvider).logSearchInteraction(
+            action: 'start',
+            query: value,
+            screenName: 'search_field',
+          );
+        }
+        onChanged!(value);
+      } : null,
     );
   }
 }

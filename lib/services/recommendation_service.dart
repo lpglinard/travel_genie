@@ -26,7 +26,7 @@ class RecommendationService {
     }
 
     final uri = Uri.parse(
-      'https://sophisticated-chimera-1052236350369.us-central1.run.app/places-recommendations',
+      'https://sophisticated-chimera.odsy.to/places-recommendations',
     ).replace(queryParameters: queryParams);
 
     try {
