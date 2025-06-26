@@ -10,7 +10,7 @@ class Trip {
     required this.description,
     required this.startDate,
     required this.endDate,
-    required this.publicImageUrl,
+    required this.coverImageUrl,
     required this.userId,
     required this.createdAt,
     required this.updatedAt,
@@ -25,7 +25,7 @@ class Trip {
   final String description;
   final DateTime startDate;
   final DateTime endDate;
-  final String publicImageUrl;
+  final String coverImageUrl;
   final String userId;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -45,7 +45,7 @@ class Trip {
       description: data['description'] as String? ?? '',
       startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endDate: (data['endDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      publicImageUrl: data['publicImageUrl'] as String? ?? '',
+      coverImageUrl: data['coverImageUrl'] as String? ?? '',
       userId: data['userId'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -63,7 +63,7 @@ class Trip {
       'description': description,
       'startDate': Timestamp.fromDate(startDate),
       'endDate': Timestamp.fromDate(endDate),
-      'publicImageUrl': publicImageUrl,
+      'coverImageUrl': coverImageUrl,
       'userId': userId,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
@@ -79,7 +79,7 @@ class Trip {
     String? description,
     DateTime? startDate,
     DateTime? endDate,
-    String? publicImageUrl,
+    String? coverImageUrl,
     String? userId,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -94,7 +94,7 @@ class Trip {
       description: description ?? this.description,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
-      publicImageUrl: publicImageUrl ?? this.publicImageUrl,
+      coverImageUrl: coverImageUrl ?? this.coverImageUrl,
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
