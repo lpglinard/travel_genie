@@ -259,7 +259,7 @@ class AnalyticsService {
         if (itemType != null) 'item_type': itemType,
         if (itemId != null) 'item_id': itemId,
         if (toLocation != null) 'to_location': toLocation,
-        if (successful != null) 'successful': successful,
+        if (successful != null) 'successful': successful.toString(),
       },
     );
   }
