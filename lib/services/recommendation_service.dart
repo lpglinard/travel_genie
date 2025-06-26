@@ -1,9 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-
-import '../models/paginated_places.dart';
-import '../models/place.dart';
+import 'package:travel_genie/models/paginated_places.dart';
+import 'package:travel_genie/models/place.dart';
 
 class RecommendationService {
   RecommendationService({http.Client? client})

@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/config/config.dart';
 import '../../core/extensions/string_extension.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
+import '../../providers/user_providers.dart';
 import 'photo_attribution.dart';
 
-class SearchResultCard extends StatelessWidget {
+class SearchResultCard extends ConsumerStatefulWidget {
   const SearchResultCard({
     super.key,
     required this.place,
@@ -19,6 +22,134 @@ class SearchResultCard extends StatelessWidget {
   final Place place;
   final int index;
   final String query;
+
+  @override
+  ConsumerState<SearchResultCard> createState() => _SearchResultCardState();
+}
+
+class _SearchResultCardState extends ConsumerState<SearchResultCard> {
+  bool _isSaved = false;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfSaved();
+  }
+
+  Future<void> _checkIfSaved() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      try {
+        final firestoreService = ref.read(firestoreServiceProvider);
+        final isSaved = await firestoreService.isPlaceSaved(user.uid, widget.place.placeId);
+        if (mounted) {
+          setState(() {
+            _isSaved = isSaved;
+          });
+        }
+      } catch (e) {
+        // Handle error silently for now
+        print('Error checking if place is saved: $e');
+      }
+    }
+  }
+
+  Future<void> _toggleSaved() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        // Show a message to the user that they need to be logged in
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Login required to save places',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.primaryContainer,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+        return;
+      }
+
+      setState(() {
+        _isLoading = true;
+      });
+
+      try {
+        final firestoreService = ref.read(firestoreServiceProvider);
+
+        if (_isSaved) {
+          // Remove from saved places
+          await firestoreService.removePlace(user.uid, widget.place.placeId);
+        } else {
+          // Add to saved places
+          await firestoreService.savePlace(user.uid, widget.place);
+        }
+
+        if (mounted) {
+          setState(() {
+            _isSaved = !_isSaved;
+            _isLoading = false;
+          });
+
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _isSaved
+                    ? 'Place saved to your favorites'
+                    : 'Place removed from your favorites',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
+              ),
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.primaryContainer,
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Error: ${e.toString()}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onError,
+                ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.error,
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   // Helper method to format rating count (e.g., 1200 -> 1.2k)
   String _formatRatingCount(int count) {
@@ -32,13 +163,13 @@ class SearchResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the first type or use a default
-    String placeType = place.types.isNotEmpty
-        ? place.types.first.replaceAll('_', ' ').capitalize()
+    String placeType = widget.place.types.isNotEmpty
+        ? widget.place.types.first.replaceAll('_', ' ').capitalize()
         : AppLocalizations.of(context).defaultPlaceType;
 
     // Extract location from formatted address (simplified)
-    String location = place.formattedAddress.split(',').length > 1
-        ? place.formattedAddress.split(',')[1].trim()
+    String location = widget.place.formattedAddress.split(',').length > 1
+        ? widget.place.formattedAddress.split(',')[1].trim()
         : '';
 
     return Card(
@@ -50,8 +181,8 @@ class SearchResultCard extends StatelessWidget {
         onTap: () {
           // Navigate to place detail using go_router with push
           context.push(
-            '/place/${place.placeId}?query=${Uri.encodeComponent(query)}',
-            extra: {'place': place, 'heroTagIndex': index},
+            '/place/${widget.place.placeId}?query=${Uri.encodeComponent(widget.query)}',
+            extra: {'place': widget.place, 'heroTagIndex': widget.index},
           );
         },
         child: Column(
@@ -61,7 +192,7 @@ class SearchResultCard extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: 200, // Fixed height for all images
-              child: place.photos.isNotEmpty
+              child: widget.place.photos.isNotEmpty
                   ? Stack(
                       children: [
                         Positioned.fill(
@@ -71,9 +202,9 @@ class SearchResultCard extends StatelessWidget {
                               topRight: Radius.circular(12),
                             ),
                             child: Hero(
-                              tag: 'place-image-${place.placeId}-$index',
+                              tag: 'place-image-${widget.place.placeId}-${widget.index}',
                               child: CachedNetworkImage(
-                                imageUrl: place.photos.first.urlWithKey(
+                                imageUrl: widget.place.photos.first.urlWithKey(
                                   googlePlacesApiKey,
                                 ),
                                 fit: BoxFit.cover,
@@ -96,13 +227,83 @@ class SearchResultCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (place.photos.isNotEmpty)
-                          PhotoAttribution(photo: place.photos.first),
+                        if (widget.place.photos.isNotEmpty)
+                          PhotoAttribution(photo: widget.place.photos.first),
+                        // Save button positioned in top-right corner
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: _isLoading ? null : _toggleSaved,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.6),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Icon(
+                                        _isSaved ? Icons.favorite : Icons.favorite_border,
+                                        color: _isSaved ? Colors.red : Colors.white,
+                                        size: 20,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     )
-                  : Container(
-                      color: Colors.grey.shade300,
-                      child: const Icon(Icons.image, size: 40),
+                  : Stack(
+                      children: [
+                        Container(
+                          color: Colors.grey.shade300,
+                          child: const Icon(Icons.image, size: 40),
+                        ),
+                        // Save button positioned in top-right corner
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: _isLoading ? null : _toggleSaved,
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.6),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        width: 16,
+                                        height: 16,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                        ),
+                                      )
+                                    : Icon(
+                                        _isSaved ? Icons.favorite : Icons.favorite_border,
+                                        color: _isSaved ? Colors.red : Colors.white,
+                                        size: 20,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
             ),
 
@@ -123,21 +324,21 @@ class SearchResultCard extends StatelessWidget {
                         decoration: BoxDecoration(
                           color:
                               Theme.of(context).brightness == Brightness.light
-                              ? place.category.lightColor
-                              : place.category.darkColor,
+                              ? widget.place.category.lightColor
+                              : widget.place.category.darkColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                              place.category.icon,
+                              widget.place.category.icon,
                               color: Colors.white,
                               size: 16,
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              place.category.name,
+                              widget.place.category.name,
                               style: Theme.of(context).textTheme.labelSmall
                                   ?.copyWith(
                                     color: Colors.white,
@@ -162,7 +363,7 @@ class SearchResultCard extends StatelessWidget {
 
                   // Title
                   Text(
-                    place.displayName,
+                    widget.place.displayName,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -171,19 +372,19 @@ class SearchResultCard extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   // Generative Summary
-                  if (place.generativeSummary.isNotEmpty)
+                  if (widget.place.generativeSummary.isNotEmpty)
                     Text(
-                      place.generativeSummary,
+                      widget.place.generativeSummary,
                       style: Theme.of(context).textTheme.bodyMedium,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
 
                   // Disclosure Text
-                  if (place.disclosureText.isNotEmpty) ...[
+                  if (widget.place.disclosureText.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      place.disclosureText,
+                      widget.place.disclosureText,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontStyle: FontStyle.italic,
                       ),
@@ -195,7 +396,7 @@ class SearchResultCard extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   // Rating and reviews
-                  if (place.rating != null)
+                  if (widget.place.rating != null)
                     Row(
                       children: [
                         const Icon(Icons.star, size: 16, color: Colors.amber),
@@ -203,15 +404,15 @@ class SearchResultCard extends StatelessWidget {
                         Text(
                           AppLocalizations.of(
                             context,
-                          ).stars(place.rating!.toString()),
+                          ).stars(widget.place.rating!.toString()),
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
-                        if (place.userRatingCount != null) ...[
+                        if (widget.place.userRatingCount != null) ...[
                           const SizedBox(width: 4),
                           Text(
                             AppLocalizations.of(context).reviews(
-                              _formatRatingCount(place.userRatingCount!),
+                              _formatRatingCount(widget.place.userRatingCount!),
                             ),
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
