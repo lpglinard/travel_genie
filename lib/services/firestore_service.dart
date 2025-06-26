@@ -2,17 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../models/badge.dart' as badge_model;
+import '../models/challenge.dart';
 import '../models/destination.dart';
 import '../models/itinerary_day.dart';
 import '../models/location.dart';
 import '../models/photo.dart';
 import '../models/place.dart';
-import '../models/trip.dart';
-import '../models/user_data.dart';
-import '../models/badge.dart' as badge_model;
-import '../models/challenge.dart';
 import '../models/travel_cover.dart';
 import '../models/traveler_profile.dart';
+import '../models/trip.dart';
+import '../models/user_data.dart';
 
 class FirestoreService {
   FirestoreService(this._firestore);
@@ -100,7 +100,9 @@ class FirestoreService {
   Future<bool> isPlaceSaved(String userId, String placeId) async {
     // Check if placeId is empty to avoid Firestore error
     if (placeId.isEmpty) {
-      print('Warning: Attempted to check if a place with empty placeId is saved');
+      print(
+        'Warning: Attempted to check if a place with empty placeId is saved',
+      );
       return false;
     }
     final docSnapshot = await _savedPlacesCollection(userId).doc(placeId).get();
@@ -267,10 +269,7 @@ class FirestoreService {
       final insertIndex = position ?? docs.length;
 
       // Set the new place with the correct order
-      final newData = {
-        ...place.toMap(),
-        'order': insertIndex,
-      };
+      final newData = {...place.toMap(), 'order': insertIndex};
       transaction.set(placeRef, newData);
 
       // Update the order of existing places that need to be shifted
@@ -434,12 +433,16 @@ class FirestoreService {
 
       // Get current summary
       final summaryDoc = await transaction.get(summaryRef);
-      final summaryData = summaryDoc.exists ? summaryDoc.data()! : <String, dynamic>{};
+      final summaryData = summaryDoc.exists
+          ? summaryDoc.data()!
+          : <String, dynamic>{};
 
       // Get current user response (to check if updating)
       final userDoc = await transaction.get(userRef);
       final hadPreviousResponse = userDoc.exists;
-      final previousResponse = hadPreviousResponse ? userDoc.data()!['wantsGroupFeature'] as bool? : null;
+      final previousResponse = hadPreviousResponse
+          ? userDoc.data()!['wantsGroupFeature'] as bool?
+          : null;
 
       // Update user response
       transaction.set(userRef, {
@@ -540,9 +543,11 @@ class FirestoreService {
         .doc(userId)
         .collection('badges')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => badge_model.Badge.fromFirestore(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => badge_model.Badge.fromFirestore(doc.data()))
+              .toList(),
+        );
   }
 
   /// Unlock a badge for the user
@@ -573,9 +578,11 @@ class FirestoreService {
         .collection('travelCovers')
         .doc('collection')
         .snapshots()
-        .map((doc) => doc.exists 
-            ? TravelCoverCollection.fromFirestore(doc.data()!)
-            : null);
+        .map(
+          (doc) => doc.exists
+              ? TravelCoverCollection.fromFirestore(doc.data()!)
+              : null,
+        );
   }
 
   /// Add a travel cover to user's collection
@@ -594,8 +601,8 @@ class FirestoreService {
         final updatedCovers = [...collection.covers, cover];
         final updatedCollection = collection.copyWith(
           covers: updatedCovers,
-          totalUnlocked: cover.isUnlocked 
-              ? collection.totalUnlocked + 1 
+          totalUnlocked: cover.isUnlocked
+              ? collection.totalUnlocked + 1
               : collection.totalUnlocked,
         );
         transaction.update(coverCollectionRef, updatedCollection.toFirestore());
@@ -609,7 +616,9 @@ class FirestoreService {
       }
     });
 
-    debugPrint('FirestoreService: Added travel cover ${cover.id} for user $userId');
+    debugPrint(
+      'FirestoreService: Added travel cover ${cover.id} for user $userId',
+    );
   }
 
   // ============================================================================
@@ -624,9 +633,11 @@ class FirestoreService {
         .where('isActive', isEqualTo: true)
         .where('endDate', isGreaterThan: now.millisecondsSinceEpoch)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Challenge.fromFirestore(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Challenge.fromFirestore(doc.data()))
+              .toList(),
+        );
   }
 
   /// Get user's challenge progress
@@ -646,7 +657,11 @@ class FirestoreService {
   }
 
   /// Update challenge progress
-  Future<void> updateChallengeProgress(String userId, String challengeId, int progress) async {
+  Future<void> updateChallengeProgress(
+    String userId,
+    String challengeId,
+    int progress,
+  ) async {
     final progressRef = _firestore
         .collection('users')
         .doc(userId)
@@ -654,7 +669,9 @@ class FirestoreService {
         .doc(challengeId);
 
     await progressRef.set({'progress': progress}, SetOptions(merge: true));
-    debugPrint('FirestoreService: Updated challenge $challengeId progress to $progress for user $userId');
+    debugPrint(
+      'FirestoreService: Updated challenge $challengeId progress to $progress for user $userId',
+    );
   }
 
   /// Get challenge progress for a specific challenge
@@ -687,7 +704,9 @@ class FirestoreService {
     try {
       return TravelerProfile.fromJson(doc.data()!);
     } catch (e) {
-      debugPrint('FirestoreService: Error parsing traveler profile for user $userId: $e');
+      debugPrint(
+        'FirestoreService: Error parsing traveler profile for user $userId: $e',
+      );
       return null;
     }
   }
@@ -706,14 +725,19 @@ class FirestoreService {
           try {
             return TravelerProfile.fromJson(doc.data()!);
           } catch (e) {
-            debugPrint('FirestoreService: Error parsing traveler profile for user $userId: $e');
+            debugPrint(
+              'FirestoreService: Error parsing traveler profile for user $userId: $e',
+            );
             return null;
           }
         });
   }
 
   /// Save user's traveler profile
-  Future<void> saveTravelerProfile(String userId, TravelerProfile profile) async {
+  Future<void> saveTravelerProfile(
+    String userId,
+    TravelerProfile profile,
+  ) async {
     final profileRef = _firestore
         .collection('users')
         .doc(userId)

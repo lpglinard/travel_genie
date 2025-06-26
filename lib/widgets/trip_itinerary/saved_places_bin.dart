@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../models/place.dart';
+
 import '../../models/drag_drop_models.dart';
+import '../../models/place.dart';
 
 /// A widget that displays saved places in a draggable format.
-/// 
+///
 /// This widget shows a collection of saved places as draggable chips
 /// that can be moved to itinerary days. Each place is displayed with
 /// its icon, name, and address in a visually appealing card format.
@@ -13,12 +14,9 @@ class SavedPlacesBin extends StatelessWidget {
   final List<Place> places;
 
   /// Creates a new [SavedPlacesBin].
-  /// 
+  ///
   /// [places] is the list of saved places to display as draggable items.
-  const SavedPlacesBin({
-    super.key,
-    required this.places,
-  });
+  const SavedPlacesBin({super.key, required this.places});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +25,9 @@ class SavedPlacesBin extends StatelessWidget {
       child: Wrap(
         spacing: 8,
         runSpacing: 4,
-        children: places.map((place) => _buildDraggablePlace(context, place)).toList(),
+        children: places
+            .map((place) => _buildDraggablePlace(context, place))
+            .toList(),
       ),
     );
   }
@@ -46,9 +46,9 @@ class SavedPlacesBin extends StatelessWidget {
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.circular(4),
-      color: Theme.of(context).brightness == Brightness.light 
-        ? place.category.lightColor.withValues(alpha: 0.7)
-        : place.category.darkColor.withValues(alpha: 0.7),
+      color: Theme.of(context).brightness == Brightness.light
+          ? place.category.lightColor.withValues(alpha: 0.7)
+          : place.category.darkColor.withValues(alpha: 0.7),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 250),
         child: Padding(
@@ -58,9 +58,7 @@ class SavedPlacesBin extends StatelessWidget {
             children: [
               _buildFeedbackIcon(context, place),
               const SizedBox(width: 8),
-              Flexible(
-                child: _buildFeedbackText(context, place),
-              ),
+              Flexible(child: _buildFeedbackText(context, place)),
             ],
           ),
         ),
@@ -71,11 +69,11 @@ class SavedPlacesBin extends StatelessWidget {
   /// Builds the icon for drag feedback
   Widget _buildFeedbackIcon(BuildContext context, Place place) {
     return Icon(
-      place.category.icon, 
-      size: 24, 
+      place.category.icon,
+      size: 24,
       color: Theme.of(context).brightness == Brightness.light
-        ? Colors.white
-        : Colors.black,
+          ? Colors.white
+          : Colors.black,
     );
   }
 
@@ -89,8 +87,8 @@ class SavedPlacesBin extends StatelessWidget {
           place.displayName,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: Theme.of(context).brightness == Brightness.light
-              ? Colors.white
-              : Colors.black,
+                ? Colors.white
+                : Colors.black,
             fontWeight: FontWeight.bold,
           ),
           overflow: TextOverflow.ellipsis,
@@ -100,8 +98,8 @@ class SavedPlacesBin extends StatelessWidget {
             place.formattedAddress,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white.withValues(alpha: 0.9)
-                : Colors.black.withValues(alpha: 0.9),
+                  ? Colors.white.withValues(alpha: 0.9)
+                  : Colors.black.withValues(alpha: 0.9),
             ),
             overflow: TextOverflow.ellipsis,
           ),
@@ -116,9 +114,7 @@ class SavedPlacesBin extends StatelessWidget {
       child: Card(
         elevation: 0,
         color: _getChipColor(context, place),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
           child: Row(
@@ -126,9 +122,7 @@ class SavedPlacesBin extends StatelessWidget {
             children: [
               _buildChipIcon(context, place),
               const SizedBox(width: 6),
-              Flexible(
-                child: _buildChipText(context, place),
-              ),
+              Flexible(child: _buildChipText(context, place)),
             ],
           ),
         ),
@@ -138,19 +132,19 @@ class SavedPlacesBin extends StatelessWidget {
 
   /// Gets the appropriate color for the place chip
   Color _getChipColor(BuildContext context, Place place) {
-    return Theme.of(context).brightness == Brightness.light 
-      ? place.category.lightColor.withValues(alpha: 0.6)
-      : place.category.darkColor.withValues(alpha: 0.6);
+    return Theme.of(context).brightness == Brightness.light
+        ? place.category.lightColor.withValues(alpha: 0.6)
+        : place.category.darkColor.withValues(alpha: 0.6);
   }
 
   /// Builds the icon for the place chip
   Widget _buildChipIcon(BuildContext context, Place place) {
     return Icon(
-      place.category.icon, 
-      size: 18, 
+      place.category.icon,
+      size: 18,
       color: Theme.of(context).brightness == Brightness.light
-        ? Colors.white
-        : Colors.black,
+          ? Colors.white
+          : Colors.black,
     );
   }
 
@@ -160,8 +154,8 @@ class SavedPlacesBin extends StatelessWidget {
       place.displayName,
       style: Theme.of(context).textTheme.labelMedium?.copyWith(
         color: Theme.of(context).brightness == Brightness.light
-          ? Colors.white
-          : Colors.black,
+            ? Colors.white
+            : Colors.black,
       ),
       overflow: TextOverflow.ellipsis,
     );

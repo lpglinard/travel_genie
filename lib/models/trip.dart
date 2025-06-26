@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'itinerary_day.dart';
 import 'place.dart';
 
@@ -50,8 +51,9 @@ class Trip {
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isArchived: data['isArchived'] as bool? ?? false,
       participants: (data['participants'] as List?)?.cast<String>() ?? const [],
-      places: null,     // serão carregados separadamente
-      itinerary: null,  // idem
+      places: null,
+      // serão carregados separadamente
+      itinerary: null, // idem
     );
   }
 

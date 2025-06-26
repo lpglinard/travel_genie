@@ -109,16 +109,18 @@ class Challenge {
     );
   }
 
-  double get progressPercentage => targetValue > 0 ? (currentProgress / targetValue).clamp(0.0, 1.0) : 0.0;
-  
+  double get progressPercentage =>
+      targetValue > 0 ? (currentProgress / targetValue).clamp(0.0, 1.0) : 0.0;
+
   bool get isExpired => DateTime.now().isAfter(endDate);
-  
-  Duration get timeRemaining => isExpired ? Duration.zero : endDate.difference(DateTime.now());
-  
+
+  Duration get timeRemaining =>
+      isExpired ? Duration.zero : endDate.difference(DateTime.now());
+
   String get timeRemainingText {
     if (isExpired) return 'Expirado';
     if (isCompleted) return 'Concluído';
-    
+
     final remaining = timeRemaining;
     if (remaining.inDays > 0) {
       return '${remaining.inDays} dias restantes';
@@ -170,11 +172,7 @@ extension ChallengeTypeExtension on ChallengeType {
   }
 }
 
-enum RewardType {
-  badge,
-  travelCover,
-  points,
-}
+enum RewardType { badge, travelCover, points }
 
 extension RewardTypeExtension on RewardType {
   String get displayName {
@@ -200,7 +198,8 @@ class PredefinedChallenges {
       Challenge(
         id: 'weekly_trip_creator',
         title: 'Criador de Aventuras',
-        description: 'Crie uma viagem com pelo menos 5 locais para desbloquear uma capa personalizada surpresa!',
+        description:
+            'Crie uma viagem com pelo menos 5 locais para desbloquear uma capa personalizada surpresa!',
         type: ChallengeType.addPlaces,
         startDate: weekStart,
         endDate: weekEnd,

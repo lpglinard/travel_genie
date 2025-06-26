@@ -16,14 +16,11 @@ class MyTripsPage extends ConsumerWidget {
     final tripsAsync = ref.watch(userTripsProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.navMyTrips),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.navMyTrips)),
       body: SafeArea(
         child: tripsAsync.when(
-          data: (trips) => trips.isEmpty 
-              ? const EmptyTripState() 
-              : TripList(trips: trips),
+          data: (trips) =>
+              trips.isEmpty ? const EmptyTripState() : TripList(trips: trips),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Center(
             child: Text(

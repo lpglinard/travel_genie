@@ -18,8 +18,8 @@ import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
 import 'pages/search_results_page.dart';
 import 'pages/traveler_profile_page.dart';
-import 'user_providers.dart';
 import 'services/analytics_service.dart';
+import 'user_providers.dart';
 
 // Navigation destinations
 enum AppRoute { home, explore, trips, groups }
@@ -86,10 +86,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: '/groups',
             name: AppRoute.groups.name,
-            pageBuilder: (context, state) => NoTransitionPage(
-              key: state.pageKey,
-              child: const GroupsPage(),
-            ),
+            pageBuilder: (context, state) =>
+                NoTransitionPage(key: state.pageKey, child: const GroupsPage()),
           ),
         ],
       ),

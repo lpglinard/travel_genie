@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../models/traveler_profile.dart';
 import 'firestore_service.dart';
 

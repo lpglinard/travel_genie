@@ -67,12 +67,7 @@ class Badge {
   }
 }
 
-enum BadgeCategory {
-  general,
-  travel,
-  social,
-  creative,
-}
+enum BadgeCategory { general, travel, social, creative }
 
 // Predefined badges based on the requirements
 class PredefinedBadges {

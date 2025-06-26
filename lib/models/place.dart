@@ -47,7 +47,10 @@ class Place {
     if (displayNameField is Map<String, dynamic>) {
       displayName = displayNameField['text'] as String? ?? '';
       displayNameLanguageCode =
-          ((displayNameField['languageCode'] ?? displayNameField['language_code']) as String?) ?? '';
+          ((displayNameField['languageCode'] ??
+                  displayNameField['language_code'])
+              as String?) ??
+          '';
     } else if (displayNameField is String) {
       displayName = displayNameField;
       displayNameLanguageCode = 'en';
@@ -55,13 +58,16 @@ class Place {
 
     String generativeSummary = '';
     String disclosureText = '';
-    final generativeSummaryField = json['generativeSummary'] ?? json['generative_summary'];
+    final generativeSummaryField =
+        json['generativeSummary'] ?? json['generative_summary'];
     if (generativeSummaryField is Map<String, dynamic>) {
       if (generativeSummaryField['overview'] is Map<String, dynamic>) {
-        generativeSummary = generativeSummaryField['overview']['text'] as String? ?? '';
+        generativeSummary =
+            generativeSummaryField['overview']['text'] as String? ?? '';
       }
       final disclosureTextField =
-          generativeSummaryField['disclosureText'] ?? generativeSummaryField['disclosure_text'];
+          generativeSummaryField['disclosureText'] ??
+          generativeSummaryField['disclosure_text'];
       if (disclosureTextField is Map<String, dynamic>) {
         disclosureText = disclosureTextField['text'] as String? ?? '';
       }
@@ -70,22 +76,28 @@ class Place {
     final types = (json['types'] as List?)?.cast<String>() ?? const [];
 
     return Place(
-      placeId: (json['placeId'] ?? json['id'] ?? json['place_id']) as String? ?? '',
+      placeId:
+          (json['placeId'] ?? json['id'] ?? json['place_id']) as String? ?? '',
       displayName: displayName,
       displayNameLanguageCode: displayNameLanguageCode,
-      formattedAddress: (json['formattedAddress'] ?? json['formatted_address']) as String? ?? '',
-      googleMapsUri: (json['googleMapsUri'] ?? json['google_maps_uri']) as String? ?? '',
+      formattedAddress:
+          (json['formattedAddress'] ?? json['formatted_address']) as String? ??
+          '',
+      googleMapsUri:
+          (json['googleMapsUri'] ?? json['google_maps_uri']) as String? ?? '',
       websiteUri: (json['websiteUri'] ?? json['website_uri']) as String?,
       types: types,
       rating: (json['rating'] as num?)?.toDouble(),
-      userRatingCount: (json['userRatingCount'] ?? json['user_rating_count']) as int?,
+      userRatingCount:
+          (json['userRatingCount'] ?? json['user_rating_count']) as int?,
       location: json['location'] == null
           ? const Location(lat: 0, lng: 0)
           : Location.fromJson(json['location'] as Map<String, dynamic>),
       openingHours: () {
         if (json['currentOpeningHours'] is Map<String, dynamic> &&
             json['currentOpeningHours']['weekdayDescriptions'] is List) {
-          return (json['currentOpeningHours']['weekdayDescriptions'] as List).cast<String>();
+          return (json['currentOpeningHours']['weekdayDescriptions'] as List)
+              .cast<String>();
         }
         return (json['opening_hours'] as List?)?.cast<String>() ?? const [];
       }(),

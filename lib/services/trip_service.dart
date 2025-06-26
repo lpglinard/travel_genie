@@ -12,7 +12,11 @@ class TripService {
   final DaySummaryService _daySummaryService;
   final String? _languageCode;
 
-  TripService(this._firestoreService, this._daySummaryService, this._languageCode);
+  TripService(
+    this._firestoreService,
+    this._daySummaryService,
+    this._languageCode,
+  );
 
   /// Stream trips for the current user
   Stream<List<Trip>> getUserTrips() {
@@ -77,67 +81,90 @@ class TripService {
     required Place place,
     required int position,
   }) {
-    return _firestoreService.addPlaceToDay(
-      tripId: tripId,
-      dayId: dayId,
-      place: place,
-      position: position,
-    ).then((onValue) {
-      _daySummaryService.getDaySummary(
-        tripId: tripId,
-        dayId: dayId,
-        languageCode: _languageCode ?? 'en',
-      ).then((value) {
-        // Optionally, you can handle any post-removal logic here
-        debugPrint('Day summary fetched after adding place: $value');
-      }).catchError((error) {
-        debugPrint('Error fetching day summary after adding place: $error');
-      });
-    });
+    return _firestoreService
+        .addPlaceToDay(
+          tripId: tripId,
+          dayId: dayId,
+          place: place,
+          position: position,
+        )
+        .then((onValue) {
+          _daySummaryService
+              .getDaySummary(
+                tripId: tripId,
+                dayId: dayId,
+                languageCode: _languageCode ?? 'en',
+              )
+              .then((value) {
+                // Optionally, you can handle any post-removal logic here
+                debugPrint('Day summary fetched after adding place: $value');
+              })
+              .catchError((error) {
+                debugPrint(
+                  'Error fetching day summary after adding place: $error',
+                );
+              });
+        });
   }
 
   Future<void> reorderPlacesWithinDay({
-    required String tripId, 
-    required String dayId, 
-    required int oldIndex, 
-    required int newIndex, 
+    required String tripId,
+    required String dayId,
+    required int oldIndex,
+    required int newIndex,
   }) async {
-    return _firestoreService.reorderPlacesWithinDay(
-      tripId: tripId,
-      dayId: dayId,
-      oldIndex: oldIndex,
-      newIndex: newIndex,
-    ).then((value) {
-      // Optionally, you can handle any post-reorder logic here
-      _daySummaryService.getDaySummary(
-        tripId: tripId,
-        dayId: dayId,
-        languageCode: _languageCode ?? 'en',
-      ).then((value) {
-        // Optionally, you can handle any post-removal logic here
-        debugPrint('Day summary fetched after reordering place: $value');
-      }).catchError((error) {
-        debugPrint('Error fetching day summary after reordering place: $error');
-      });
-    });
+    return _firestoreService
+        .reorderPlacesWithinDay(
+          tripId: tripId,
+          dayId: dayId,
+          oldIndex: oldIndex,
+          newIndex: newIndex,
+        )
+        .then((value) {
+          // Optionally, you can handle any post-reorder logic here
+          _daySummaryService
+              .getDaySummary(
+                tripId: tripId,
+                dayId: dayId,
+                languageCode: _languageCode ?? 'en',
+              )
+              .then((value) {
+                // Optionally, you can handle any post-removal logic here
+                debugPrint(
+                  'Day summary fetched after reordering place: $value',
+                );
+              })
+              .catchError((error) {
+                debugPrint(
+                  'Error fetching day summary after reordering place: $error',
+                );
+              });
+        });
   }
 
-  Future<void> removePlaceFromDay({required String tripId, required String dayId, required Place place}) async {
-    return _firestoreService.removePlaceFromDay(
-      tripId: tripId,
-      dayId: dayId,
-      place: place,
-    ).then((onValue) {
-      _daySummaryService.getDaySummary(
-        tripId: tripId,
-        dayId: dayId,
-        languageCode: _languageCode ?? 'en',
-      ).then((value) {
-        // Optionally, you can handle any post-removal logic here
-        debugPrint('Day summary fetched after removing place: $value');
-      }).catchError((error) {
-        debugPrint('Error fetching day summary after removing place: $error');
-      });
-    });
+  Future<void> removePlaceFromDay({
+    required String tripId,
+    required String dayId,
+    required Place place,
+  }) async {
+    return _firestoreService
+        .removePlaceFromDay(tripId: tripId, dayId: dayId, place: place)
+        .then((onValue) {
+          _daySummaryService
+              .getDaySummary(
+                tripId: tripId,
+                dayId: dayId,
+                languageCode: _languageCode ?? 'en',
+              )
+              .then((value) {
+                // Optionally, you can handle any post-removal logic here
+                debugPrint('Day summary fetched after removing place: $value');
+              })
+              .catchError((error) {
+                debugPrint(
+                  'Error fetching day summary after removing place: $error',
+                );
+              });
+        });
   }
 }

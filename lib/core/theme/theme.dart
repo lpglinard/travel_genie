@@ -151,7 +151,9 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: _lightColorScheme.surfaceContainerHighest.withValues(alpha: 0.1),
+      fillColor: _lightColorScheme.surfaceContainerHighest.withValues(
+        alpha: 0.1,
+      ),
       alignLabelWithHint: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -293,7 +295,9 @@ class AppTheme {
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: _darkColorScheme.surfaceContainerHighest.withValues(alpha: 0.2),
+      fillColor: _darkColorScheme.surfaceContainerHighest.withValues(
+        alpha: 0.2,
+      ),
       alignLabelWithHint: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.all(Radius.circular(8)),

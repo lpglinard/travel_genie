@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
+import '../../models/drag_drop_models.dart';
 import '../../models/itinerary_day.dart';
 import '../../models/place.dart';
-import '../../models/drag_drop_models.dart';
 import 'drag_target_slot.dart';
 import 'place_draggable.dart';
 
 /// A widget that displays a single day in the trip itinerary.
-/// 
+///
 /// This widget shows the day's date, summary, and all places assigned to it.
 /// It supports drag-and-drop functionality for reordering places within the day
 /// and accepting new places from other days or the saved places bin.
 class DayItem extends StatelessWidget {
   /// The itinerary day to display
   final ItineraryDay day;
-  
+
   /// The list of places assigned to this day
   final List<Place> places;
-  
+
   /// Callback function called when a place is dropped on this day
-  final Future<void> Function(DraggedPlaceData data, int insertIndex) onPlaceAccepted;
+  final Future<void> Function(DraggedPlaceData data, int insertIndex)
+  onPlaceAccepted;
 
   /// Creates a new [DayItem].
-  /// 
+  ///
   /// [day] is the itinerary day data to display.
   /// [places] is the list of places assigned to this day.
   /// [onPlaceAccepted] is called when a place is dropped on this day.
@@ -50,10 +52,7 @@ class DayItem extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDayHeader(context),
-            _buildPlacesList(context),
-          ],
+          children: [_buildDayHeader(context), _buildPlacesList(context)],
         ),
       ),
     );
@@ -70,12 +69,15 @@ class DayItem extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 8.0,
+        ),
         title: Text(
           _formatDayDate(day.date, context),
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         subtitle: _buildDaySummary(context),
       ),
@@ -95,9 +97,7 @@ class DayItem extends StatelessWidget {
     return Column(
       children: [
         // Drop zone before the first place
-        DragTargetSlot(
-          onPlaceAccepted: (data) => onPlaceAccepted(data, 0),
-        ),
+        DragTargetSlot(onPlaceAccepted: (data) => onPlaceAccepted(data, 0)),
         // Places with drop zones after each one
         ...List.generate(places.length, (index) {
           final place = places[index];
@@ -124,9 +124,7 @@ class DayItem extends StatelessWidget {
         child: Card(
           elevation: 0,
           margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
           child: _buildPlaceListTile(context, place),
         ),
       ),
@@ -137,14 +135,15 @@ class DayItem extends StatelessWidget {
   Widget _buildPlaceListTile(BuildContext context, Place place) {
     return ListTile(
       key: ValueKey(place.displayName),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 8.0,
+      ),
       leading: _buildPlaceIcon(context, place),
       title: _buildPlaceTitle(context, place),
       subtitle: _buildPlaceSubtitle(context, place),
       tileColor: Theme.of(context).colorScheme.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       onTap: () => _navigateToPlace(context, place),
     );
   }
@@ -155,16 +154,16 @@ class DayItem extends StatelessWidget {
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.light
-          ? place.category.lightColor.withOpacity(0.15)
-          : place.category.darkColor.withOpacity(0.15),
+            ? place.category.lightColor.withOpacity(0.15)
+            : place.category.darkColor.withOpacity(0.15),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Icon(
         place.category.icon,
         size: 24,
         color: Theme.of(context).brightness == Brightness.light
-          ? place.category.lightColor
-          : place.category.darkColor,
+            ? place.category.lightColor
+            : place.category.darkColor,
       ),
     );
   }
@@ -173,9 +172,9 @@ class DayItem extends StatelessWidget {
   Widget _buildPlaceTitle(BuildContext context, Place place) {
     return Text(
       place.displayName,
-      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
+      style: Theme.of(
+        context,
+      ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
     );
   }
 

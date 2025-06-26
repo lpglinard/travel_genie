@@ -12,15 +12,15 @@ class TripCoverImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return trip.publicImageUrl.isNotEmpty
-      ? Image.network(
-          trip.publicImageUrl,
-          height: 150,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return TripPlaceholderImage(trip: trip);
-          },
-        )
-      : TripPlaceholderImage(trip: trip);
+        ? Image.network(
+            trip.publicImageUrl,
+            height: 150,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return TripPlaceholderImage(trip: trip);
+            },
+          )
+        : TripPlaceholderImage(trip: trip);
   }
 }

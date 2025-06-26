@@ -36,7 +36,9 @@ class GroupsPage extends ConsumerWidget {
       if (ref.context.mounted) {
         ScaffoldMessenger.of(ref.context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(ref.context).groupsFeedbackThanks),
+            content: Text(
+              AppLocalizations.of(ref.context).groupsFeedbackThanks,
+            ),
             backgroundColor: Theme.of(ref.context).colorScheme.primary,
           ),
         );
@@ -46,7 +48,9 @@ class GroupsPage extends ConsumerWidget {
       if (ref.context.mounted) {
         ScaffoldMessenger.of(ref.context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(ref.context).errorGeneric(e.toString())),
+            content: Text(
+              AppLocalizations.of(ref.context).errorGeneric(e.toString()),
+            ),
             backgroundColor: Theme.of(ref.context).colorScheme.error,
           ),
         );
@@ -112,7 +116,9 @@ class GroupsPage extends ConsumerWidget {
                           Text(
                             l10n.groupsSubtitle,
                             style: theme.textTheme.bodyLarge?.copyWith(
-                              color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                              color: theme.colorScheme.onSurface.withValues(
+                                alpha: 0.7,
+                              ),
                             ),
                             textAlign: TextAlign.center,
                           ),
@@ -139,7 +145,8 @@ class GroupsPage extends ConsumerWidget {
                         noCount: summary?['noCount'] ?? 0,
                         totalResponses: summary?['totalResponses'] ?? 0,
                       ),
-                      loading: () => const Center(child: CircularProgressIndicator()),
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
                       error: (error, stack) => Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -148,13 +155,17 @@ class GroupsPage extends ConsumerWidget {
                         ),
                         child: Text(
                           l10n.errorGeneric(error.toString()),
-                          style: TextStyle(color: theme.colorScheme.onErrorContainer),
+                          style: TextStyle(
+                            color: theme.colorScheme.onErrorContainer,
+                          ),
                         ),
                       ),
                     ),
 
                     // Add bottom padding - more when buttons are shown, less when not
-                    SizedBox(height: userFeedbackAsync.valueOrNull == null ? 100 : 24),
+                    SizedBox(
+                      height: userFeedbackAsync.valueOrNull == null ? 100 : 24,
+                    ),
                   ],
                 ),
               ),
@@ -184,7 +195,8 @@ class GroupsPage extends ConsumerWidget {
                           icon: const Icon(Icons.thumb_down_rounded),
                           label: Text(l10n.groupsFeedbackNo),
                           style: FilledButton.styleFrom(
-                            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
                             foregroundColor: theme.colorScheme.onSurfaceVariant,
                             padding: const EdgeInsets.symmetric(vertical: 16),
                           ),

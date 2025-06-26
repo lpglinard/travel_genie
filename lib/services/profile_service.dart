@@ -15,7 +15,9 @@ class ProfileService {
     return _firestoreService.getUserBadges(userId).asyncMap((badges) async {
       // If badges list is empty, initialize user profile
       if (badges.isEmpty) {
-        debugPrint('ProfileService: No badges found for user $userId, initializing profile...');
+        debugPrint(
+          'ProfileService: No badges found for user $userId, initializing profile...',
+        );
         await initializeUserProfile(userId);
         // Return the badges again after initialization
         return await _firestoreService.getUserBadges(userId).first;
@@ -55,12 +57,24 @@ class ProfileService {
   }
 
   /// Update challenge progress
-  Future<void> updateChallengeProgress(String userId, String challengeId, int progress) async {
-    return _firestoreService.updateChallengeProgress(userId, challengeId, progress);
+  Future<void> updateChallengeProgress(
+    String userId,
+    String challengeId,
+    int progress,
+  ) async {
+    return _firestoreService.updateChallengeProgress(
+      userId,
+      challengeId,
+      progress,
+    );
   }
 
   /// Check and trigger achievements based on user actions
-  Future<void> checkAchievements(String userId, AchievementTrigger trigger, {Map<String, dynamic>? data}) async {
+  Future<void> checkAchievements(
+    String userId,
+    AchievementTrigger trigger, {
+    Map<String, dynamic>? data,
+  }) async {
     switch (trigger) {
       case AchievementTrigger.firstTrip:
         await unlockBadge(userId, 'first_trip');
@@ -91,7 +105,9 @@ class ProfileService {
 
   Future<void> _updateTripChallenges(String userId) async {
     final activeChallenges = await getActiveChallenges(userId).first;
-    final tripChallenges = activeChallenges.where((c) => c.type == ChallengeType.createTrips);
+    final tripChallenges = activeChallenges.where(
+      (c) => c.type == ChallengeType.createTrips,
+    );
 
     for (final challenge in tripChallenges) {
       final currentProgress = await _getChallengeProgress(userId, challenge.id);
@@ -101,17 +117,25 @@ class ProfileService {
 
   Future<void> _updatePlaceChallenges(String userId, int placeCount) async {
     final activeChallenges = await getActiveChallenges(userId).first;
-    final placeChallenges = activeChallenges.where((c) => c.type == ChallengeType.addPlaces);
+    final placeChallenges = activeChallenges.where(
+      (c) => c.type == ChallengeType.addPlaces,
+    );
 
     for (final challenge in placeChallenges) {
       final currentProgress = await _getChallengeProgress(userId, challenge.id);
-      await updateChallengeProgress(userId, challenge.id, currentProgress + placeCount);
+      await updateChallengeProgress(
+        userId,
+        challenge.id,
+        currentProgress + placeCount,
+      );
     }
   }
 
   Future<void> _updateInviteChallenges(String userId) async {
     final activeChallenges = await getActiveChallenges(userId).first;
-    final inviteChallenges = activeChallenges.where((c) => c.type == ChallengeType.inviteFriends);
+    final inviteChallenges = activeChallenges.where(
+      (c) => c.type == ChallengeType.inviteFriends,
+    );
 
     for (final challenge in inviteChallenges) {
       final currentProgress = await _getChallengeProgress(userId, challenge.id);
@@ -121,7 +145,9 @@ class ProfileService {
 
   Future<void> _updateCoverChallenges(String userId, String? coverStyle) async {
     final activeChallenges = await getActiveChallenges(userId).first;
-    final coverChallenges = activeChallenges.where((c) => c.type == ChallengeType.generateCovers);
+    final coverChallenges = activeChallenges.where(
+      (c) => c.type == ChallengeType.generateCovers,
+    );
 
     for (final challenge in coverChallenges) {
       final currentProgress = await _getChallengeProgress(userId, challenge.id);
@@ -137,8 +163,10 @@ class ProfileService {
 
       final newCover = TravelCover(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
-        tripId: '', // This should be provided from the calling context
-        imageUrl: '', // This should be provided from the calling context
+        tripId: '',
+        // This should be provided from the calling context
+        imageUrl: '',
+        // This should be provided from the calling context
         style: coverStyleEnum,
         createdAt: DateTime.now(),
         isUnlocked: true,
@@ -171,7 +199,9 @@ class ProfileService {
       'unlockedCovers': unlockedCovers,
       'totalCovers': totalCovers,
       'activeChallenges': activeChallenges,
-      'badgeCompletionPercentage': totalBadges > 0 ? (unlockedBadges / totalBadges) * 100 : 0.0,
+      'badgeCompletionPercentage': totalBadges > 0
+          ? (unlockedBadges / totalBadges) * 100
+          : 0.0,
       'coverCompletionPercentage': covers?.completionPercentage ?? 0.0,
     };
   }

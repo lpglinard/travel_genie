@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/place.dart';
@@ -8,7 +7,7 @@ import '../user_providers.dart';
 import 'day_summary_service_provider.dart';
 
 /// Provider for TripService
-/// 
+///
 /// This provider exposes the TripService which includes:
 /// - createTrip method for creating new trips
 /// - Other trip-related functionality

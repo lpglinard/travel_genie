@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../l10n/app_localizations.dart';
 import '../providers/search_results_provider.dart';
 import '../widgets/search_field.dart';
-import '../widgets/search_results/category_filter_section.dart';
 import '../widgets/search_results/results_list.dart';
 
 class SearchResultsPage extends ConsumerStatefulWidget {

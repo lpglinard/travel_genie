@@ -48,7 +48,11 @@ class TravelerProfileSummary extends ConsumerWidget {
     return completedFields / totalFields;
   }
 
-  Widget _buildSummaryCard(BuildContext context, TravelerProfile? profile, double completionPercentage) {
+  Widget _buildSummaryCard(
+    BuildContext context,
+    TravelerProfile? profile,
+    double completionPercentage,
+  ) {
     final l10n = AppLocalizations.of(context)!;
 
     if (profile == null || completionPercentage == 0.0) {
@@ -93,18 +97,18 @@ class TravelerProfileSummary extends ConsumerWidget {
                     value: completionPercentage,
                     backgroundColor: Colors.grey[300],
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      completionPercentage == 1.0 
-                        ? Colors.green 
-                        : Theme.of(context).primaryColor,
+                      completionPercentage == 1.0
+                          ? Colors.green
+                          : Theme.of(context).primaryColor,
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Text(
                   '${(completionPercentage * 100).round()}%',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -146,9 +150,9 @@ class TravelerProfileSummary extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(
               l10n.travelerProfileEmptyDescription,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -168,75 +172,97 @@ class TravelerProfileSummary extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileSummary(BuildContext context, TravelerProfile profile, AppLocalizations l10n) {
+  Widget _buildProfileSummary(
+    BuildContext context,
+    TravelerProfile profile,
+    AppLocalizations l10n,
+  ) {
     final summaryItems = <Widget>[];
 
     // Travel company
     if (profile.travelCompany.isNotEmpty) {
-      final companies = profile.travelCompany.map((company) => 
-        _getTravelCompanyLabel(l10n, company)
-      ).join(', ');
-      summaryItems.add(_buildSummaryItem(
-        context,
-        Icons.group,
-        l10n.travelerProfileTravelCompanyTitle,
-        companies,
-      ));
+      final companies = profile.travelCompany
+          .map((company) => _getTravelCompanyLabel(l10n, company))
+          .join(', ');
+      summaryItems.add(
+        _buildSummaryItem(
+          context,
+          Icons.group,
+          l10n.travelerProfileTravelCompanyTitle,
+          companies,
+        ),
+      );
     }
 
     // Budget
     if (profile.budget != null) {
-      summaryItems.add(_buildSummaryItem(
-        context,
-        Icons.attach_money,
-        l10n.travelerProfileBudgetTitle,
-        _getBudgetLabel(l10n, profile.budget!),
-      ));
+      summaryItems.add(
+        _buildSummaryItem(
+          context,
+          Icons.attach_money,
+          l10n.travelerProfileBudgetTitle,
+          _getBudgetLabel(l10n, profile.budget!),
+        ),
+      );
     }
 
     // Interests (show first 2)
     if (profile.interests.isNotEmpty) {
-      final interests = profile.interests.take(2).map((interest) => 
-        _getInterestLabel(l10n, interest)
-      ).join(', ');
-      final moreCount = profile.interests.length > 2 ? profile.interests.length - 2 : 0;
-      final interestsText = moreCount > 0 ? '$interests +$moreCount' : interests;
+      final interests = profile.interests
+          .take(2)
+          .map((interest) => _getInterestLabel(l10n, interest))
+          .join(', ');
+      final moreCount = profile.interests.length > 2
+          ? profile.interests.length - 2
+          : 0;
+      final interestsText = moreCount > 0
+          ? '$interests +$moreCount'
+          : interests;
 
-      summaryItems.add(_buildSummaryItem(
-        context,
-        Icons.favorite,
-        l10n.travelerProfileInterestsTitle,
-        interestsText,
-      ));
+      summaryItems.add(
+        _buildSummaryItem(
+          context,
+          Icons.favorite,
+          l10n.travelerProfileInterestsTitle,
+          interestsText,
+        ),
+      );
     }
 
     // Itinerary style
     if (profile.itineraryStyle != null) {
-      summaryItems.add(_buildSummaryItem(
-        context,
-        Icons.map,
-        l10n.travelerProfileItineraryTitle,
-        _getItineraryStyleLabel(l10n, profile.itineraryStyle!),
-      ));
+      summaryItems.add(
+        _buildSummaryItem(
+          context,
+          Icons.map,
+          l10n.travelerProfileItineraryTitle,
+          _getItineraryStyleLabel(l10n, profile.itineraryStyle!),
+        ),
+      );
     }
 
     return Column(
-      children: summaryItems.map((item) => Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
-        child: item,
-      )).toList(),
+      children: summaryItems
+          .map(
+            (item) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: item,
+            ),
+          )
+          .toList(),
     );
   }
 
-  Widget _buildSummaryItem(BuildContext context, IconData icon, String title, String value) {
+  Widget _buildSummaryItem(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String value,
+  ) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
-          icon,
-          size: 16,
-          color: Colors.grey[600],
-        ),
+        Icon(icon, size: 16, color: Colors.grey[600]),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -251,9 +277,9 @@ class TravelerProfileSummary extends ConsumerWidget {
               ),
               Text(
                 value,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
             ],
           ),

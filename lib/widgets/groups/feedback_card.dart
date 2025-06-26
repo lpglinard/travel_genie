@@ -21,9 +21,7 @@ class FeedbackCard extends StatelessWidget {
 
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -38,10 +36,7 @@ class FeedbackCard extends StatelessWidget {
                     color: theme.colorScheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(
-                    '🤔',
-                    style: const TextStyle(fontSize: 24),
-                  ),
+                  child: Text('🤔', style: const TextStyle(fontSize: 24)),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -55,9 +50,9 @@ class FeedbackCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Description
             Text(
               description,
@@ -66,9 +61,9 @@ class FeedbackCard extends StatelessWidget {
                 height: 1.5,
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Examples section
             Container(
               padding: const EdgeInsets.all(16),
@@ -101,24 +96,40 @@ class FeedbackCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  _buildExampleRow(context, '👨‍👩‍👧‍👦', l10n.groupsFeedbackExampleFamily),
+                  _buildExampleRow(
+                    context,
+                    '👨‍👩‍👧‍👦',
+                    l10n.groupsFeedbackExampleFamily,
+                  ),
                   const SizedBox(height: 8),
-                  _buildExampleRow(context, '👥', l10n.groupsFeedbackExampleFriends),
+                  _buildExampleRow(
+                    context,
+                    '👥',
+                    l10n.groupsFeedbackExampleFriends,
+                  ),
                   const SizedBox(height: 8),
-                  _buildExampleRow(context, '💼', l10n.groupsFeedbackExampleColleagues),
+                  _buildExampleRow(
+                    context,
+                    '💼',
+                    l10n.groupsFeedbackExampleColleagues,
+                  ),
                   const SizedBox(height: 8),
-                  _buildExampleRow(context, '💕', l10n.groupsFeedbackExamplePartner),
+                  _buildExampleRow(
+                    context,
+                    '💕',
+                    l10n.groupsFeedbackExamplePartner,
+                  ),
                 ],
               ),
             ),
-            
+
             // Current response indicator
             if (userResponse != null) ...[
               const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: userResponse! 
+                  color: userResponse!
                       ? theme.colorScheme.primaryContainer.withOpacity(0.5)
                       : theme.colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.circular(8),
@@ -128,18 +139,18 @@ class FeedbackCard extends StatelessWidget {
                   children: [
                     Icon(
                       userResponse! ? Icons.check_circle : Icons.cancel,
-                      color: userResponse! 
+                      color: userResponse!
                           ? theme.colorScheme.primary
                           : theme.colorScheme.onSurfaceVariant,
                       size: 20,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      userResponse! 
+                      userResponse!
                           ? l10n.groupsFeedbackCurrentResponseYes
                           : l10n.groupsFeedbackCurrentResponseNo,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: userResponse! 
+                        color: userResponse!
                             ? theme.colorScheme.onPrimaryContainer
                             : theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w500,

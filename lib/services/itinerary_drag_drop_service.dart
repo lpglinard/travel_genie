@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/drag_drop_models.dart';
 import '../models/place.dart';
 import '../providers/trip_service_provider.dart';
 
 /// Service that handles the business logic for drag-and-drop operations in the trip itinerary.
-/// 
+///
 /// This service encapsulates all the complex logic for moving places between days,
 /// reordering places within days, and adding places from the saved places bin.
 /// It provides a clean separation between UI components and business logic.
@@ -16,18 +17,18 @@ class ItineraryDragDropService {
   final String _tripId;
 
   /// Creates a new [ItineraryDragDropService].
-  /// 
+  ///
   /// [ref] is the Riverpod reference for accessing providers.
   /// [tripId] is the ID of the trip being managed.
   const ItineraryDragDropService(this._ref, this._tripId);
 
   /// Handles a place being dropped on a specific day at a specific position.
-  /// 
+  ///
   /// This method determines the appropriate action based on the source and destination:
   /// - If moving between different days: removes from source and adds to destination
   /// - If reordering within the same day: reorders the places
   /// - If adding from saved places: adds to the destination day
-  /// 
+  ///
   /// [data] contains the place being moved and its source information.
   /// [targetDayId] is the ID of the day where the place is being dropped.
   /// [insertIndex] is the position where the place should be inserted.
@@ -140,7 +141,7 @@ class ItineraryDragDropService {
   }
 
   /// Validates that a drop operation is allowed
-  /// 
+  ///
   /// This method can be extended to add business rules for drag-and-drop operations,
   /// such as preventing certain types of places from being added to specific days.
   bool canAcceptDrop({
@@ -171,9 +172,10 @@ class ItineraryDragDropException implements Exception {
 }
 
 /// Provider for the ItineraryDragDropService
-/// 
+///
 /// This provider creates a service instance for a specific trip.
 /// Usage: `ref.read(itineraryDragDropServiceProvider(tripId))`
-final itineraryDragDropServiceProvider = Provider.family<ItineraryDragDropService, String>(
-  (ref, tripId) => ItineraryDragDropService(ref, tripId),
-);
+final itineraryDragDropServiceProvider =
+    Provider.family<ItineraryDragDropService, String>(
+      (ref, tripId) => ItineraryDragDropService(ref, tripId),
+    );

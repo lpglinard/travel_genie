@@ -6,9 +6,7 @@ import '../../l10n/app_localizations.dart';
 import '../../user_providers.dart';
 
 class LogoutTile extends ConsumerWidget {
-  const LogoutTile({
-    super.key,
-  });
+  const LogoutTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -22,10 +22,7 @@ class TripDetails extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Trip title
-          Text(
-            trip.title,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text(trip.title, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
 
           // Trip dates

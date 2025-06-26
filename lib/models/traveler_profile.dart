@@ -21,36 +21,52 @@ class TravelerProfile {
 
   factory TravelerProfile.fromJson(Map<String, dynamic> json) {
     return TravelerProfile(
-      travelCompany: (json['travelCompany'] as List<dynamic>?)
-          ?.map((e) => TravelCompany.values.firstWhere(
-                (company) => company.name == e,
-                orElse: () => TravelCompany.solo,
-              ))
-          .toList() ?? [],
+      travelCompany:
+          (json['travelCompany'] as List<dynamic>?)
+              ?.map(
+                (e) => TravelCompany.values.firstWhere(
+                  (company) => company.name == e,
+                  orElse: () => TravelCompany.solo,
+                ),
+              )
+              .toList() ??
+          [],
       budget: json['budget'] != null
           ? TravelBudget.values.firstWhere(
               (budget) => budget.name == json['budget'],
               orElse: () => TravelBudget.moderate,
             )
           : null,
-      accommodationTypes: (json['accommodationTypes'] as List<dynamic>?)
-          ?.map((e) => AccommodationType.values.firstWhere(
-                (type) => type.name == e,
-                orElse: () => AccommodationType.comfortHotel,
-              ))
-          .toList() ?? [],
-      interests: (json['interests'] as List<dynamic>?)
-          ?.map((e) => TravelInterest.values.firstWhere(
-                (interest) => interest.name == e,
-                orElse: () => TravelInterest.culture,
-              ))
-          .toList() ?? [],
-      gastronomicPreferences: (json['gastronomicPreferences'] as List<dynamic>?)
-          ?.map((e) => GastronomicPreference.values.firstWhere(
-                (pref) => pref.name == e,
-                orElse: () => GastronomicPreference.localFood,
-              ))
-          .toList() ?? [],
+      accommodationTypes:
+          (json['accommodationTypes'] as List<dynamic>?)
+              ?.map(
+                (e) => AccommodationType.values.firstWhere(
+                  (type) => type.name == e,
+                  orElse: () => AccommodationType.comfortHotel,
+                ),
+              )
+              .toList() ??
+          [],
+      interests:
+          (json['interests'] as List<dynamic>?)
+              ?.map(
+                (e) => TravelInterest.values.firstWhere(
+                  (interest) => interest.name == e,
+                  orElse: () => TravelInterest.culture,
+                ),
+              )
+              .toList() ??
+          [],
+      gastronomicPreferences:
+          (json['gastronomicPreferences'] as List<dynamic>?)
+              ?.map(
+                (e) => GastronomicPreference.values.firstWhere(
+                  (pref) => pref.name == e,
+                  orElse: () => GastronomicPreference.localFood,
+                ),
+              )
+              .toList() ??
+          [],
       itineraryStyle: json['itineraryStyle'] != null
           ? ItineraryStyle.values.firstWhere(
               (style) => style.name == json['itineraryStyle'],
@@ -72,7 +88,9 @@ class TravelerProfile {
       'budget': budget?.name,
       'accommodationTypes': accommodationTypes.map((e) => e.name).toList(),
       'interests': interests.map((e) => e.name).toList(),
-      'gastronomicPreferences': gastronomicPreferences.map((e) => e.name).toList(),
+      'gastronomicPreferences': gastronomicPreferences
+          .map((e) => e.name)
+          .toList(),
       'itineraryStyle': itineraryStyle?.name,
       'createdAt': createdAt?.millisecondsSinceEpoch,
       'updatedAt': updatedAt?.millisecondsSinceEpoch,
@@ -94,7 +112,8 @@ class TravelerProfile {
       budget: budget ?? this.budget,
       accommodationTypes: accommodationTypes ?? this.accommodationTypes,
       interests: interests ?? this.interests,
-      gastronomicPreferences: gastronomicPreferences ?? this.gastronomicPreferences,
+      gastronomicPreferences:
+          gastronomicPreferences ?? this.gastronomicPreferences,
       itineraryStyle: itineraryStyle ?? this.itineraryStyle,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -147,26 +166,11 @@ class TravelerProfile {
   }
 }
 
-enum TravelCompany {
-  solo,
-  couple,
-  familyWithChildren,
-  friendsGroup,
-}
+enum TravelCompany { solo, couple, familyWithChildren, friendsGroup }
 
-enum TravelBudget {
-  economic,
-  moderate,
-  luxury,
-}
+enum TravelBudget { economic, moderate, luxury }
 
-enum AccommodationType {
-  hostel,
-  budgetHotel,
-  comfortHotel,
-  resort,
-  apartment,
-}
+enum AccommodationType { hostel, budgetHotel, comfortHotel, resort, apartment }
 
 enum TravelInterest {
   culture,
@@ -183,7 +187,4 @@ enum GastronomicPreference {
   dietaryRestrictions,
 }
 
-enum ItineraryStyle {
-  detailed,
-  spontaneous,
-}
+enum ItineraryStyle { detailed, spontaneous }

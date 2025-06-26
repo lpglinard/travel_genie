@@ -148,7 +148,10 @@ class TravelCoverCollection {
   factory TravelCoverCollection.fromFirestore(Map<String, dynamic> data) {
     final coversData = data['covers'] as List<dynamic>? ?? [];
     final covers = coversData
-        .map((coverData) => TravelCover.fromFirestore(coverData as Map<String, dynamic>))
+        .map(
+          (coverData) =>
+              TravelCover.fromFirestore(coverData as Map<String, dynamic>),
+        )
         .toList();
 
     return TravelCoverCollection(
@@ -178,9 +181,12 @@ class TravelCoverCollection {
     );
   }
 
-  List<TravelCover> get unlockedCovers => covers.where((cover) => cover.isUnlocked).toList();
-  
-  List<TravelCover> get lockedCovers => covers.where((cover) => !cover.isUnlocked).toList();
-  
-  double get completionPercentage => covers.isEmpty ? 0.0 : (totalUnlocked / covers.length) * 100;
+  List<TravelCover> get unlockedCovers =>
+      covers.where((cover) => cover.isUnlocked).toList();
+
+  List<TravelCover> get lockedCovers =>
+      covers.where((cover) => !cover.isUnlocked).toList();
+
+  double get completionPercentage =>
+      covers.isEmpty ? 0.0 : (totalUnlocked / covers.length) * 100;
 }

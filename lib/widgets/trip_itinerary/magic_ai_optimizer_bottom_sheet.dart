@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../l10n/app_localizations.dart';
 import '../../providers/user_providers.dart';
 
 /// Optimization strategies available for the magic AI trip optimizer
-enum OptimizationStrategy {
-  timeEfficient,
-  costEffective,
-  experienceMaximizer,
-}
+enum OptimizationStrategy { timeEfficient, costEffective, experienceMaximizer }
 
 /// A bottom sheet that allows users to select a trip optimization strategy
 /// and start the magic AI optimization process.
@@ -22,10 +19,12 @@ class MagicAiOptimizerBottomSheet extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MagicAiOptimizerBottomSheet> createState() => _MagicAiOptimizerBottomSheetState();
+  ConsumerState<MagicAiOptimizerBottomSheet> createState() =>
+      _MagicAiOptimizerBottomSheetState();
 }
 
-class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBottomSheet> {
+class _MagicAiOptimizerBottomSheetState
+    extends ConsumerState<MagicAiOptimizerBottomSheet> {
   OptimizationStrategy? _selectedStrategy;
 
   @override
@@ -89,7 +88,8 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
             strategy: OptimizationStrategy.timeEfficient,
             icon: Icons.schedule,
             title: 'Time Efficient',
-            description: 'Minimize travel time between locations and optimize your schedule',
+            description:
+                'Minimize travel time between locations and optimize your schedule',
             theme: theme,
           ),
           const SizedBox(height: 16),
@@ -98,7 +98,8 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
             strategy: OptimizationStrategy.costEffective,
             icon: Icons.savings,
             title: 'Cost Effective',
-            description: 'Find budget-friendly alternatives and reduce overall trip costs',
+            description:
+                'Find budget-friendly alternatives and reduce overall trip costs',
             theme: theme,
           ),
           const SizedBox(height: 16),
@@ -116,11 +117,13 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
           ElevatedButton(
             onPressed: _selectedStrategy != null
                 ? () {
-                    ref.read(analyticsServiceProvider).logButtonTap(
-                      buttonName: 'start_magic_optimization',
-                      screenName: 'magic_ai_optimizer_bottom_sheet',
-                      context: 'strategy_${_selectedStrategy!.name}',
-                    );
+                    ref
+                        .read(analyticsServiceProvider)
+                        .logButtonTap(
+                          buttonName: 'start_magic_optimization',
+                          screenName: 'magic_ai_optimizer_bottom_sheet',
+                          context: 'strategy_${_selectedStrategy!.name}',
+                        );
                     Navigator.of(context).pop();
                     widget.onOptimizationStart(_selectedStrategy!);
                   }
@@ -136,10 +139,7 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.auto_fix_high,
-                  size: 20,
-                ),
+                Icon(Icons.auto_fix_high, size: 20),
                 const SizedBox(width: 8),
                 Text(
                   'Start Magic Optimization',
@@ -168,12 +168,14 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
 
     return GestureDetector(
       onTap: () {
-        ref.read(analyticsServiceProvider).logWidgetInteraction(
-          widgetType: 'strategy_option',
-          action: 'select',
-          widgetId: strategy.name,
-          screenName: 'magic_ai_optimizer_bottom_sheet',
-        );
+        ref
+            .read(analyticsServiceProvider)
+            .logWidgetInteraction(
+              widgetType: 'strategy_option',
+              action: 'select',
+              widgetId: strategy.name,
+              screenName: 'magic_ai_optimizer_bottom_sheet',
+            );
         setState(() {
           _selectedStrategy = strategy;
         });
@@ -181,12 +183,12 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? theme.colorScheme.primaryContainer.withOpacity(0.3)
               : theme.colorScheme.surfaceVariant.withOpacity(0.3),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected 
+            color: isSelected
                 ? theme.colorScheme.primary
                 : theme.colorScheme.outline.withOpacity(0.2),
             width: isSelected ? 2 : 1,
@@ -197,14 +199,14 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isSelected 
+                color: isSelected
                     ? theme.colorScheme.primary
                     : theme.colorScheme.surfaceVariant,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(
                 icon,
-                color: isSelected 
+                color: isSelected
                     ? theme.colorScheme.onPrimary
                     : theme.colorScheme.onSurfaceVariant,
                 size: 24,
@@ -219,7 +221,7 @@ class _MagicAiOptimizerBottomSheetState extends ConsumerState<MagicAiOptimizerBo
                     title,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: isSelected 
+                      color: isSelected
                           ? theme.colorScheme.primary
                           : theme.colorScheme.onSurface,
                     ),

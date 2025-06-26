@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +10,8 @@ class TravelerProfilePage extends ConsumerStatefulWidget {
   const TravelerProfilePage({super.key});
 
   @override
-  ConsumerState<TravelerProfilePage> createState() => _TravelerProfilePageState();
+  ConsumerState<TravelerProfilePage> createState() =>
+      _TravelerProfilePageState();
 }
 
 class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
@@ -127,10 +127,7 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
     final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.travelerProfileTitle),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(l10n.travelerProfileTitle), elevation: 0),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -217,9 +214,9 @@ class _IntroductionCard extends StatelessWidget {
             Expanded(
               child: Text(
                 message,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -282,10 +279,7 @@ class _TravelCompanySection extends StatelessWidget {
 }
 
 class _BudgetSection extends StatelessWidget {
-  const _BudgetSection({
-    required this.selectedBudget,
-    required this.onChanged,
-  });
+  const _BudgetSection({required this.selectedBudget, required this.onChanged});
 
   final TravelBudget? selectedBudget;
   final ValueChanged<TravelBudget> onChanged;
@@ -460,7 +454,9 @@ class _GastronomicSection extends StatelessWidget {
             title: Text(_getGastronomicLabel(context, preference)),
             value: isSelected,
             onChanged: (bool? value) {
-              final newList = List<GastronomicPreference>.from(selectedPreferences);
+              final newList = List<GastronomicPreference>.from(
+                selectedPreferences,
+              );
               if (value == true) {
                 newList.add(preference);
               } else {
@@ -474,7 +470,10 @@ class _GastronomicSection extends StatelessWidget {
     );
   }
 
-  String _getGastronomicLabel(BuildContext context, GastronomicPreference preference) {
+  String _getGastronomicLabel(
+    BuildContext context,
+    GastronomicPreference preference,
+  ) {
     final l10n = AppLocalizations.of(context)!;
     switch (preference) {
       case GastronomicPreference.localFood:
@@ -552,10 +551,7 @@ class _SectionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(
-                  icon,
-                  color: Theme.of(context).primaryColor,
-                ),
+                Icon(icon, color: Theme.of(context).primaryColor),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -597,13 +593,13 @@ class _ActionButtons extends StatelessWidget {
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: isLoading ? null : onSave,
-            icon: isLoading 
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.save),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.save),
             label: Text(l10n.travelerProfileSaveButton),
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),

@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class DaySummaryService {
-  DaySummaryService({http.Client? client})
-      : _client = client ?? http.Client();
+  DaySummaryService({http.Client? client}) : _client = client ?? http.Client();
   final http.Client _client;
 
   /// Fetches a summary for a specific day in a trip
-  /// 
+  ///
   /// Parameters:
   /// - userId: The ID of the user
   /// - tripId: The ID of the trip
@@ -20,7 +19,9 @@ class DaySummaryService {
     required String dayId,
     required String languageCode,
   }) async {
-    final uri = Uri.parse('https://sophisticated-chimera.odsy.to/itinerary-summary/summary');
+    final uri = Uri.parse(
+      'https://sophisticated-chimera.odsy.to/itinerary-summary/summary',
+    );
 
     final requestBody = {
       'tripId': tripId,
@@ -28,7 +29,9 @@ class DaySummaryService {
       'languageCode': languageCode,
     };
 
-    debugPrint('DaySummaryService: Fetching day summary for tripId=$tripId, dayId=$dayId, languageCode=$languageCode');
+    debugPrint(
+      'DaySummaryService: Fetching day summary for tripId=$tripId, dayId=$dayId, languageCode=$languageCode',
+    );
     debugPrint('DaySummaryService: Request URL: $uri');
     debugPrint('DaySummaryService: Request body: ${json.encode(requestBody)}');
 
@@ -45,20 +48,26 @@ class DaySummaryService {
       );
 
       stopwatch.stop();
-      debugPrint('DaySummaryService: Request completed in ${stopwatch.elapsedMilliseconds}ms');
-      debugPrint('DaySummaryService: Response status code: ${response.statusCode}');
+      debugPrint(
+        'DaySummaryService: Request completed in ${stopwatch.elapsedMilliseconds}ms',
+      );
+      debugPrint(
+        'DaySummaryService: Response status code: ${response.statusCode}',
+      );
 
       if (response.statusCode == 200) {
         debugPrint('DaySummaryService: Successfully fetched day summary');
         // Log a truncated version of the response body to avoid flooding the logs
-        final truncatedBody = response.body.length > 500 
+        final truncatedBody = response.body.length > 500
             ? '${response.body.substring(0, 500)}...(truncated)'
             : response.body;
         debugPrint('DaySummaryService: Response body: $truncatedBody');
 
         return _parseSummaryResponse(response.body);
       } else {
-        debugPrint('DaySummaryService: Failed to fetch day summary: Status ${response.statusCode}');
+        debugPrint(
+          'DaySummaryService: Failed to fetch day summary: Status ${response.statusCode}',
+        );
         debugPrint('DaySummaryService: Error response: ${response.body}');
 
         throw Exception(
@@ -66,7 +75,9 @@ class DaySummaryService {
         );
       }
     } catch (e) {
-      debugPrint('DaySummaryService: Exception occurred while fetching day summary: $e');
+      debugPrint(
+        'DaySummaryService: Exception occurred while fetching day summary: $e',
+      );
       rethrow;
     }
   }
@@ -80,18 +91,28 @@ class DaySummaryService {
       final jsonData = json.decode(responseBody);
       stopwatch.stop();
 
-      debugPrint('DaySummaryService: JSON parsing completed in ${stopwatch.elapsedMilliseconds}ms');
+      debugPrint(
+        'DaySummaryService: JSON parsing completed in ${stopwatch.elapsedMilliseconds}ms',
+      );
 
       if (jsonData is Map<String, dynamic>) {
-        debugPrint('DaySummaryService: Successfully parsed response as Map<String, dynamic>');
-        debugPrint('DaySummaryService: Response contains ${jsonData.length} keys: ${jsonData.keys.join(', ')}');
+        debugPrint(
+          'DaySummaryService: Successfully parsed response as Map<String, dynamic>',
+        );
+        debugPrint(
+          'DaySummaryService: Response contains ${jsonData.length} keys: ${jsonData.keys.join(', ')}',
+        );
         return jsonData;
       } else {
-        debugPrint('DaySummaryService: Unexpected response format: ${jsonData.runtimeType}');
+        debugPrint(
+          'DaySummaryService: Unexpected response format: ${jsonData.runtimeType}',
+        );
         throw Exception('Unexpected response format: ${jsonData.runtimeType}');
       }
     } catch (parseError) {
-      debugPrint('DaySummaryService: Failed to parse summary response: $parseError');
+      debugPrint(
+        'DaySummaryService: Failed to parse summary response: $parseError',
+      );
       throw Exception('Failed to parse summary response: $parseError');
     }
   }

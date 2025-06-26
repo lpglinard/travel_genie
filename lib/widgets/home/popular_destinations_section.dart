@@ -48,11 +48,13 @@ class _DestinationItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        ref.read(analyticsServiceProvider).logButtonTap(
-          buttonName: 'popular_destination',
-          screenName: 'home',
-          context: destination.name,
-        );
+        ref
+            .read(analyticsServiceProvider)
+            .logButtonTap(
+              buttonName: 'popular_destination',
+              screenName: 'home',
+              context: destination.name,
+            );
         // Clear autocomplete suggestions
         ref.read(autocompleteProvider.notifier).search('');
         // Navigate to explore page with destination name as query

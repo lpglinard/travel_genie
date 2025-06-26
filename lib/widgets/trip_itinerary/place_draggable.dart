@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../models/place.dart';
+
 import '../../models/drag_drop_models.dart';
+import '../../models/place.dart';
 import '../../providers/user_providers.dart';
 
 /// A draggable wrapper widget that makes any child widget draggable with place data.
-/// 
+///
 /// This widget wraps a child widget and makes it draggable, providing visual feedback
 /// during the drag operation. It's designed specifically for dragging places in the
 /// trip itinerary interface.
@@ -20,7 +21,7 @@ class PlaceDraggable extends ConsumerWidget {
   final Widget child;
 
   /// Creates a new [PlaceDraggable].
-  /// 
+  ///
   /// [place] is the place data that will be transferred during drag operations.
   /// [fromDayId] identifies the source day for this place.
   /// [child] is the widget that will be made draggable.
@@ -39,11 +40,13 @@ class PlaceDraggable extends ConsumerWidget {
       child: child,
       childWhenDragging: Opacity(opacity: 0.5, child: child),
       onDragStarted: () {
-        ref.read(analyticsServiceProvider).logDragStart(
-          itemType: 'place',
-          itemId: place.placeId,
-          fromLocation: fromDayId,
-        );
+        ref
+            .read(analyticsServiceProvider)
+            .logDragStart(
+              itemType: 'place',
+              itemId: place.placeId,
+              fromLocation: fromDayId,
+            );
       },
     );
   }
@@ -53,9 +56,9 @@ class PlaceDraggable extends ConsumerWidget {
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.circular(4),
-      color: Theme.of(context).brightness == Brightness.light 
-        ? place.category.lightColor.withValues(alpha: 0.7)
-        : place.category.darkColor.withValues(alpha: 0.7),
+      color: Theme.of(context).brightness == Brightness.light
+          ? place.category.lightColor.withValues(alpha: 0.7)
+          : place.category.darkColor.withValues(alpha: 0.7),
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 280),
         child: Padding(
@@ -65,9 +68,7 @@ class PlaceDraggable extends ConsumerWidget {
             children: [
               _buildIcon(context),
               const SizedBox(width: 12),
-              Flexible(
-                child: _buildTextContent(context),
-              ),
+              Flexible(child: _buildTextContent(context)),
             ],
           ),
         ),
@@ -81,16 +82,16 @@ class PlaceDraggable extends ConsumerWidget {
       padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
         color: Theme.of(context).brightness == Brightness.light
-          ? Colors.white.withValues(alpha: 0.2)
-          : Colors.black.withValues(alpha: 0.1),
+            ? Colors.white.withValues(alpha: 0.2)
+            : Colors.black.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Icon(
-        place.category.icon, 
-        size: 24, 
+        place.category.icon,
+        size: 24,
         color: Theme.of(context).brightness == Brightness.light
-          ? Colors.white
-          : Colors.black,
+            ? Colors.white
+            : Colors.black,
       ),
     );
   }
@@ -105,8 +106,8 @@ class PlaceDraggable extends ConsumerWidget {
           place.displayName,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             color: Theme.of(context).brightness == Brightness.light
-              ? Colors.white
-              : Colors.black,
+                ? Colors.white
+                : Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 16,
           ),
@@ -118,8 +119,8 @@ class PlaceDraggable extends ConsumerWidget {
             place.formattedAddress,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).brightness == Brightness.light
-                ? Colors.white.withValues(alpha: 0.9)
-                : Colors.black.withValues(alpha: 0.9),
+                  ? Colors.white.withValues(alpha: 0.9)
+                  : Colors.black.withValues(alpha: 0.9),
             ),
             overflow: TextOverflow.ellipsis,
             maxLines: 2,

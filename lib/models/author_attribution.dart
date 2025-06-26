@@ -14,6 +14,7 @@ class AuthorAttribution {
       photoUri: (json['photoUri'] ?? json['photo_uri']) as String?,
     );
   }
+
   Map<String, dynamic> toMap() {
     return {
       'displayName': displayName,

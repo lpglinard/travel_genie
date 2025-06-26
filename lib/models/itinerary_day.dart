@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'place.dart';
 
 class ItineraryDay {
@@ -7,7 +8,7 @@ class ItineraryDay {
     required this.date,
     required this.order,
     this.summary,
-  this.places = const [],
+    this.places = const [],
   });
 
   final String id;
@@ -17,14 +18,15 @@ class ItineraryDay {
   String? summary;
 
   factory ItineraryDay.fromFirestore(
-      DocumentSnapshot<Map<String, dynamic>> doc,
-      ) {
+    DocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
     final data = doc.data() ?? {};
     return ItineraryDay(
       id: doc.id,
       date: (data['date'] as Timestamp).toDate(),
       order: data['order'] as int? ?? 0,
-      places: const [], // será carregado separadamente por stream
+      places: const [],
+      // será carregado separadamente por stream
       summary: data['summary'] as String? ?? '',
     );
   }

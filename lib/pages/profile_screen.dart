@@ -7,12 +7,11 @@ import '../l10n/app_localizations.dart';
 import '../models/badge.dart' as badge_model;
 import '../models/challenge.dart';
 import '../models/travel_cover.dart';
-import '../user_providers.dart';
 import '../services/profile_service.dart';
+import '../user_providers.dart';
 import '../widgets/profile/dark_mode_toggle_tile.dart';
 import '../widgets/profile/language_settings_tile.dart';
 import '../widgets/profile/logout_tile.dart';
-import '../widgets/profile/profile_info_tile.dart';
 import '../widgets/profile/traveler_profile_summary.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -33,7 +32,12 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUnifiedView(BuildContext context, User? user, dynamic userData, ProfileService profileService) {
+  Widget _buildUnifiedView(
+    BuildContext context,
+    User? user,
+    dynamic userData,
+    ProfileService profileService,
+  ) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -51,15 +55,27 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Badges and Achievements Section
-          _buildBadgesSection(context, user?.uid ?? 'anonymous', profileService),
+          _buildBadgesSection(
+            context,
+            user?.uid ?? 'anonymous',
+            profileService,
+          ),
           const SizedBox(height: 24),
 
           // Travel Cover Collection Section
-          _buildTravelCoverSection(context, user?.uid ?? 'anonymous', profileService),
+          _buildTravelCoverSection(
+            context,
+            user?.uid ?? 'anonymous',
+            profileService,
+          ),
           const SizedBox(height: 24),
 
           // Challenges Section
-          _buildChallengesSection(context, user?.uid ?? 'anonymous', profileService),
+          _buildChallengesSection(
+            context,
+            user?.uid ?? 'anonymous',
+            profileService,
+          ),
           const SizedBox(height: 24),
 
           // Settings Section
@@ -112,7 +128,10 @@ class ProfileScreen extends ConsumerWidget {
               icon: const Icon(Icons.login),
               label: const Text('Fazer Login / Cadastro'),
               style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
               ),
             ),
           ],
@@ -121,7 +140,11 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildUserIdentificationSection(BuildContext context, User user, dynamic userData) {
+  Widget _buildUserIdentificationSection(
+    BuildContext context,
+    User user,
+    dynamic userData,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -129,8 +152,12 @@ class ProfileScreen extends ConsumerWidget {
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
-              child: user.photoURL == null ? const Icon(Icons.person, size: 30) : null,
+              backgroundImage: user.photoURL != null
+                  ? NetworkImage(user.photoURL!)
+                  : null,
+              child: user.photoURL == null
+                  ? const Icon(Icons.person, size: 30)
+                  : null,
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -138,7 +165,10 @@ class ProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    userData?.name ?? user.displayName ?? user.email ?? 'Usuário',
+                    userData?.name ??
+                        user.displayName ??
+                        user.email ??
+                        'Usuário',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -146,9 +176,9 @@ class ProfileScreen extends ConsumerWidget {
                   if (userData?.email != null || user.email != null)
                     Text(
                       userData?.email ?? user.email!,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     ),
                 ],
               ),
@@ -159,7 +189,11 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBadgesSection(BuildContext context, String userId, ProfileService profileService) {
+  Widget _buildBadgesSection(
+    BuildContext context,
+    String userId,
+    ProfileService profileService,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -169,9 +203,9 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(width: 8),
             Text(
               'Conquistas',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -184,8 +218,12 @@ class ProfileScreen extends ConsumerWidget {
             }
 
             final badges = snapshot.data ?? [];
-            final unlockedBadges = badges.where((badge) => badge.isUnlocked).toList();
-            final lockedBadges = badges.where((badge) => !badge.isUnlocked).toList();
+            final unlockedBadges = badges
+                .where((badge) => badge.isUnlocked)
+                .toList();
+            final lockedBadges = badges
+                .where((badge) => !badge.isUnlocked)
+                .toList();
 
             return Card(
               child: Padding(
@@ -201,28 +239,34 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         Text(
                           '${badges.isNotEmpty ? ((unlockedBadges.length / badges.length) * 100).toInt() : 0}%',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 12),
                     LinearProgressIndicator(
-                      value: badges.isNotEmpty ? unlockedBadges.length / badges.length : 0,
+                      value: badges.isNotEmpty
+                          ? unlockedBadges.length / badges.length
+                          : 0,
                       backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.green,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     GridView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                          ),
                       itemCount: badges.length,
                       itemBuilder: (context, index) {
                         final badge = badges[index];
@@ -241,7 +285,10 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildBadgeItem(BuildContext context, badge_model.Badge badge) {
     final translatedName = _getTranslatedBadgeName(context, badge.name);
-    final translatedDescription = _getTranslatedBadgeDescription(context, badge.description);
+    final translatedDescription = _getTranslatedBadgeDescription(
+      context,
+      badge.description,
+    );
 
     return Tooltip(
       message: '$translatedName\n$translatedDescription',
@@ -312,7 +359,11 @@ class ProfileScreen extends ConsumerWidget {
     }
   }
 
-  Widget _buildTravelCoverSection(BuildContext context, String userId, ProfileService profileService) {
+  Widget _buildTravelCoverSection(
+    BuildContext context,
+    String userId,
+    ProfileService profileService,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -322,9 +373,9 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(width: 8),
             Text(
               'Coleção de Capas',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -354,10 +405,11 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         Text(
                           '${collection?.completionPercentage.toInt() ?? 0}%',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
                         ),
                       ],
                     ),
@@ -365,7 +417,9 @@ class ProfileScreen extends ConsumerWidget {
                     LinearProgressIndicator(
                       value: (collection?.completionPercentage ?? 0) / 100,
                       backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Colors.blue,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     if (unlockedCovers.isEmpty)
@@ -378,12 +432,13 @@ class ProfileScreen extends ConsumerWidget {
                       GridView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          crossAxisSpacing: 8,
-                          mainAxisSpacing: 8,
-                          childAspectRatio: 0.8,
-                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              childAspectRatio: 0.8,
+                            ),
                         itemCount: unlockedCovers.length,
                         itemBuilder: (context, index) {
                           final cover = unlockedCovers[index];
@@ -411,17 +466,22 @@ class ProfileScreen extends ConsumerWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(8),
+                ),
                 color: Colors.grey[200],
               ),
               child: cover.imageUrl.isNotEmpty
                   ? ClipRRect(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(8),
+                      ),
                       child: Image.network(
                         cover.imageUrl,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.image),
                       ),
                     )
                   : const Center(child: Icon(Icons.image, size: 40)),
@@ -442,7 +502,11 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildChallengesSection(BuildContext context, String userId, ProfileService profileService) {
+  Widget _buildChallengesSection(
+    BuildContext context,
+    String userId,
+    ProfileService profileService,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -452,9 +516,9 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(width: 8),
             Text(
               'Desafios Ativos',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -465,8 +529,10 @@ class ProfileScreen extends ConsumerWidget {
             return StreamBuilder<Map<String, int>>(
               stream: profileService.getUserChallengeProgress(userId),
               builder: (context, progressSnapshot) {
-                if (challengeSnapshot.connectionState == ConnectionState.waiting ||
-                    progressSnapshot.connectionState == ConnectionState.waiting) {
+                if (challengeSnapshot.connectionState ==
+                        ConnectionState.waiting ||
+                    progressSnapshot.connectionState ==
+                        ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
@@ -489,7 +555,9 @@ class ProfileScreen extends ConsumerWidget {
                 return Column(
                   children: challenges.map((challenge) {
                     final currentProgress = progress[challenge.id] ?? 0;
-                    final updatedChallenge = challenge.copyWith(currentProgress: currentProgress);
+                    final updatedChallenge = challenge.copyWith(
+                      currentProgress: currentProgress,
+                    );
                     return _buildChallengeItem(context, updatedChallenge);
                   }).toList(),
                 );
@@ -558,17 +626,16 @@ class ProfileScreen extends ConsumerWidget {
             Row(
               children: [
                 Icon(
-                  challenge.rewardType == RewardType.badge ? Icons.emoji_events : Icons.collections,
+                  challenge.rewardType == RewardType.badge
+                      ? Icons.emoji_events
+                      : Icons.collections,
                   size: 16,
                   color: Colors.grey[600],
                 ),
                 const SizedBox(width: 4),
                 Text(
                   'Recompensa: ${challenge.rewardType.displayName}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
             ),

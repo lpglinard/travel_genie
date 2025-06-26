@@ -20,10 +20,9 @@ class TripCard extends ConsumerWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () {
-          ref.read(analyticsServiceProvider).logViewItinerary(
-            id: trip.id,
-            destination: trip.title,
-          );
+          ref
+              .read(analyticsServiceProvider)
+              .logViewItinerary(id: trip.id, destination: trip.title);
           // Navigate to trip itinerary page
           context.go('/trip/${trip.id}');
         },

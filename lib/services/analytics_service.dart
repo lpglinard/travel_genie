@@ -18,6 +18,14 @@ class AnalyticsService {
   }
 
   Future<void> logSignUp({String method = 'email'}) {
+    _analytics.logEvent(
+      name: 'ad_conversion',
+      parameters: {
+        'campaign_id': "web-traffic-Performance-Max-1",
+        'value': 1.0,
+        'currency': 'USD',
+      },
+    );
     return _analytics.logSignUp(signUpMethod: method);
   }
 
@@ -78,7 +86,11 @@ class AnalyticsService {
     return _analytics.logSearch(searchTerm: query ?? '');
   }
 
-  Future<void> logViewPlace({String? placeId, String? placeName, String? category}) {
+  Future<void> logViewPlace({
+    String? placeId,
+    String? placeName,
+    String? category,
+  }) {
     return _analytics.logEvent(
       name: 'view_place',
       parameters: {
@@ -122,7 +134,10 @@ class AnalyticsService {
   }
 
   // AI and Optimization Events
-  Future<void> logUseAIOptimizer({String? itineraryId, String? optimizationType}) {
+  Future<void> logUseAIOptimizer({
+    String? itineraryId,
+    String? optimizationType,
+  }) {
     return _analytics.logEvent(
       name: 'use_ai_optimizer',
       parameters: {
@@ -140,7 +155,8 @@ class AnalyticsService {
     return _analytics.logEvent(
       name: 'ai_recommendation',
       parameters: {
-        if (recommendationType != null) 'recommendation_type': recommendationType,
+        if (recommendationType != null)
+          'recommendation_type': recommendationType,
         if (placeId != null) 'place_id': placeId,
         if (accepted != null) 'accepted': accepted,
       },
@@ -148,7 +164,10 @@ class AnalyticsService {
   }
 
   // User Engagement Events
-  Future<void> logScreenView({required String screenName, String? screenClass}) {
+  Future<void> logScreenView({
+    required String screenName,
+    String? screenClass,
+  }) {
     return _analytics.logScreenView(
       screenName: screenName,
       screenClass: screenClass,
@@ -318,17 +337,11 @@ class AnalyticsService {
     required String eventName,
     Map<String, Object>? parameters,
   }) {
-    return _analytics.logEvent(
-      name: eventName,
-      parameters: parameters,
-    );
+    return _analytics.logEvent(name: eventName, parameters: parameters);
   }
 
   // User Properties
-  Future<void> setUserProperty({
-    required String name,
-    required String value,
-  }) {
+  Future<void> setUserProperty({required String name, required String value}) {
     return _analytics.setUserProperty(name: name, value: value);
   }
 

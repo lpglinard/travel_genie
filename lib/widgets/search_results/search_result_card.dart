@@ -42,7 +42,10 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
     if (user != null) {
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
-        final isSaved = await firestoreService.isPlaceSaved(user.uid, widget.place.placeId);
+        final isSaved = await firestoreService.isPlaceSaved(
+          user.uid,
+          widget.place.placeId,
+        );
         if (mounted) {
           setState(() {
             _isSaved = isSaved;
@@ -91,19 +94,23 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
         if (_isSaved) {
           // Remove from saved places
           await firestoreService.removePlace(user.uid, widget.place.placeId);
-          ref.read(analyticsServiceProvider).logButtonTap(
-            buttonName: 'remove_from_favorites',
-            screenName: 'search_results',
-            context: 'place_card',
-          );
+          ref
+              .read(analyticsServiceProvider)
+              .logButtonTap(
+                buttonName: 'remove_from_favorites',
+                screenName: 'search_results',
+                context: 'place_card',
+              );
         } else {
           // Add to saved places
           await firestoreService.savePlace(user.uid, widget.place);
-          ref.read(analyticsServiceProvider).logButtonTap(
-            buttonName: 'add_to_favorites',
-            screenName: 'search_results',
-            context: 'place_card',
-          );
+          ref
+              .read(analyticsServiceProvider)
+              .logButtonTap(
+                buttonName: 'add_to_favorites',
+                screenName: 'search_results',
+                context: 'place_card',
+              );
         }
 
         if (mounted) {
@@ -189,11 +196,13 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
       elevation: 2,
       child: InkWell(
         onTap: () {
-          ref.read(analyticsServiceProvider).logViewPlace(
-            placeId: widget.place.placeId,
-            placeName: widget.place.displayName,
-            category: widget.place.category.name,
-          );
+          ref
+              .read(analyticsServiceProvider)
+              .logViewPlace(
+                placeId: widget.place.placeId,
+                placeName: widget.place.displayName,
+                category: widget.place.category.name,
+              );
           // Navigate to place detail using go_router with push
           context.push(
             '/place/${widget.place.placeId}?query=${Uri.encodeComponent(widget.query)}',
@@ -217,7 +226,8 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
                               topRight: Radius.circular(12),
                             ),
                             child: Hero(
-                              tag: 'place-image-${widget.place.placeId}-${widget.index}',
+                              tag:
+                                  'place-image-${widget.place.placeId}-${widget.index}',
                               child: CachedNetworkImage(
                                 imageUrl: widget.place.photos.first.urlWithKey(
                                   googlePlacesApiKey,
@@ -265,12 +275,19 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
                                         height: 16,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
                                         ),
                                       )
                                     : Icon(
-                                        _isSaved ? Icons.favorite : Icons.favorite_border,
-                                        color: _isSaved ? Colors.red : Colors.white,
+                                        _isSaved
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: _isSaved
+                                            ? Colors.red
+                                            : Colors.white,
                                         size: 20,
                                       ),
                               ),
@@ -306,12 +323,19 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
                                         height: 16,
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
-                                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
                                         ),
                                       )
                                     : Icon(
-                                        _isSaved ? Icons.favorite : Icons.favorite_border,
-                                        color: _isSaved ? Colors.red : Colors.white,
+                                        _isSaved
+                                            ? Icons.favorite
+                                            : Icons.favorite_border,
+                                        color: _isSaved
+                                            ? Colors.red
+                                            : Colors.white,
                                         size: 20,
                                       ),
                               ),

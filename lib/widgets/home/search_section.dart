@@ -77,11 +77,13 @@ class _SearchSectionState extends ConsumerState<SearchSection> {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       onTap: () {
-                        ref.read(analyticsServiceProvider).logButtonTap(
-                          buttonName: 'search_suggestion',
-                          screenName: 'home',
-                          context: 'autocomplete',
-                        );
+                        ref
+                            .read(analyticsServiceProvider)
+                            .logButtonTap(
+                              buttonName: 'search_suggestion',
+                              screenName: 'home',
+                              context: 'autocomplete',
+                            );
                         searchController.text = s;
                         _submitSearch(s);
                       },

@@ -1,31 +1,29 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../l10n/app_localizations.dart';
-import '../models/itinerary_day.dart';
-import '../models/place.dart';
 import '../models/drag_drop_models.dart';
+import '../models/place.dart';
 import '../providers/itinerary_providers.dart';
 import '../providers/trip_service_provider.dart';
 import '../providers/user_providers.dart';
 import '../services/itinerary_drag_drop_service.dart';
 import '../services/magic_ai_optimizer_service.dart';
-import '../services/analytics_service.dart';
-import '../widgets/trip_itinerary/saved_places_bin.dart';
 import '../widgets/trip_itinerary/day_item.dart';
 import '../widgets/trip_itinerary/magic_ai_optimizer_bottom_sheet.dart';
 import '../widgets/trip_itinerary/magic_animation_overlay.dart';
+import '../widgets/trip_itinerary/saved_places_bin.dart';
 
 /// A page that displays and manages a trip's itinerary.
-/// 
+///
 /// This page allows users to view and organize their trip itinerary by:
 /// - Viewing saved places that can be added to days
 /// - Organizing places within specific days via drag-and-drop
 /// - Reordering places within days
 /// - Moving places between different days
 /// - Optimizing the trip using Magic AI Trip Optimizer
-/// 
+///
 /// The page uses extracted widgets and services for better maintainability:
 /// - [SavedPlacesBin] for displaying draggable saved places
 /// - [DayItem] for displaying individual itinerary days
@@ -36,7 +34,7 @@ class TripItineraryPage extends ConsumerStatefulWidget {
   final String tripId;
 
   /// Creates a new [TripItineraryPage].
-  /// 
+  ///
   /// [tripId] is required and identifies the trip whose itinerary to display.
   const TripItineraryPage({super.key, required this.tripId});
 
@@ -69,17 +67,22 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            l10n.tripItinerary, 
-            style: Theme.of(context).appBarTheme.titleTextStyle
+            l10n.tripItinerary,
+            style: Theme.of(context).appBarTheme.titleTextStyle,
           ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Theme.of(context).iconTheme.color),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).iconTheme.color,
+            ),
             onPressed: () {
-              ref.read(analyticsServiceProvider).logButtonTap(
-                buttonName: 'back_button',
-                screenName: 'trip_itinerary',
-                context: 'app_bar',
-              );
+              ref
+                  .read(analyticsServiceProvider)
+                  .logButtonTap(
+                    buttonName: 'back_button',
+                    screenName: 'trip_itinerary',
+                    context: 'app_bar',
+                  );
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
               } else {
@@ -93,35 +96,45 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                 Icons.auto_fix_high,
                 color: Theme.of(context).iconTheme.color,
               ),
-              onPressed: _isOptimizing ? null : () {
-                ref.read(analyticsServiceProvider).logButtonTap(
-                  buttonName: 'magic_ai_optimizer',
-                  screenName: 'trip_itinerary',
-                  context: 'app_bar',
-                );
-                _showMagicAiOptimizerBottomSheet();
-              },
+              onPressed: _isOptimizing
+                  ? null
+                  : () {
+                      ref
+                          .read(analyticsServiceProvider)
+                          .logButtonTap(
+                            buttonName: 'magic_ai_optimizer',
+                            screenName: 'trip_itinerary',
+                            context: 'app_bar',
+                          );
+                      _showMagicAiOptimizerBottomSheet();
+                    },
               tooltip: 'Magic AI Trip Optimizer',
             ),
           ],
         ),
         body: daysAsync.when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(
-            child: Text(l10n.errorGeneric(e.toString()))
-          ),
+          error: (e, _) => Center(child: Text(l10n.errorGeneric(e.toString()))),
           data: (days) {
             return savedPlacesAsync.when(
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (e, _) => Center(
-                child: Text(l10n.errorLoadingSavedPlaces(e.toString()))
+                child: Text(l10n.errorLoadingSavedPlaces(e.toString())),
               ),
               data: (savedPlaces) {
                 final placesByDay = {
                   for (final day in days)
-                    day.id: ref.watch(placesForDayProvider((tripId: widget.tripId, dayId: day.id))).maybeWhen(
-                      data: (places) => places,
-                      orElse: () => <Place>[],                    )
+                    day.id: ref
+                        .watch(
+                          placesForDayProvider((
+                            tripId: widget.tripId,
+                            dayId: day.id,
+                          )),
+                        )
+                        .maybeWhen(
+                          data: (places) => places,
+                          orElse: () => <Place>[],
+                        ),
                 };
 
                 return SingleChildScrollView(
@@ -135,15 +148,15 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),
-                      SavedPlacesBin(
-                        places: savedPlaces,
-                      ),
+                      SavedPlacesBin(places: savedPlaces),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Divider(
                           height: 32,
                           thickness: 1,
-                          color: Theme.of(context).colorScheme.outlineVariant.withOpacity(0.5),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.outlineVariant.withOpacity(0.5),
                         ),
                       ),
                       ...days.map((day) {
@@ -151,21 +164,28 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                         return DayItem(
                           day: day,
                           places: places,
-                          onPlaceAccepted: (DraggedPlaceData data, int insertIndex) async {
-                            ref.read(analyticsServiceProvider).logDragEnd(
-                              itemType: 'place',
-                              itemId: data.place.placeId,
-                              toLocation: day.id,
-                              successful: true,
-                            );
-                            final dragDropService = ref.read(itineraryDragDropServiceProvider(widget.tripId));
-                            await dragDropService.handlePlaceDrop(
-                              data: data,
-                              targetDayId: day.id,
-                              insertIndex: insertIndex,
-                              currentPlaces: places,
-                            );
-                          },
+                          onPlaceAccepted:
+                              (DraggedPlaceData data, int insertIndex) async {
+                                ref
+                                    .read(analyticsServiceProvider)
+                                    .logDragEnd(
+                                      itemType: 'place',
+                                      itemId: data.place.placeId,
+                                      toLocation: day.id,
+                                      successful: true,
+                                    );
+                                final dragDropService = ref.read(
+                                  itineraryDragDropServiceProvider(
+                                    widget.tripId,
+                                  ),
+                                );
+                                await dragDropService.handlePlaceDrop(
+                                  data: data,
+                                  targetDayId: day.id,
+                                  insertIndex: insertIndex,
+                                  currentPlaces: places,
+                                );
+                              },
                         );
                       }).toList(),
                     ],
@@ -185,9 +205,8 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => MagicAiOptimizerBottomSheet(
-        onOptimizationStart: _startOptimization,
-      ),
+      builder: (context) =>
+          MagicAiOptimizerBottomSheet(onOptimizationStart: _startOptimization),
     );
   }
 
@@ -270,41 +289,45 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
             const SizedBox(height: 16),
             Text(
               'Improvements found:',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            ...result.improvementsFound.map((improvement) => Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.check,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      improvement,
-                      style: Theme.of(context).textTheme.bodySmall,
+            ...result.improvementsFound.map(
+              (improvement) => Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.check,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        improvement,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            )),
+            ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () {
-              ref.read(analyticsServiceProvider).logDialogInteraction(
-                dialogType: 'optimization_result',
-                action: 'confirm',
-                screenName: 'trip_itinerary',
-              );
+              ref
+                  .read(analyticsServiceProvider)
+                  .logDialogInteraction(
+                    dialogType: 'optimization_result',
+                    action: 'confirm',
+                    screenName: 'trip_itinerary',
+                  );
               Navigator.of(context).pop();
             },
             child: const Text('Great!'),
@@ -321,10 +344,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
       builder: (context) => AlertDialog(
         title: Row(
           children: [
-            Icon(
-              Icons.error,
-              color: Theme.of(context).colorScheme.error,
-            ),
+            Icon(Icons.error, color: Theme.of(context).colorScheme.error),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -341,11 +361,13 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
         actions: [
           TextButton(
             onPressed: () {
-              ref.read(analyticsServiceProvider).logDialogInteraction(
-                dialogType: 'optimization_error',
-                action: 'dismiss',
-                screenName: 'trip_itinerary',
-              );
+              ref
+                  .read(analyticsServiceProvider)
+                  .logDialogInteraction(
+                    dialogType: 'optimization_error',
+                    action: 'dismiss',
+                    screenName: 'trip_itinerary',
+                  );
               Navigator.of(context).pop();
             },
             child: const Text('OK'),

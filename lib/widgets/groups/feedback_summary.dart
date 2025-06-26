@@ -22,9 +22,7 @@ class FeedbackSummary extends StatelessWidget {
     if (totalResponses == 0) {
       return Card(
         elevation: 1,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
@@ -53,9 +51,7 @@ class FeedbackSummary extends StatelessWidget {
 
     return Card(
       elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -99,9 +95,9 @@ class FeedbackSummary extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Progress bar
             Container(
               height: 12,
@@ -120,8 +116,12 @@ class FeedbackSummary extends StatelessWidget {
                           borderRadius: BorderRadius.only(
                             topLeft: const Radius.circular(6),
                             bottomLeft: const Radius.circular(6),
-                            topRight: noCount == 0 ? const Radius.circular(6) : Radius.zero,
-                            bottomRight: noCount == 0 ? const Radius.circular(6) : Radius.zero,
+                            topRight: noCount == 0
+                                ? const Radius.circular(6)
+                                : Radius.zero,
+                            bottomRight: noCount == 0
+                                ? const Radius.circular(6)
+                                : Radius.zero,
                           ),
                         ),
                       ),
@@ -131,12 +131,18 @@ class FeedbackSummary extends StatelessWidget {
                       flex: noCount,
                       child: Container(
                         decoration: BoxDecoration(
-                          color: theme.colorScheme.surfaceVariant.withOpacity(0.8),
+                          color: theme.colorScheme.surfaceVariant.withOpacity(
+                            0.8,
+                          ),
                           borderRadius: BorderRadius.only(
                             topRight: const Radius.circular(6),
                             bottomRight: const Radius.circular(6),
-                            topLeft: yesCount == 0 ? const Radius.circular(6) : Radius.zero,
-                            bottomLeft: yesCount == 0 ? const Radius.circular(6) : Radius.zero,
+                            topLeft: yesCount == 0
+                                ? const Radius.circular(6)
+                                : Radius.zero,
+                            bottomLeft: yesCount == 0
+                                ? const Radius.circular(6)
+                                : Radius.zero,
                           ),
                         ),
                       ),
@@ -144,9 +150,9 @@ class FeedbackSummary extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Statistics
             Row(
               children: [
@@ -175,9 +181,9 @@ class FeedbackSummary extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Encouraging message
             Container(
               padding: const EdgeInsets.all(16),
@@ -217,24 +223,17 @@ class FeedbackSummary extends StatelessWidget {
     required Color backgroundColor,
   }) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: backgroundColor.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: color.withOpacity(0.3),
-          width: 1,
-        ),
+        border: Border.all(color: color.withOpacity(0.3), width: 1),
       ),
       child: Column(
         children: [
-          Icon(
-            icon,
-            color: color,
-            size: 24,
-          ),
+          Icon(icon, color: color, size: 24),
           const SizedBox(height: 8),
           Text(
             '$count',
@@ -265,7 +264,7 @@ class FeedbackSummary extends StatelessWidget {
 
   String _getEncouragingMessage(BuildContext context, int yesPercentage) {
     final l10n = AppLocalizations.of(context);
-    
+
     if (yesPercentage >= 80) {
       return l10n.groupsFeedbackEncouragingHigh;
     } else if (yesPercentage >= 60) {

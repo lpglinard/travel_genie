@@ -8,9 +8,9 @@ class PlaceholderContent extends StatelessWidget {
   final MaterialColor color;
 
   const PlaceholderContent({
-    super.key, 
-    required this.trip, 
-    required this.color
+    super.key,
+    required this.trip,
+    required this.color,
   });
 
   @override
@@ -18,18 +18,11 @@ class PlaceholderContent extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(
-          Icons.landscape,
-          size: 50,
-          color: color,
-        ),
+        Icon(Icons.landscape, size: 50, color: color),
         const SizedBox(height: 8),
         Text(
           trip.title.isNotEmpty ? trip.title : 'Trip',
-          style: TextStyle(
-            color: color.shade800,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: color.shade800, fontWeight: FontWeight.bold),
         ),
       ],
     );

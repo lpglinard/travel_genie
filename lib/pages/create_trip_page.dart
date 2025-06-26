@@ -32,11 +32,13 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
   }
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    ref.read(analyticsServiceProvider).logButtonTap(
-      buttonName: isStartDate ? 'select_start_date' : 'select_end_date',
-      screenName: 'create_trip',
-      context: 'date_picker',
-    );
+    ref
+        .read(analyticsServiceProvider)
+        .logButtonTap(
+          buttonName: isStartDate ? 'select_start_date' : 'select_end_date',
+          screenName: 'create_trip',
+          context: 'date_picker',
+        );
 
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -82,10 +84,12 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
         isArchived: false,
       );
 
-      ref.read(analyticsServiceProvider).logCreateItinerary(
-        id: trip,
-        destination: _titleController.text.trim(),
-      );
+      ref
+          .read(analyticsServiceProvider)
+          .logCreateItinerary(
+            id: trip,
+            destination: _titleController.text.trim(),
+          );
 
       if (mounted) {
         // Show success message and navigate back

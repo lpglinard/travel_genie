@@ -8,11 +8,7 @@ class EmptyStateMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Icon(
-          Icons.map_outlined,
-          size: 80,
-          color: Colors.grey,
-        ),
+        const Icon(Icons.map_outlined, size: 80, color: Colors.grey),
         const SizedBox(height: 16),
         Text(
           'No trips saved yet',
@@ -21,9 +17,9 @@ class EmptyStateMessage extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'Your saved trips will appear here',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: Colors.grey),
         ),
       ],
     );

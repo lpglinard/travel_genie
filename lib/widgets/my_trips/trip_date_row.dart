@@ -6,9 +6,9 @@ class TripDateRow extends StatelessWidget {
   final String endDate;
 
   const TripDateRow({
-    super.key, 
-    required this.startDate, 
-    required this.endDate
+    super.key,
+    required this.startDate,
+    required this.endDate,
   });
 
   @override
