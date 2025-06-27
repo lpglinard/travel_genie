@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 
 import '../../lib/models/place.dart';
 import '../../lib/models/location.dart';
@@ -33,6 +37,28 @@ class MockFirestoreService extends FirestoreService {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() async {
+    // Setup Firebase Auth Mock to return null user
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+      const MethodChannel('plugins.flutter.io/firebase_auth'),
+      (methodCall) async {
+        if (methodCall.method == 'Auth#registerIdTokenListener') {
+          return null;
+        }
+        if (methodCall.method == 'Auth#registerAuthStateListener') {
+          return null;
+        }
+        if (methodCall.method == 'Auth#currentUser') {
+          return null;
+        }
+        return null;
+      },
+    );
+  });
+
   group('SearchResultCard', () {
     late Place testPlace;
 

@@ -1,10 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../providers/trip_service_provider.dart';
 import '../providers/user_providers.dart';
+import '../widgets/login_required_dialog.dart';
 
 class CreateTripPage extends ConsumerStatefulWidget {
   const CreateTripPage({super.key});
@@ -64,6 +67,24 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
 
   Future<void> _saveTrip() async {
     if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    // Check if user is authenticated
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        // Show login required dialog
+        if (mounted) {
+          await LoginRequiredDialog.show(context);
+        }
+        return;
+      }
+    } catch (e) {
+      // Handle Firebase not initialized error - show login dialog
+      if (mounted) {
+        await LoginRequiredDialog.show(context);
+      }
       return;
     }
 
