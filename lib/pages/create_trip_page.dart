@@ -94,13 +94,13 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
       if (mounted) {
         // Show success message and navigate back
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Trip created successfully')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.tripCreatedSuccessfully)),
         );
         context.go('/trips');
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Failed to create trip: ${e.toString()}';
+        _errorMessage = AppLocalizations.of(context)!.failedToCreateTrip(e.toString());
       });
     } finally {
       if (mounted) {
@@ -117,7 +117,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create New Trip'),
+        title: Text(AppLocalizations.of(context)!.createNewTrip),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go('/trips'),
@@ -132,14 +132,14 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
               // Title field
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Trip Title',
-                  hintText: 'e.g., Summer Vacation in Paris',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.tripTitle,
+                  hintText: AppLocalizations.of(context)!.tripTitleHint,
+                  border: const OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter a title for your trip';
+                    return AppLocalizations.of(context)!.tripTitleValidation;
                   }
                   return null;
                 },
@@ -149,10 +149,10 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
               // Description field
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Describe your trip plans',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.tripDescription,
+                  hintText: AppLocalizations.of(context)!.tripDescriptionHint,
+                  border: const OutlineInputBorder(),
                 ),
                 maxLines: 3,
               ),
@@ -160,7 +160,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
 
               // Start date picker
               ListTile(
-                title: const Text('Start Date'),
+                title: Text(AppLocalizations.of(context)!.startDate),
                 subtitle: Text(dateFormat.format(_startDate)),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context, true),
@@ -173,7 +173,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
 
               // End date picker
               ListTile(
-                title: const Text('End Date'),
+                title: Text(AppLocalizations.of(context)!.endDate),
                 subtitle: Text(dateFormat.format(_endDate)),
                 trailing: const Icon(Icons.calendar_today),
                 onTap: () => _selectDate(context, false),
@@ -204,7 +204,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
                 ),
                 child: _isLoading
                     ? const CircularProgressIndicator()
-                    : const Text('Create Trip'),
+                    : Text(AppLocalizations.of(context)!.createTrip),
               ),
             ],
           ),

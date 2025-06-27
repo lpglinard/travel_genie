@@ -9,6 +9,7 @@ import '../../core/extensions/string_extension.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 import '../../providers/user_providers.dart';
+import '../login_required_dialog.dart';
 import 'photo_attribution.dart';
 
 class SearchResultCard extends ConsumerStatefulWidget {
@@ -62,24 +63,9 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        // Show a message to the user that they need to be logged in
+        // Show login required dialog
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Login required to save places',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Theme.of(context).colorScheme.onPrimary
-                      : Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
-              ),
-              backgroundColor: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).colorScheme.primaryContainer
-                  : Theme.of(context).colorScheme.primaryContainer,
-              duration: const Duration(seconds: 3),
-            ),
-          );
+          await LoginRequiredDialog.show(context);
         }
         return;
       }
@@ -124,8 +110,8 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
             SnackBar(
               content: Text(
                 _isSaved
-                    ? 'Place saved to your favorites'
-                    : 'Place removed from your favorites',
+                    ? AppLocalizations.of(context).placeSavedToFavorites
+                    : AppLocalizations.of(context).placeRemovedFromFavorites,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).brightness == Brightness.dark
                       ? Theme.of(context).colorScheme.onPrimary
@@ -148,7 +134,7 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Error: ${e.toString()}',
+                AppLocalizations.of(context).errorWithDetails(e.toString()),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onError,
                 ),

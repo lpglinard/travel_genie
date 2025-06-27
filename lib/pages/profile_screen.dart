@@ -43,8 +43,8 @@ class ProfileScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Section - Login for Anonymous, User Info for Non-Anonymous
-          if (user == null || user.isAnonymous)
+          // Top Section - Login for Unauthenticated, User Info for Authenticated
+          if (user == null)
             _buildLoginSection(context)
           else
             _buildUserIdentificationSection(context, user, userData),
@@ -54,29 +54,32 @@ class ProfileScreen extends ConsumerWidget {
           const TravelerProfileSummary(),
           const SizedBox(height: 24),
 
-          // Badges and Achievements Section
-          _buildBadgesSection(
-            context,
-            user?.uid ?? 'anonymous',
-            profileService,
-          ),
-          const SizedBox(height: 24),
+          // Show user-specific sections only for authenticated users
+          if (user != null) ...[
+            // Badges and Achievements Section
+            _buildBadgesSection(
+              context,
+              user.uid,
+              profileService,
+            ),
+            const SizedBox(height: 24),
 
-          // Travel Cover Collection Section
-          _buildTravelCoverSection(
-            context,
-            user?.uid ?? 'anonymous',
-            profileService,
-          ),
-          const SizedBox(height: 24),
+            // Travel Cover Collection Section
+            _buildTravelCoverSection(
+              context,
+              user.uid,
+              profileService,
+            ),
+            const SizedBox(height: 24),
 
-          // Challenges Section
-          _buildChallengesSection(
-            context,
-            user?.uid ?? 'anonymous',
-            profileService,
-          ),
-          const SizedBox(height: 24),
+            // Challenges Section
+            _buildChallengesSection(
+              context,
+              user.uid,
+              profileService,
+            ),
+            const SizedBox(height: 24),
+          ],
 
           // Settings Section
           _buildSettingsSection(),
@@ -103,13 +106,13 @@ class ProfileScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Visitante',
+                        AppLocalizations.of(context)!.guest,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Faça login para acessar recursos completos',
+                        AppLocalizations.of(context)!.loginToAccessFullFeatures,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -126,7 +129,7 @@ class ProfileScreen extends ConsumerWidget {
                 context.go('/signin');
               },
               icon: const Icon(Icons.login),
-              label: const Text('Fazer Login / Cadastro'),
+              label: Text(AppLocalizations.of(context)!.loginRegisterButton),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
@@ -168,7 +171,7 @@ class ProfileScreen extends ConsumerWidget {
                     userData?.name ??
                         user.displayName ??
                         user.email ??
-                        'Usuário',
+                        AppLocalizations.of(context)!.user,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -202,7 +205,7 @@ class ProfileScreen extends ConsumerWidget {
             const Icon(Icons.emoji_events, color: Colors.amber),
             const SizedBox(width: 8),
             Text(
-              'Conquistas',
+              AppLocalizations.of(context)!.achievements,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -234,7 +237,7 @@ class ProfileScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Desbloqueadas: ${unlockedBadges.length}/${badges.length}',
+                          AppLocalizations.of(context)!.unlockedBadges(unlockedBadges.length, badges.length),
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         Text(
@@ -423,10 +426,10 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     if (unlockedCovers.isEmpty)
-                      const Text(
-                        'Nenhuma capa desbloqueada ainda.\nCrie viagens e gere capas personalizadas!',
+                      Text(
+                        AppLocalizations.of(context)!.noCoversUnlockedYet,
                         textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       )
                     else
                       GridView.builder(
@@ -515,7 +518,7 @@ class ProfileScreen extends ConsumerWidget {
             const Icon(Icons.flag, color: Colors.orange),
             const SizedBox(width: 8),
             Text(
-              'Desafios Ativos',
+              AppLocalizations.of(context)!.activeChallenges,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

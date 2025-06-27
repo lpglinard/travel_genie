@@ -22,7 +22,7 @@ class LanguageSettingsTile extends ConsumerWidget {
       onTap: () async {
         if (locale == const Locale('en')) {
           ref.read(localeProvider.notifier).state = null;
-          if (user != null && !user.isAnonymous) {
+          if (user != null) {
             await service.upsertUser(
               user,
               locale: null,
@@ -33,7 +33,7 @@ class LanguageSettingsTile extends ConsumerWidget {
           await prefs.setLocale(null);
         } else {
           ref.read(localeProvider.notifier).state = const Locale('en');
-          if (user != null && !user.isAnonymous) {
+          if (user != null) {
             await service.upsertUser(
               user,
               locale: const Locale('en'),

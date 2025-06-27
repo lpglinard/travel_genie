@@ -269,6 +269,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                   );
                 },
                 actions: [
+                  AuthStateChangeAction<AuthFailed>((context, state) {
+                    final analyticsService = ref.read(analyticsServiceProvider);
+                    analyticsService.logError(
+                      errorType: 'auth_failed',
+                      errorMessage: state.exception?.toString(),
+                      screenName: 'signin_screen',
+                    );
+                  }),
                   AuthStateChangeAction<SignedIn>((context, state) {
                     context.go('/');
                   }),

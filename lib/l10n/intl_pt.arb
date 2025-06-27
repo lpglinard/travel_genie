@@ -46,6 +46,12 @@
   "addToItinerary": "Adicionar ao Itinerário",
   "close": "Fechar",
 
+  "loginRequiredTitle": "Crie sua conta gratuita",
+  "loginRequiredMessage": "Para salvar seus locais favoritos e planejar viagens personalizadas, crie uma conta gratuita.",
+  "createAccount": "Criar Conta",
+  "signIn": "Entrar",
+  "cancel": "Cancelar",
+
   "categoryAll": "Todos",
   "categoryAttractions": "Atrações",
   "categoryRestaurants": "Restaurantes",
@@ -237,5 +243,83 @@
   "travelerProfileSkipButton": "Pular esta etapa",
   "travelerProfileEmptyDescription": "Complete seu perfil de viajante para receber recomendações personalizadas de acordo com seu estilo de viagem.",
   "travelerProfileCreateButton": "Criar Perfil",
-  "profileEdit": "Editar"
+  "profileEdit": "Editar",
+
+  "loginRegisterButton": "Fazer Login / Cadastro",
+  "user": "Usuário",
+  "achievements": "Conquistas",
+  "unlockedBadges": "Desbloqueadas: {count}/{total}",
+  "@unlockedBadges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "tripCreatedSuccessfully": "Viagem criada com sucesso",
+  "createNewTrip": "Criar Nova Viagem",
+  "tripTitle": "Título da Viagem",
+  "tripTitleHint": "ex: Férias de Verão em Paris",
+  "tripTitleValidation": "Por favor, insira um título para sua viagem",
+  "tripDescription": "Descrição",
+  "tripDescriptionHint": "Descreva seus planos de viagem",
+  "startDate": "Data de Início",
+  "endDate": "Data de Fim",
+  "createTrip": "Criar Viagem",
+  "failedToCreateTrip": "Falha ao criar viagem: {error}",
+  "@failedToCreateTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "placeSavedToFavorites": "Local salvo nos seus favoritos",
+  "placeRemovedFromFavorites": "Local removido dos seus favoritos",
+  "errorSavingPlace": "Erro ao salvar local",
+  "errorWithDetails": "Erro: {error}",
+  "@errorWithDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "exploreDestinations": "Explorar Destinos",
+
+  "optimizationComplete": "Otimização Concluída!",
+  "optimizationCompleteMessage": "Sua viagem foi otimizada usando a estratégia {strategyName}.",
+  "@optimizationCompleteMessage": {
+    "placeholders": {
+      "strategyName": {
+        "type": "String"
+      }
+    }
+  },
+  "improvementsFound": "Melhorias encontradas:",
+  "great": "Ótimo!",
+  "optimizationFailed": "Otimização Falhou",
+  "optimizationFailedMessage": "Desculpe, encontramos um problema ao otimizar sua viagem: {error}",
+  "@optimizationFailedMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK",
+  "timeEfficient": "Eficiente em Tempo",
+  "costEffective": "Custo-Benefício",
+  "experienceMaximizer": "Maximizador de Experiência",
+
+  "guest": "Visitante",
+  "loginToAccessFullFeatures": "Faça login para acessar recursos completos",
+  "noCoversUnlockedYet": "Nenhuma capa desbloqueada ainda.\nCrie viagens e gere capas personalizadas!",
+  "activeChallenges": "Desafios Ativos"
 }

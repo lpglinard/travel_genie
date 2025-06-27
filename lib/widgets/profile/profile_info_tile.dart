@@ -11,10 +11,6 @@ class ProfileInfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (user.isAnonymous) {
-      return const SizedBox.shrink();
-    }
-
     return ListTile(
       leading: const Icon(Icons.person),
       title: Text(userData?.name ?? user.displayName ?? user.email ?? 'User'),

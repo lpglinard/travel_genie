@@ -7,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../l10n/app_localizations.dart';
 import '../models/place.dart';
 import '../providers/user_providers.dart';
+import '../widgets/login_required_dialog.dart';
 import '../widgets/place_detail/action_buttons.dart';
 import '../widgets/place_detail/additional_info_section.dart';
 import '../widgets/place_detail/description_section.dart';
@@ -111,23 +112,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        // Show a message to the user that they need to be logged in
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              '${AppLocalizations.of(context).logout} required',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onPrimaryContainer,
-              ),
-            ),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.primaryContainer
-                : Theme.of(context).colorScheme.primaryContainer,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+        // Show login required dialog
+        await LoginRequiredDialog.show(context);
         return;
       }
 
@@ -156,8 +142,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
           SnackBar(
             content: Text(
               _isSaved
-                  ? 'Place saved to your favorites'
-                  : 'Place removed from your favorites',
+                  ? AppLocalizations.of(context).placeSavedToFavorites
+                  : AppLocalizations.of(context).placeRemovedFromFavorites,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Theme.of(context).colorScheme.onPrimary
@@ -179,7 +165,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Error saving place',
+              AppLocalizations.of(context).errorSavingPlace,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Theme.of(context).colorScheme.onPrimary

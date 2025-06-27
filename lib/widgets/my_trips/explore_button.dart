@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../l10n/app_localizations.dart';
+
 /// Widget that displays the explore button
 class ExploreButton extends StatelessWidget {
   const ExploreButton({super.key});
@@ -13,7 +15,7 @@ class ExploreButton extends StatelessWidget {
         context.go('/explore');
       },
       icon: const Icon(Icons.search),
-      label: const Text('Explore Destinations'),
+      label: Text(AppLocalizations.of(context).exploreDestinations),
     );
   }
 }

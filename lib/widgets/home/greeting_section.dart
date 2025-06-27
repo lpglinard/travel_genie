@@ -14,7 +14,7 @@ class GreetingSection extends ConsumerWidget {
     String greeting = AppLocalizations.of(context).greeting;
 
     authState.whenData((user) {
-      if (user != null && !user.isAnonymous) {
+      if (user != null) {
         final name = userData?.name ?? user.displayName;
         if (name != null && name.isNotEmpty) {
           greeting = '${AppLocalizations.of(context).greeting}, $name';

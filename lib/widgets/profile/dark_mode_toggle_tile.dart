@@ -24,7 +24,7 @@ class DarkModeToggleTile extends ConsumerWidget {
           ref.read(themeModeProvider.notifier).state = value
               ? ThemeMode.dark
               : ThemeMode.light;
-          if (user != null && !user.isAnonymous) {
+          if (user != null) {
             await service.upsertUser(user, locale: locale, darkMode: value);
           }
           final prefs = await ref.read(preferencesServiceProvider.future);

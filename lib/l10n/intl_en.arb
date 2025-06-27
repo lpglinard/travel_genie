@@ -46,6 +46,12 @@
   "addToItinerary": "Add to Itinerary",
   "close": "Close",
 
+  "loginRequiredTitle": "Unlock more features",
+  "loginRequiredMessage": "To save your favorite places and plan personalized trips, create a free account.",
+  "createAccount": "Create Account",
+  "signIn": "Sign In",
+  "cancel": "Cancel",
+
   "categoryAll": "All",
   "categoryAttractions": "Attractions",
   "categoryRestaurants": "Restaurants",
@@ -237,5 +243,83 @@
   "travelerProfileSkipButton": "Skip this step",
   "travelerProfileEmptyDescription": "Complete your traveler profile to get personalized recommendations tailored to your travel style.",
   "travelerProfileCreateButton": "Create Profile",
-  "profileEdit": "Edit"
+  "profileEdit": "Edit",
+
+  "loginRegisterButton": "Login / Register",
+  "user": "User",
+  "achievements": "Achievements",
+  "unlockedBadges": "Unlocked: {count}/{total}",
+  "@unlockedBadges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "tripCreatedSuccessfully": "Trip created successfully",
+  "createNewTrip": "Create New Trip",
+  "tripTitle": "Trip Title",
+  "tripTitleHint": "e.g., Summer Vacation in Paris",
+  "tripTitleValidation": "Please enter a title for your trip",
+  "tripDescription": "Description",
+  "tripDescriptionHint": "Describe your trip plans",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "createTrip": "Create Trip",
+  "failedToCreateTrip": "Failed to create trip: {error}",
+  "@failedToCreateTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "placeSavedToFavorites": "Place saved to your favorites",
+  "placeRemovedFromFavorites": "Place removed from your favorites",
+  "errorSavingPlace": "Error saving place",
+  "errorWithDetails": "Error: {error}",
+  "@errorWithDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "exploreDestinations": "Explore Destinations",
+
+  "optimizationComplete": "Optimization Complete!",
+  "optimizationCompleteMessage": "Your trip has been optimized using the {strategyName} strategy.",
+  "@optimizationCompleteMessage": {
+    "placeholders": {
+      "strategyName": {
+        "type": "String"
+      }
+    }
+  },
+  "improvementsFound": "Improvements found:",
+  "great": "Great!",
+  "optimizationFailed": "Optimization Failed",
+  "optimizationFailedMessage": "Sorry, we encountered an issue while optimizing your trip: {error}",
+  "@optimizationFailedMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK",
+  "timeEfficient": "Time Efficient",
+  "costEffective": "Cost Effective",
+  "experienceMaximizer": "Experience Maximizer",
+
+  "guest": "Guest",
+  "loginToAccessFullFeatures": "Login to access full features",
+  "noCoversUnlockedYet": "No covers unlocked yet.\nCreate trips and generate personalized covers!",
+  "activeChallenges": "Active Challenges"
 }

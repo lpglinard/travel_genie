@@ -48,9 +48,6 @@ Future<void> main() async {
       return true;
     };
 
-    if (FirebaseAuth.instance.currentUser == null) {
-      await FirebaseAuth.instance.signInAnonymously();
-    }
   } catch (error, stackTrace) {
     // Error during Firebase initialization
   }

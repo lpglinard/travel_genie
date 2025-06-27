@@ -272,7 +272,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Optimization Complete!',
+                AppLocalizations.of(context)!.optimizationComplete,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -283,12 +283,12 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Your trip has been optimized using the ${result.strategyName} strategy.',
+              AppLocalizations.of(context)!.optimizationCompleteMessage(result.strategyName),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),
             Text(
-              'Improvements found:',
+              AppLocalizations.of(context)!.improvementsFound,
               style: Theme.of(
                 context,
               ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
@@ -330,7 +330,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                   );
               Navigator.of(context).pop();
             },
-            child: const Text('Great!'),
+            child: Text(AppLocalizations.of(context)!.great),
           ),
         ],
       ),
@@ -348,14 +348,14 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Optimization Failed',
+                AppLocalizations.of(context)!.optimizationFailed,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
           ],
         ),
         content: Text(
-          'Sorry, we encountered an issue while optimizing your trip: $error',
+          AppLocalizations.of(context)!.optimizationFailedMessage(error),
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         actions: [
@@ -370,7 +370,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                   );
               Navigator.of(context).pop();
             },
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),
@@ -381,11 +381,11 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
   String _getStrategyName(OptimizationStrategy strategy) {
     switch (strategy) {
       case OptimizationStrategy.timeEfficient:
-        return 'Time Efficient';
+        return AppLocalizations.of(context)!.timeEfficient;
       case OptimizationStrategy.costEffective:
-        return 'Cost Effective';
+        return AppLocalizations.of(context)!.costEffective;
       case OptimizationStrategy.experienceMaximizer:
-        return 'Experience Maximizer';
+        return AppLocalizations.of(context)!.experienceMaximizer;
     }
   }
 }

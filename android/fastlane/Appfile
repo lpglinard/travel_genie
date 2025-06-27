@@ -1,0 +1,2 @@
+json_key_file("/Users/lucaslinard/IdeaProjects/travel_genie/proven-aviary-434423-s1-596a1d9f6dcc.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("tech.linard.travelgenieapp.travel_genie") # e.g. com.krausefx.app

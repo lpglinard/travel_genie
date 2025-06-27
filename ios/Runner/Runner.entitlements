@@ -7,7 +7,9 @@
 		<string>Default</string>
 	</array>
 	<key>com.apple.developer.associated-domains</key>
-	<array/>
+	<array>
+		<string>odsy.to</string>
+	</array>
 	<key>com.apple.developer.devicecheck.app-attest-opt-in</key>
 	<array>
 		<string>CDhash</string>
