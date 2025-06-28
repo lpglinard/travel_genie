@@ -1,215 +1,57 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:developer';
 
-import '../l10n/app_localizations.dart';
-import '../user_providers.dart';
 import '../models/destination.dart';
-import '../providers/autocomplete_provider.dart';
+import '../services/firestore_service.dart';
+import '../widgets/home/greeting_section.dart';
+import '../widgets/home/hero_image.dart';
+import '../widgets/home/home_app_bar.dart';
+import '../widgets/home/popular_destinations_section.dart';
+import '../widgets/home/search_section.dart';
 
-import '../providers/search_results_provider.dart';
-final _destinations = [
-  Destination('Paris',
-      'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=60'),
-  Destination('Caribbean Beaches',
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=60'),
-  Destination('Patagonia',
-      'https://images.unsplash.com/photo-1575819453111-abb276cd4973?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=400&q=60'),
-];
+final firestoreServiceProvider = Provider<FirestoreService>((ref) {
+  return FirestoreService(FirebaseFirestore.instance);
+});
 
-class MyHomePage extends ConsumerStatefulWidget {
+final recommendedDestinationsProvider = StreamProvider<List<Destination>>((
+  ref,
+) {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return firestoreService.streamRecommendedDestinations();
+});
+
+class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
 
   @override
-  ConsumerState<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends ConsumerState<MyHomePage> {
-  final formKey = GlobalKey<FormState>();
-  late final TextEditingController searchController;
-
-  @override
-  void initState() {
-    super.initState();
-    searchController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    searchController.dispose();
-    super.dispose();
-  }
-
-  void _submitSearch(String value) {
-    if (value.isNotEmpty) {
-      log('Search form submitted with value: ' + value);
-      ref.read(autocompleteProvider.notifier).search('');
-      ref.read(searchResultsProvider.notifier).search(value);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final userData = ref.watch(userDataProvider).valueOrNull;
-    String greeting = AppLocalizations.of(context).greeting;
-    if (user != null && !user.isAnonymous) {
-      final name = userData?.name ?? user.displayName;
-      if (name != null && name.isNotEmpty) {
-        greeting = '${AppLocalizations.of(context).greeting}, $name';
-      }
-    }
-    const heroImage =
-        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60';
+  Widget build(BuildContext context, WidgetRef ref) {
+    const heroImage = 'images/odsy_main.png';
+    final recommendedDestinationsAsync = ref.watch(
+      recommendedDestinationsProvider,
+    );
 
     return Scaffold(
+      appBar: const HomeAppBar(),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.network(heroImage, height: 180, fit: BoxFit.cover),
-            ),
+            const HeroImage(imagePath: heroImage),
             const SizedBox(height: 16),
-            Text(
-              greeting,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
+            const GreetingSection(),
             const SizedBox(height: 12),
-            Form(
-              key: formKey,
-              child: TextFormField(
-                controller: searchController,
-                onChanged: (value) {
-                  log('HomePage search field changed: ' + value);
-                  ref.read(autocompleteProvider.notifier).search(value);
-                },
-                onFieldSubmitted: _submitSearch,
-                decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).searchPlaceholder,
-                  prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_forward),
-                    onPressed: () => _submitSearch(searchController.text),
-                  ),
-                  filled: true,
-                  fillColor:
-                      Theme.of(context).colorScheme.inverseSurface.withOpacity(0.2),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-            () {
-              final suggestions = ref.watch(autocompleteProvider);
-              return suggestions.maybeWhen(
-                data: (list) => list.isEmpty
-                    ? const SizedBox.shrink()
-                    : Column(
-                        children: list
-                            .map(
-                              (s) => ListTile(
-                                title: Text(s),
-                                onTap: () {
-                                  searchController.text = s;
-                                  _submitSearch(s);
-                                },
-                              ),
-                            )
-                            .toList(),
-                      ),
-                orElse: () => const SizedBox.shrink(),
-              );
-            }(),
-            (() {
-              final results = ref.watch(searchResultsProvider);
-              return results.maybeWhen(
-                data: (list) => list.isEmpty
-                    ? const SizedBox.shrink()
-                    : Column(
-                        children: list
-                            .map(
-                              (r) => Card(
-                                child: ListTile(
-                                  leading: r.photos.isNotEmpty &&
-                                          r.photos.first.url != null &&
-                                          r.photos.first.url!.isNotEmpty
-                                      ? Image.network(
-                                          r.photos.first.url!,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                  title: Text(r.displayName),
-                                  subtitle: Text(r.formattedAddress),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                orElse: () => const SizedBox.shrink(),
-              );
-            })(),
+            const SearchSection(),
             const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context).popularDestinations,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              height: 150,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  final dest = _destinations[index];
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(dest.imageUrl,
-                            width: 120, height: 100, fit: BoxFit.cover),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(dest.name),
-                    ],
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
-                itemCount: _destinations.length,
-              ),
+            recommendedDestinationsAsync.when(
+              data: (destinations) =>
+                  PopularDestinationsSection(destinations: destinations),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) =>
+                  Text('Error loading destinations: $error'),
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: AppLocalizations.of(context).navHome,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.search),
-            label: AppLocalizations.of(context).navExplore,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.map),
-            label: AppLocalizations.of(context).navMyTrips,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.group),
-            label: AppLocalizations.of(context).navGroups,
-          ),
-        ],
       ),
     );
   }

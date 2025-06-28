@@ -7,15 +7,15 @@
 		<string>Default</string>
 	</array>
 	<key>com.apple.developer.associated-domains</key>
-	<array/>
+	<array>
+		<string>odsy.to</string>
+	</array>
 	<key>com.apple.developer.devicecheck.app-attest-opt-in</key>
 	<array>
 		<string>CDhash</string>
 	</array>
 	<key>com.apple.developer.devicecheck.appattest-environment</key>
 	<string>development</string>
-	<key>com.apple.developer.in-app-payments</key>
-	<array/>
 	<key>com.apple.developer.networking.wifi-info</key>
 	<true/>
 </dict>
