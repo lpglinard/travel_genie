@@ -1,0 +1,355 @@
+{
+  "@@locale": "en",
+  "appTitle": "Travel Genie",
+  "demoHomePageTitle": "Flutter Demo Home Page",
+  "incrementTooltip": "Increment",
+  "buttonMessage": "You have pushed the button this many times:",
+  "profileButtonTooltip": "Profile",
+  "profileTitle": "Profile",
+  "changeLanguage": "Change language",
+  "logout": "Logout",
+  "toggleDarkMode": "Dark theme",
+  "greeting": "Hello",
+  "searchPlaceholder": "Where do you want to go?",
+  "popularDestinations": "Popular Destinations",
+  "navHome": "Home",
+  "navExplore": "Explore",
+  "navMyTrips": "My Trips",
+  "navGroups": "Groups",
+  "tripItinerary": "Trip Itinerary",
+  "savedPlaces": "Saved Places",
+  "errorGeneric": "Error: {error}",
+  "errorLoadingSavedPlaces": "Error loading saved places: {error}",
+  "noResults": "No results",
+  "openingHours": "Opening hours:",
+  "openInMaps": "Open in Google Maps",
+
+  "photoBy": "Photo by: {name}",
+  "imageCount": "{current} / {total}",
+  "shareMessage": "Check out {name} at {address}. {url}",
+  "shareSubject": "Check out this place!",
+  "description": "Description",
+  "additionalInfo": "Additional Information",
+  "openNow": "Open Now",
+  "closedNow": "Closed Now",
+  "tapForHours": "Tap for hours",
+  "price": "Price",
+  "free": "Free",
+  "website": "Website",
+  "visitWebsite": "Visit official website",
+  "viewOnGoogleMaps": "View on Google Maps",
+  "openInExternalApp": "Open in external app",
+  "averageVisitTime": "Average Visit Time",
+  "oneToTwoHours": "1-2 hours",
+  "location": "Location",
+  "save": "Save",
+  "addToItinerary": "Add to Itinerary",
+  "close": "Close",
+
+  "loginRequiredTitle": "Unlock more features",
+  "loginRequiredMessage": "To save your favorite places and plan personalized trips, create a free account.",
+  "createAccount": "Create Account",
+  "signIn": "Sign In",
+  "cancel": "Cancel",
+
+  "categoryAll": "All",
+  "categoryAttractions": "Attractions",
+  "categoryRestaurants": "Restaurants",
+  "categoryHotels": "Hotels",
+  "defaultPlaceType": "Place",
+  "locationSeparator": " • ",
+  "stars": "{rating} stars",
+  "reviews": "({count} reviews)",
+
+  "paris": "Paris",
+  "caribbeanBeaches": "Caribbean Beaches",
+  "patagonia": "Patagonia",
+
+  "placeTypeAccounting": "Accounting",
+  "placeTypeAirport": "Airport",
+  "placeTypeAmusementPark": "Amusement Park",
+  "placeTypeAquarium": "Aquarium",
+  "placeTypeArtGallery": "Art Gallery",
+  "placeTypeAtm": "ATM",
+  "placeTypeBakery": "Bakery",
+  "placeTypeBank": "Bank",
+  "placeTypeBar": "Bar",
+  "placeTypeBeautySalon": "Beauty Salon",
+  "placeTypeBicycleStore": "Bicycle Store",
+  "placeTypeBookStore": "Book Store",
+  "placeTypeBowlingAlley": "Bowling Alley",
+  "placeTypeBusStation": "Bus Station",
+  "placeTypeCafe": "Cafe",
+  "placeTypeCampground": "Campground",
+  "placeTypeCarDealer": "Car Dealer",
+  "placeTypeCarRental": "Car Rental",
+  "placeTypeCarRepair": "Car Repair",
+  "placeTypeCarWash": "Car Wash",
+  "placeTypeCasino": "Casino",
+  "placeTypeCemetery": "Cemetery",
+  "placeTypeChurch": "Church",
+  "placeTypeCityHall": "City Hall",
+  "placeTypeClothingStore": "Clothing Store",
+  "placeTypeConvenienceStore": "Convenience Store",
+  "placeTypeCourthouse": "Courthouse",
+  "placeTypeDentist": "Dentist",
+  "placeTypeDepartmentStore": "Department Store",
+  "placeTypeDoctor": "Doctor",
+  "placeTypeDrugstore": "Drugstore",
+  "placeTypeElectrician": "Electrician",
+  "placeTypeElectronicsStore": "Electronics Store",
+  "placeTypeEmbassy": "Embassy",
+  "placeTypeFireStation": "Fire Station",
+  "placeTypeFlorist": "Florist",
+  "placeTypeFuneralHome": "Funeral Home",
+  "placeTypeFurnitureStore": "Furniture Store",
+  "placeTypeGasStation": "Gas Station",
+  "placeTypeGym": "Gym",
+  "placeTypeHairCare": "Hair Care",
+  "placeTypeHardwareStore": "Hardware Store",
+  "placeTypeHinduTemple": "Hindu Temple",
+  "placeTypeHomeGoodsStore": "Home Goods Store",
+  "placeTypeHospital": "Hospital",
+  "placeTypeInsuranceAgency": "Insurance Agency",
+  "placeTypeJewelryStore": "Jewelry Store",
+  "placeTypeLaundry": "Laundry",
+  "placeTypeLawyer": "Lawyer",
+  "placeTypeLibrary": "Library",
+  "placeTypeLightRailStation": "Light Rail Station",
+  "placeTypeLiquorStore": "Liquor Store",
+  "placeTypeLocalGovernmentOffice": "Local Government Office",
+  "placeTypeLocksmith": "Locksmith",
+  "placeTypeLodging": "Lodging",
+  "placeTypeMealDelivery": "Meal Delivery",
+  "placeTypeMealTakeaway": "Meal Takeaway",
+  "placeTypeMosque": "Mosque",
+  "placeTypeMovieRental": "Movie Rental",
+  "placeTypeMovieTheater": "Movie Theater",
+  "placeTypeMovingCompany": "Moving Company",
+  "placeTypeMuseum": "Museum",
+  "placeTypeNightClub": "Night Club",
+  "placeTypePainter": "Painter",
+  "placeTypePark": "Park",
+  "placeTypeParking": "Parking",
+  "placeTypePetStore": "Pet Store",
+  "placeTypePharmacy": "Pharmacy",
+  "placeTypePhysiotherapist": "Physiotherapist",
+  "placeTypePlumber": "Plumber",
+  "placeTypePolice": "Police",
+  "placeTypePostOffice": "Post Office",
+  "placeTypePrimarySchool": "Primary School",
+  "placeTypeRealEstateAgency": "Real Estate Agency",
+  "placeTypeRestaurant": "Restaurant",
+  "placeTypeRoofingContractor": "Roofing Contractor",
+  "placeTypeRvPark": "RV Park",
+  "placeTypeSchool": "School",
+  "placeTypeSecondarySchool": "Secondary School",
+  "placeTypeShoeStore": "Shoe Store",
+  "placeTypeShoppingMall": "Shopping Mall",
+  "placeTypeSpa": "Spa",
+  "placeTypeStadium": "Stadium",
+  "placeTypeStorage": "Storage",
+  "placeTypeStore": "Store",
+  "placeTypeSubwayStation": "Subway Station",
+  "placeTypeSupermarket": "Supermarket",
+  "placeTypeSynagogue": "Synagogue",
+  "placeTypeTaxiStand": "Taxi Stand",
+  "placeTypeTouristAttraction": "Tourist Attraction",
+  "placeTypeTrainStation": "Train Station",
+  "placeTypeTransitStation": "Transit Station",
+  "placeTypeTravelAgency": "Travel Agency",
+  "placeTypeUniversity": "University",
+  "placeTypeVeterinaryCare": "Veterinary Care",
+  "placeTypeZoo": "Zoo",
+
+  "groupsTitle": "Travel Groups",
+  "groupsSubtitle": "Help us shape the future of group travel planning!",
+  "groupsFeedbackQuestion": "Would you like to plan trips with others?",
+  "groupsFeedbackDescription": "We're considering adding a feature that lets you create and plan trips together with your favorite people. Your input helps us prioritize this development!",
+  "groupsFeedbackExamplesTitle": "Think about planning trips with:",
+  "groupsFeedbackExampleFamily": "Family members for reunions or vacations",
+  "groupsFeedbackExampleFriends": "Friends for weekend getaways or adventures",
+  "groupsFeedbackExampleColleagues": "Colleagues for team building or conferences",
+  "groupsFeedbackExamplePartner": "Your significant other for romantic escapes",
+  "groupsFeedbackYes": "Yes, I'd love this!",
+  "groupsFeedbackNo": "Not for me",
+  "groupsFeedbackThanks": "Thanks for your feedback! 🙏",
+  "groupsFeedbackCurrentResponseYes": "You said yes to group travel features",
+  "groupsFeedbackCurrentResponseNo": "You're not interested in group features",
+  "groupsFeedbackSummaryTitle": "Community Feedback",
+  "groupsFeedbackSummarySubtitle": "{count, plural, =0{No responses yet} =1{1 response so far} other{{count} responses so far}}",
+  "@groupsFeedbackSummarySubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupsFeedbackSummaryEmpty": "Be the first to share your thoughts!",
+  "groupsFeedbackEncouragingHigh": "Wow! The community really wants group travel features! 🎉",
+  "groupsFeedbackEncouragingMedium": "Great interest in group travel! This feature could be really valuable. 👥",
+  "groupsFeedbackEncouragingLow": "Mixed feelings about group travel features. Every opinion matters! 🤔",
+  "groupsFeedbackEncouragingVeryLow": "Looks like group features aren't a priority right now. Thanks for the honest feedback! 💭",
+
+  "badgesFirstTripName": "First Trip",
+  "badgesFirstTripDescription": "Created your first trip",
+  "badgesFirstLoginName": "Welcome",
+  "badgesFirstLoginDescription": "Made your first login",
+  "badgesFirstInviteName": "Host",
+  "badgesFirstInviteDescription": "Invited friends to collaborate",
+  "badgesFirstAiCoverName": "Digital Artist",
+  "badgesFirstAiCoverDescription": "Generated your first personalized AI cover",
+
+  "travelerProfileTitle": "Traveler Profile",
+  "travelerProfileIntroduction": "Help us understand your travel style and preferences better for perfect personalized recommendations for you!",
+  "travelerProfileSaved": "Preferences saved successfully!",
+
+  "travelerProfileTravelCompanyTitle": "Who do you usually travel with?",
+  "travelerProfileTravelCompanySolo": "Solo",
+  "travelerProfileTravelCompanyCouple": "Couple",
+  "travelerProfileTravelCompanyFamily": "Family with children",
+  "travelerProfileTravelCompanyFriends": "Group of friends",
+
+  "travelerProfileBudgetTitle": "What is your usual travel budget?",
+  "travelerProfileBudgetEconomic": "Economic",
+  "travelerProfileBudgetModerate": "Moderate",
+  "travelerProfileBudgetLuxury": "Luxury",
+
+  "travelerProfileAccommodationTitle": "What type of accommodation do you prefer?",
+  "travelerProfileAccommodationHostel": "Hostel/Backpacker",
+  "travelerProfileAccommodationBudgetHotel": "Budget Hotel/Inn",
+  "travelerProfileAccommodationComfortHotel": "Comfort Hotel (3-4 stars)",
+  "travelerProfileAccommodationResort": "Resort/Luxury",
+  "travelerProfileAccommodationApartment": "Apartment/Airbnb",
+
+  "travelerProfileInterestsTitle": "What activities do you enjoy most on your trips?",
+  "travelerProfileInterestsCulture": "Culture and Museums",
+  "travelerProfileInterestsNature": "Nature and Adventure",
+  "travelerProfileInterestsNightlife": "Nightlife",
+  "travelerProfileInterestsGastronomy": "Gastronomy",
+  "travelerProfileInterestsShopping": "Shopping",
+  "travelerProfileInterestsRelaxation": "Relaxation and Beach",
+
+  "travelerProfileGastronomicTitle": "What is your gastronomic profile when traveling?",
+  "travelerProfileGastronomicLocal": "I love trying local and street food",
+  "travelerProfileGastronomicGourmet": "I prefer recommended restaurants and gourmet cuisine",
+  "travelerProfileGastronomicDietary": "I have dietary restrictions/special needs (vegetarian, vegan, allergies, etc.)",
+
+  "travelerProfileItineraryTitle": "How do you prefer to organize your trips?",
+  "travelerProfileItineraryDetailed": "I like a detailed itinerary",
+  "travelerProfileItinerarySpontaneous": "I prefer to discover spontaneously during the trip",
+
+  "travelerProfileSaveButton": "Save preferences",
+  "travelerProfileSkipButton": "Skip this step",
+  "travelerProfileEmptyDescription": "Complete your traveler profile to get personalized recommendations tailored to your travel style.",
+  "travelerProfileCreateButton": "Create Profile",
+  "profileEdit": "Edit",
+
+  "loginRegisterButton": "Login / Register",
+  "user": "User",
+  "achievements": "Achievements",
+  "unlockedBadges": "Unlocked: {count}/{total}",
+  "@unlockedBadges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "tripCreatedSuccessfully": "Trip created successfully",
+  "createNewTrip": "Create New Trip",
+  "tripTitle": "Trip Title",
+  "tripTitleHint": "e.g., Summer Vacation in Paris",
+  "tripTitleValidation": "Please enter a title for your trip",
+  "tripDescription": "Description",
+  "tripDescriptionHint": "Describe your trip plans",
+  "startDate": "Start Date",
+  "endDate": "End Date",
+  "createTrip": "Create Trip",
+  "failedToCreateTrip": "Failed to create trip: {error}",
+  "@failedToCreateTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "placeSavedToFavorites": "Place saved to your favorites",
+  "placeRemovedFromFavorites": "Place removed from your favorites",
+  "errorSavingPlace": "Error saving place",
+  "errorWithDetails": "Error: {error}",
+  "@errorWithDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "exploreDestinations": "Explore Destinations",
+
+  "optimizationComplete": "Optimization Complete!",
+  "optimizationCompleteMessage": "Your trip has been optimized using the {strategyName} strategy.",
+  "@optimizationCompleteMessage": {
+    "placeholders": {
+      "strategyName": {
+        "type": "String"
+      }
+    }
+  },
+  "improvementsFound": "Improvements found:",
+  "great": "Great!",
+  "optimizationFailed": "Optimization Failed",
+  "optimizationFailedMessage": "Sorry, we encountered an issue while optimizing your trip: {error}",
+  "@optimizationFailedMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK",
+  "timeEfficient": "Time Efficient",
+  "costEffective": "Cost Effective",
+  "experienceMaximizer": "Experience Maximizer",
+
+  "guest": "Guest",
+  "loginToAccessFullFeatures": "Login to access full features",
+  "noCoversUnlockedYet": "No covers unlocked yet.\nCreate trips and generate personalized covers!",
+  "activeChallenges": "Active Challenges",
+  "travelCoverCollection": "Travel Cover Collection",
+  "unlockedCovers": "Unlocked: {count}/{total}",
+  "@unlockedCovers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noChallengesActive": "No active challenges at the moment.\nNew challenges arrive weekly!",
+  "deleteAccount": "Delete Account",
+  "deleteAccountTitle": "Delete Your Account",
+  "deleteAccountWarning": "This action cannot be undone. Deleting your account will permanently remove all your data including trips, saved places, achievements, and profile information.",
+  "deleteAccountConfirmation": "Are you sure you want to delete your account?",
+  "deleteAccountFinalConfirmation": "Type 'DELETE' to confirm account deletion",
+  "deleteAccountButton": "Delete My Account",
+  "deleteAccountSuccess": "Your account has been successfully deleted",
+  "deleteAccountError": "Failed to delete account: {error}",
+  "@deleteAccountError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountReauthRequired": "For security reasons, please sign in again to delete your account",
+  "typeDeleteToConfirm": "Type DELETE to confirm"
+}

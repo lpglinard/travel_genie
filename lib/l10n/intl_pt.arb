@@ -1,0 +1,355 @@
+{
+  "@@locale": "pt",
+  "appTitle": "Travel Genie",
+  "demoHomePageTitle": "Página Inicial do Flutter",
+  "incrementTooltip": "Incrementar",
+  "buttonMessage": "Você apertou o botão tantas vezes:",
+  "profileButtonTooltip": "Perfil",
+  "profileTitle": "Perfil",
+  "changeLanguage": "Alterar idioma",
+  "logout": "Sair",
+  "toggleDarkMode": "Usar tema escuro",
+  "greeting": "Olá",
+  "searchPlaceholder": "Para onde você quer ir?",
+  "popularDestinations": "Destinos Populares",
+  "navHome": "Início",
+  "navExplore": "Explorar",
+  "navMyTrips": "Minhas Viagens",
+  "navGroups": "Grupos",
+  "tripItinerary": "Itinerário da Viagem",
+  "savedPlaces": "Lugares Salvos",
+  "errorGeneric": "Erro: {error}",
+  "errorLoadingSavedPlaces": "Erro ao carregar lugares salvos: {error}",
+  "noResults": "Nenhum resultado",
+  "openingHours": "Horário de funcionamento:",
+  "openInMaps": "Abrir no Google Maps",
+
+  "photoBy": "Foto por: {name}",
+  "imageCount": "{current} / {total}",
+  "shareMessage": "Confira {name} em {address}. {url}",
+  "shareSubject": "Confira este lugar!",
+  "description": "Descrição",
+  "additionalInfo": "Informações Adicionais",
+  "openNow": "Aberto Agora",
+  "closedNow": "Fechado Agora",
+  "tapForHours": "Toque para ver horários",
+  "price": "Preço",
+  "free": "Grátis",
+  "website": "Site",
+  "visitWebsite": "Visitar site oficial",
+  "viewOnGoogleMaps": "Ver no Google Maps",
+  "openInExternalApp": "Abrir em aplicativo externo",
+  "averageVisitTime": "Tempo Médio de Visita",
+  "oneToTwoHours": "1-2 horas",
+  "location": "Localização",
+  "save": "Salvar",
+  "addToItinerary": "Adicionar ao Itinerário",
+  "close": "Fechar",
+
+  "loginRequiredTitle": "Crie sua conta gratuita",
+  "loginRequiredMessage": "Para salvar seus locais favoritos e planejar viagens personalizadas, crie uma conta gratuita.",
+  "createAccount": "Criar Conta",
+  "signIn": "Entrar",
+  "cancel": "Cancelar",
+
+  "categoryAll": "Todos",
+  "categoryAttractions": "Atrações",
+  "categoryRestaurants": "Restaurantes",
+  "categoryHotels": "Hotéis",
+  "defaultPlaceType": "Lugar",
+  "locationSeparator": " • ",
+  "stars": "{rating} estrelas",
+  "reviews": "({count} avaliações)",
+
+  "paris": "Paris",
+  "caribbeanBeaches": "Praias do Caribe",
+  "patagonia": "Patagônia",
+
+  "placeTypeAccounting": "Contabilidade",
+  "placeTypeAirport": "Aeroporto",
+  "placeTypeAmusementPark": "Parque de Diversões",
+  "placeTypeAquarium": "Aquário",
+  "placeTypeArtGallery": "Galeria de Arte",
+  "placeTypeAtm": "Caixa Eletrônico",
+  "placeTypeBakery": "Padaria",
+  "placeTypeBank": "Banco",
+  "placeTypeBar": "Bar",
+  "placeTypeBeautySalon": "Salão de Beleza",
+  "placeTypeBicycleStore": "Loja de Bicicletas",
+  "placeTypeBookStore": "Livraria",
+  "placeTypeBowlingAlley": "Boliche",
+  "placeTypeBusStation": "Estação de Ônibus",
+  "placeTypeCafe": "Café",
+  "placeTypeCampground": "Acampamento",
+  "placeTypeCarDealer": "Concessionária de Carros",
+  "placeTypeCarRental": "Aluguel de Carros",
+  "placeTypeCarRepair": "Oficina Mecânica",
+  "placeTypeCarWash": "Lava-Rápido",
+  "placeTypeCasino": "Cassino",
+  "placeTypeCemetery": "Cemitério",
+  "placeTypeChurch": "Igreja",
+  "placeTypeCityHall": "Prefeitura",
+  "placeTypeClothingStore": "Loja de Roupas",
+  "placeTypeConvenienceStore": "Loja de Conveniência",
+  "placeTypeCourthouse": "Tribunal",
+  "placeTypeDentist": "Dentista",
+  "placeTypeDepartmentStore": "Loja de Departamentos",
+  "placeTypeDoctor": "Médico",
+  "placeTypeDrugstore": "Farmácia",
+  "placeTypeElectrician": "Eletricista",
+  "placeTypeElectronicsStore": "Loja de Eletrônicos",
+  "placeTypeEmbassy": "Embaixada",
+  "placeTypeFireStation": "Corpo de Bombeiros",
+  "placeTypeFlorist": "Floricultura",
+  "placeTypeFuneralHome": "Funerária",
+  "placeTypeFurnitureStore": "Loja de Móveis",
+  "placeTypeGasStation": "Posto de Gasolina",
+  "placeTypeGym": "Academia",
+  "placeTypeHairCare": "Cabeleireiro",
+  "placeTypeHardwareStore": "Loja de Ferragens",
+  "placeTypeHinduTemple": "Templo Hindu",
+  "placeTypeHomeGoodsStore": "Loja de Artigos para Casa",
+  "placeTypeHospital": "Hospital",
+  "placeTypeInsuranceAgency": "Agência de Seguros",
+  "placeTypeJewelryStore": "Joalheria",
+  "placeTypeLaundry": "Lavanderia",
+  "placeTypeLawyer": "Advogado",
+  "placeTypeLibrary": "Biblioteca",
+  "placeTypeLightRailStation": "Estação de VLT",
+  "placeTypeLiquorStore": "Loja de Bebidas",
+  "placeTypeLocalGovernmentOffice": "Órgão Governamental Local",
+  "placeTypeLocksmith": "Chaveiro",
+  "placeTypeLodging": "Hospedagem",
+  "placeTypeMealDelivery": "Entrega de Refeições",
+  "placeTypeMealTakeaway": "Refeições para Viagem",
+  "placeTypeMosque": "Mesquita",
+  "placeTypeMovieRental": "Locadora de Filmes",
+  "placeTypeMovieTheater": "Cinema",
+  "placeTypeMovingCompany": "Empresa de Mudanças",
+  "placeTypeMuseum": "Museu",
+  "placeTypeNightClub": "Boate",
+  "placeTypePainter": "Pintor",
+  "placeTypePark": "Parque",
+  "placeTypeParking": "Estacionamento",
+  "placeTypePetStore": "Pet Shop",
+  "placeTypePharmacy": "Farmácia",
+  "placeTypePhysiotherapist": "Fisioterapeuta",
+  "placeTypePlumber": "Encanador",
+  "placeTypePolice": "Polícia",
+  "placeTypePostOffice": "Correios",
+  "placeTypePrimarySchool": "Escola Primária",
+  "placeTypeRealEstateAgency": "Imobiliária",
+  "placeTypeRestaurant": "Restaurante",
+  "placeTypeRoofingContractor": "Empresa de Telhados",
+  "placeTypeRvPark": "Estacionamento de Trailers",
+  "placeTypeSchool": "Escola",
+  "placeTypeSecondarySchool": "Escola Secundária",
+  "placeTypeShoeStore": "Sapataria",
+  "placeTypeShoppingMall": "Shopping Center",
+  "placeTypeSpa": "Spa",
+  "placeTypeStadium": "Estádio",
+  "placeTypeStorage": "Armazenamento",
+  "placeTypeStore": "Loja",
+  "placeTypeSubwayStation": "Estação de Metrô",
+  "placeTypeSupermarket": "Supermercado",
+  "placeTypeSynagogue": "Sinagoga",
+  "placeTypeTaxiStand": "Ponto de Táxi",
+  "placeTypeTouristAttraction": "Atração Turística",
+  "placeTypeTrainStation": "Estação de Trem",
+  "placeTypeTransitStation": "Estação de Transporte",
+  "placeTypeTravelAgency": "Agência de Viagens",
+  "placeTypeUniversity": "Universidade",
+  "placeTypeVeterinaryCare": "Veterinário",
+  "placeTypeZoo": "Zoológico",
+
+  "groupsTitle": "Grupos de Viagem",
+  "groupsSubtitle": "Ajude-nos a moldar o futuro do planejamento de viagens em grupo!",
+  "groupsFeedbackQuestion": "Gostaria de planejar viagens com outras pessoas?",
+  "groupsFeedbackDescription": "Estamos considerando adicionar um recurso que permite criar e planejar viagens junto com suas pessoas favoritas. Sua opinião nos ajuda a priorizar este desenvolvimento!",
+  "groupsFeedbackExamplesTitle": "Pense em planejar viagens com:",
+  "groupsFeedbackExampleFamily": "Familiares para reuniões ou férias",
+  "groupsFeedbackExampleFriends": "Amigos para escapadas de fim de semana ou aventuras",
+  "groupsFeedbackExampleColleagues": "Colegas para team building ou conferências",
+  "groupsFeedbackExamplePartner": "Seu parceiro(a) para escapadas românticas",
+  "groupsFeedbackYes": "Sim, adoraria isso!",
+  "groupsFeedbackNo": "Não é para mim",
+  "groupsFeedbackThanks": "Obrigado pelo seu feedback! 🙏",
+  "groupsFeedbackCurrentResponseYes": "Você disse sim para recursos de viagem em grupo",
+  "groupsFeedbackCurrentResponseNo": "Você não tem interesse em recursos de grupo",
+  "groupsFeedbackSummaryTitle": "Feedback da Comunidade",
+  "groupsFeedbackSummarySubtitle": "{count, plural, =0{Nenhuma resposta ainda} =1{1 resposta até agora} other{{count} respostas até agora}}",
+  "@groupsFeedbackSummarySubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "groupsFeedbackSummaryEmpty": "Seja o primeiro a compartilhar seus pensamentos!",
+  "groupsFeedbackEncouragingHigh": "Uau! A comunidade realmente quer recursos de viagem em grupo! 🎉",
+  "groupsFeedbackEncouragingMedium": "Grande interesse em viagens em grupo! Este recurso pode ser muito valioso. 👥",
+  "groupsFeedbackEncouragingLow": "Sentimentos mistos sobre recursos de viagem em grupo. Toda opinião importa! 🤔",
+  "groupsFeedbackEncouragingVeryLow": "Parece que recursos de grupo não são uma prioridade agora. Obrigado pelo feedback honesto! 💭",
+
+  "badgesFirstTripName": "Primeira Viagem",
+  "badgesFirstTripDescription": "Criou sua primeira viagem",
+  "badgesFirstLoginName": "Bem-vindo",
+  "badgesFirstLoginDescription": "Fez seu primeiro login",
+  "badgesFirstInviteName": "Anfitrião",
+  "badgesFirstInviteDescription": "Convidou amigos para colaborar",
+  "badgesFirstAiCoverName": "Artista Digital",
+  "badgesFirstAiCoverDescription": "Gerou sua primeira capa personalizada via IA",
+
+  "travelerProfileTitle": "Perfil do Viajante",
+  "travelerProfileIntroduction": "Ajude-nos a entender melhor o seu estilo e preferências de viagem para recomendações personalizadas perfeitas para você!",
+  "travelerProfileSaved": "Preferências salvas com sucesso!",
+
+  "travelerProfileTravelCompanyTitle": "Com quem você costuma viajar?",
+  "travelerProfileTravelCompanySolo": "Sozinho(a)",
+  "travelerProfileTravelCompanyCouple": "Casal",
+  "travelerProfileTravelCompanyFamily": "Família com crianças",
+  "travelerProfileTravelCompanyFriends": "Grupo de amigos",
+
+  "travelerProfileBudgetTitle": "Qual seu orçamento habitual para viagens?",
+  "travelerProfileBudgetEconomic": "Econômico",
+  "travelerProfileBudgetModerate": "Moderado",
+  "travelerProfileBudgetLuxury": "Luxo",
+
+  "travelerProfileAccommodationTitle": "Que tipo de hospedagem você prefere?",
+  "travelerProfileAccommodationHostel": "Hostel/Albergue",
+  "travelerProfileAccommodationBudgetHotel": "Pousada/Hotel econômico",
+  "travelerProfileAccommodationComfortHotel": "Hotel conforto (3-4 estrelas)",
+  "travelerProfileAccommodationResort": "Resort/Luxo",
+  "travelerProfileAccommodationApartment": "Apartamento/Airbnb",
+
+  "travelerProfileInterestsTitle": "Quais atividades você mais gosta em suas viagens?",
+  "travelerProfileInterestsCulture": "Cultura e Museus",
+  "travelerProfileInterestsNature": "Natureza e Aventura",
+  "travelerProfileInterestsNightlife": "Vida Noturna",
+  "travelerProfileInterestsGastronomy": "Gastronomia",
+  "travelerProfileInterestsShopping": "Compras",
+  "travelerProfileInterestsRelaxation": "Relaxamento e Praia",
+
+  "travelerProfileGastronomicTitle": "Como é seu perfil gastronômico nas viagens?",
+  "travelerProfileGastronomicLocal": "Adoro provar comidas locais e de rua",
+  "travelerProfileGastronomicGourmet": "Prefiro restaurantes recomendados e culinária gourmet",
+  "travelerProfileGastronomicDietary": "Tenho restrições alimentares/especiais (vegetariano, vegano, alergias, etc.)",
+
+  "travelerProfileItineraryTitle": "Como você prefere organizar suas viagens?",
+  "travelerProfileItineraryDetailed": "Gosto de um roteiro detalhado",
+  "travelerProfileItinerarySpontaneous": "Prefiro descobrir espontaneamente durante a viagem",
+
+  "travelerProfileSaveButton": "Salvar preferências",
+  "travelerProfileSkipButton": "Pular esta etapa",
+  "travelerProfileEmptyDescription": "Complete seu perfil de viajante para receber recomendações personalizadas de acordo com seu estilo de viagem.",
+  "travelerProfileCreateButton": "Criar Perfil",
+  "profileEdit": "Editar",
+
+  "loginRegisterButton": "Fazer Login / Cadastro",
+  "user": "Usuário",
+  "achievements": "Conquistas",
+  "unlockedBadges": "Desbloqueadas: {count}/{total}",
+  "@unlockedBadges": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+
+  "tripCreatedSuccessfully": "Viagem criada com sucesso",
+  "createNewTrip": "Criar Nova Viagem",
+  "tripTitle": "Título da Viagem",
+  "tripTitleHint": "ex: Férias de Verão em Paris",
+  "tripTitleValidation": "Por favor, insira um título para sua viagem",
+  "tripDescription": "Descrição",
+  "tripDescriptionHint": "Descreva seus planos de viagem",
+  "startDate": "Data de Início",
+  "endDate": "Data de Fim",
+  "createTrip": "Criar Viagem",
+  "failedToCreateTrip": "Falha ao criar viagem: {error}",
+  "@failedToCreateTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "placeSavedToFavorites": "Local salvo nos seus favoritos",
+  "placeRemovedFromFavorites": "Local removido dos seus favoritos",
+  "errorSavingPlace": "Erro ao salvar local",
+  "errorWithDetails": "Erro: {error}",
+  "@errorWithDetails": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "exploreDestinations": "Explorar Destinos",
+
+  "optimizationComplete": "Otimização Concluída!",
+  "optimizationCompleteMessage": "Sua viagem foi otimizada usando a estratégia {strategyName}.",
+  "@optimizationCompleteMessage": {
+    "placeholders": {
+      "strategyName": {
+        "type": "String"
+      }
+    }
+  },
+  "improvementsFound": "Melhorias encontradas:",
+  "great": "Ótimo!",
+  "optimizationFailed": "Otimização Falhou",
+  "optimizationFailedMessage": "Desculpe, encontramos um problema ao otimizar sua viagem: {error}",
+  "@optimizationFailedMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "ok": "OK",
+  "timeEfficient": "Eficiente em Tempo",
+  "costEffective": "Custo-Benefício",
+  "experienceMaximizer": "Maximizador de Experiência",
+
+  "guest": "Visitante",
+  "loginToAccessFullFeatures": "Faça login para acessar recursos completos",
+  "noCoversUnlockedYet": "Nenhuma capa desbloqueada ainda.\nCrie viagens e gere capas personalizadas!",
+  "activeChallenges": "Desafios Ativos",
+  "travelCoverCollection": "Coleção de Capas",
+  "unlockedCovers": "Desbloqueadas: {count}/{total}",
+  "@unlockedCovers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noChallengesActive": "Nenhum desafio ativo no momento.\nNovos desafios chegam semanalmente!",
+  "deleteAccount": "Excluir Conta",
+  "deleteAccountTitle": "Excluir Sua Conta",
+  "deleteAccountWarning": "Esta ação não pode ser desfeita. Excluir sua conta removerá permanentemente todos os seus dados, incluindo viagens, lugares salvos, conquistas e informações do perfil.",
+  "deleteAccountConfirmation": "Tem certeza de que deseja excluir sua conta?",
+  "deleteAccountFinalConfirmation": "Digite 'EXCLUIR' para confirmar a exclusão da conta",
+  "deleteAccountButton": "Excluir Minha Conta",
+  "deleteAccountSuccess": "Sua conta foi excluída com sucesso",
+  "deleteAccountError": "Falha ao excluir conta: {error}",
+  "@deleteAccountError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountReauthRequired": "Por motivos de segurança, faça login novamente para excluir sua conta",
+  "typeDeleteToConfirm": "Digite EXCLUIR para confirmar"
+}

@@ -1,0 +1,169 @@
+definitions:
+  models.AuthorAttribution:
+    properties:
+      displayName:
+        type: string
+      photoUri:
+        type: string
+      uri:
+        type: string
+    type: object
+  models.DisplayName:
+    properties:
+      languageCode:
+        type: string
+      text:
+        type: string
+    type: object
+  models.GooglePlacesResponse:
+    properties:
+      nextPageToken:
+        type: string
+      places:
+        items:
+          $ref: '#/definitions/models.Place'
+        type: array
+    type: object
+  models.Location:
+    properties:
+      latitude:
+        type: number
+      longitude:
+        type: number
+    type: object
+  models.OpeningHours:
+    properties:
+      weekdayDescriptions:
+        items:
+          type: string
+        type: array
+    type: object
+  models.Photo:
+    properties:
+      authorAttributions:
+        items:
+          $ref: '#/definitions/models.AuthorAttribution'
+        type: array
+      flagContentUri:
+        type: string
+      googleMapsUri:
+        type: string
+      heightPx:
+        type: integer
+      name:
+        type: string
+      widthPx:
+        type: integer
+    type: object
+  models.Place:
+    properties:
+      businessStatus:
+        type: string
+      currentOpeningHours:
+        $ref: '#/definitions/models.OpeningHours'
+      displayName:
+        $ref: '#/definitions/models.DisplayName'
+      formattedAddress:
+        type: string
+      googleMapsUri:
+        type: string
+      iconBackgroundColor:
+        type: string
+      iconMaskBaseUri:
+        type: string
+      id:
+        type: string
+      location:
+        $ref: '#/definitions/models.Location'
+      photos:
+        items:
+          $ref: '#/definitions/models.Photo'
+        type: array
+      rating:
+        type: number
+      types:
+        items:
+          type: string
+        type: array
+      userRatingCount:
+        type: integer
+      websiteUri:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      description: Returns a welcome message
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Welcome message
+      tags:
+      - root
+  /places:
+    get:
+      description: Search for places using the Google Places API
+      parameters:
+      - description: Text query for searching places
+        in: query
+        name: textQuery
+        required: true
+        type: string
+      - description: Token for pagination
+        in: query
+        name: pageToken
+        type: string
+      - description: Language code for results
+        in: query
+        name: languageCode
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GooglePlacesResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Search for places
+      tags:
+      - places
+  /sample:
+    get:
+      description: Returns sample place data for testing without making API calls
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GooglePlacesResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get sample places
+      tags:
+      - sample
+swagger: "2.0"

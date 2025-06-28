@@ -1,0 +1,45 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "travel-genie-494f7",
+          "appId": "1:1052236350369:android:4d67912c0c8197800f41e0",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "travel-genie-494f7",
+          "appId": "1:1052236350369:ios:a710f989e50859920f41e0",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "travel-genie-494f7",
+          "configurations": {
+            "android": "1:1052236350369:android:4d67912c0c8197800f41e0",
+            "ios": "1:1052236350369:ios:a710f989e50859920f41e0",
+            "web": "1:1052236350369:web:91671822f0eecdb80f41e0"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

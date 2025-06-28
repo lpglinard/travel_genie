@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1052236350369",
+    "project_id": "travel-genie-494f7",
+    "storage_bucket": "travel-genie-494f7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1052236350369:android:4d67912c0c8197800f41e0",
+        "android_client_info": {
+          "package_name": "tech.linard.travelgenieapp.travel_genie"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAundy5AWpE4Lw6a7Xa8VIDxOOcj7vzvvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
