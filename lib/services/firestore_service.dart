@@ -771,4 +771,83 @@ class FirestoreService {
 
     return doc.exists;
   }
+
+  // ============================================================================
+  // USER ACCOUNT DELETION
+  // ============================================================================
+
+  /// Delete all user data from Firestore
+  /// This should be called before deleting the Firebase Auth account
+  Future<void> deleteAllUserData(String userId) async {
+    final batch = _firestore.batch();
+
+    try {
+      // Delete user's main document
+      final userDoc = _users.doc(userId);
+      batch.delete(userDoc);
+
+      // Delete all saved places
+      final savedPlacesQuery = await _savedPlacesCollection(userId).get();
+      for (final doc in savedPlacesQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete traveler profile
+      final profileRef = _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('profile')
+          .doc('traveler_profile');
+      batch.delete(profileRef);
+
+      // Delete challenge progress
+      final challengeProgressQuery = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('challengeProgress')
+          .get();
+      for (final doc in challengeProgressQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete user badges
+      final badgesQuery = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('badges')
+          .get();
+      for (final doc in badgesQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete user travel covers
+      final coversQuery = await _firestore
+          .collection('users')
+          .doc(userId)
+          .collection('travelCovers')
+          .get();
+      for (final doc in coversQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete trips where user is the owner
+      final tripsQuery = await _trips.where('ownerId', isEqualTo: userId).get();
+      for (final doc in tripsQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Delete groups feedback submitted by user
+      final feedbackQuery = await _groupsFeedback.where('userId', isEqualTo: userId).get();
+      for (final doc in feedbackQuery.docs) {
+        batch.delete(doc.reference);
+      }
+
+      // Commit all deletions
+      await batch.commit();
+      debugPrint('FirestoreService: Successfully deleted all data for user $userId');
+    } catch (e) {
+      debugPrint('FirestoreService: Error deleting user data for $userId: $e');
+      rethrow;
+    }
+  }
 }

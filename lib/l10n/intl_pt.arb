@@ -321,5 +321,35 @@
   "guest": "Visitante",
   "loginToAccessFullFeatures": "Faça login para acessar recursos completos",
   "noCoversUnlockedYet": "Nenhuma capa desbloqueada ainda.\nCrie viagens e gere capas personalizadas!",
-  "activeChallenges": "Desafios Ativos"
+  "activeChallenges": "Desafios Ativos",
+  "travelCoverCollection": "Coleção de Capas",
+  "unlockedCovers": "Desbloqueadas: {count}/{total}",
+  "@unlockedCovers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noChallengesActive": "Nenhum desafio ativo no momento.\nNovos desafios chegam semanalmente!",
+  "deleteAccount": "Excluir Conta",
+  "deleteAccountTitle": "Excluir Sua Conta",
+  "deleteAccountWarning": "Esta ação não pode ser desfeita. Excluir sua conta removerá permanentemente todos os seus dados, incluindo viagens, lugares salvos, conquistas e informações do perfil.",
+  "deleteAccountConfirmation": "Tem certeza de que deseja excluir sua conta?",
+  "deleteAccountFinalConfirmation": "Digite 'EXCLUIR' para confirmar a exclusão da conta",
+  "deleteAccountButton": "Excluir Minha Conta",
+  "deleteAccountSuccess": "Sua conta foi excluída com sucesso",
+  "deleteAccountError": "Falha ao excluir conta: {error}",
+  "@deleteAccountError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountReauthRequired": "Por motivos de segurança, faça login novamente para excluir sua conta",
+  "typeDeleteToConfirm": "Digite EXCLUIR para confirmar"
 }

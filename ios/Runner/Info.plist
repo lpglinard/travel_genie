@@ -49,5 +49,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>tech.linard.travelgenieapp.travelGenie</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.1052236350369-8v3f0dve2h1c5felcledb1rdej7b11t9</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

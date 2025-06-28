@@ -13,6 +13,8 @@ import 'services/preferences_service.dart';
 import 'services/profile_service.dart';
 import 'services/recommendation_service.dart';
 import 'services/traveler_profile_service.dart';
+import 'services/user_deletion_service.dart';
+import 'services/user_management_service.dart';
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);
@@ -65,4 +67,13 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 final travelerProfileServiceProvider = Provider<TravelerProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return TravelerProfileService(firestoreService);
+});
+
+final userDeletionServiceProvider = Provider<UserDeletionService>((ref) {
+  return UserDeletionService();
+});
+
+final userManagementServiceProvider = Provider<UserManagementService>((ref) {
+  final userDeletionService = ref.watch(userDeletionServiceProvider);
+  return UserManagementService(userDeletionService: userDeletionService);
 });

@@ -321,5 +321,35 @@
   "guest": "Guest",
   "loginToAccessFullFeatures": "Login to access full features",
   "noCoversUnlockedYet": "No covers unlocked yet.\nCreate trips and generate personalized covers!",
-  "activeChallenges": "Active Challenges"
+  "activeChallenges": "Active Challenges",
+  "travelCoverCollection": "Travel Cover Collection",
+  "unlockedCovers": "Unlocked: {count}/{total}",
+  "@unlockedCovers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noChallengesActive": "No active challenges at the moment.\nNew challenges arrive weekly!",
+  "deleteAccount": "Delete Account",
+  "deleteAccountTitle": "Delete Your Account",
+  "deleteAccountWarning": "This action cannot be undone. Deleting your account will permanently remove all your data including trips, saved places, achievements, and profile information.",
+  "deleteAccountConfirmation": "Are you sure you want to delete your account?",
+  "deleteAccountFinalConfirmation": "Type 'DELETE' to confirm account deletion",
+  "deleteAccountButton": "Delete My Account",
+  "deleteAccountSuccess": "Your account has been successfully deleted",
+  "deleteAccountError": "Failed to delete account: {error}",
+  "@deleteAccountError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteAccountReauthRequired": "For security reasons, please sign in again to delete your account",
+  "typeDeleteToConfirm": "Type DELETE to confirm"
 }

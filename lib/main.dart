@@ -29,7 +29,10 @@ Future<void> main() async {
 
     firebase_ui_auth.FirebaseUIAuth.configureProviders([
       firebase_ui_auth.EmailAuthProvider(),
-      GoogleProvider(clientId: googleClientId),
+      GoogleProvider(
+        clientId: googleClientId,
+        iOSPreferPlist: true,
+      ),
       AppleProvider(),
     ]);
 

@@ -39,26 +39,6 @@ class MockFirestoreService extends FirestoreService {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() async {
-    // Setup Firebase Auth Mock to return null user
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      const MethodChannel('plugins.flutter.io/firebase_auth'),
-      (methodCall) async {
-        if (methodCall.method == 'Auth#registerIdTokenListener') {
-          return null;
-        }
-        if (methodCall.method == 'Auth#registerAuthStateListener') {
-          return null;
-        }
-        if (methodCall.method == 'Auth#currentUser') {
-          return null;
-        }
-        return null;
-      },
-    );
-  });
-
   group('SearchResultCard', () {
     late Place testPlace;
 
@@ -124,6 +104,16 @@ void main() {
               firestoreServiceProvider.overrideWith((ref) => MockFirestoreService()),
             ],
             child: MaterialApp(
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: const [
+                Locale('en'),
+                Locale('pt'),
+              ],
               home: Scaffold(
                 body: SearchResultCard(
                   place: testPlace,

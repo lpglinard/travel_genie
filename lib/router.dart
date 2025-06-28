@@ -255,6 +255,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   EmailAuthProvider(),
                   GoogleProvider(
                     clientId: googleClientId,
+                    iOSPreferPlist: true,
                     scopes: ['email', 'profile', 'openid'],
                   ),
                   AppleProvider(),

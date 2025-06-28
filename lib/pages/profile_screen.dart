@@ -9,7 +9,9 @@ import '../models/challenge.dart';
 import '../models/travel_cover.dart';
 import '../services/profile_service.dart';
 import '../user_providers.dart';
+import '../widgets/login_required_dialog.dart';
 import '../widgets/profile/dark_mode_toggle_tile.dart';
+import '../widgets/profile/delete_account_tile.dart';
 import '../widgets/profile/language_settings_tile.dart';
 import '../widgets/profile/logout_tile.dart';
 import '../widgets/profile/traveler_profile_summary.dart';
@@ -54,32 +56,30 @@ class ProfileScreen extends ConsumerWidget {
           const TravelerProfileSummary(),
           const SizedBox(height: 24),
 
-          // Show user-specific sections only for authenticated users
-          if (user != null) ...[
-            // Badges and Achievements Section
-            _buildBadgesSection(
-              context,
-              user.uid,
-              profileService,
-            ),
-            const SizedBox(height: 24),
+          // Profile features sections - show for all users
+          // Badges and Achievements Section
+          _buildBadgesSection(
+            context,
+            user,
+            profileService,
+          ),
+          const SizedBox(height: 24),
 
-            // Travel Cover Collection Section
-            _buildTravelCoverSection(
-              context,
-              user.uid,
-              profileService,
-            ),
-            const SizedBox(height: 24),
+          // Travel Cover Collection Section
+          _buildTravelCoverSection(
+            context,
+            user,
+            profileService,
+          ),
+          const SizedBox(height: 24),
 
-            // Challenges Section
-            _buildChallengesSection(
-              context,
-              user.uid,
-              profileService,
-            ),
-            const SizedBox(height: 24),
-          ],
+          // Challenges Section
+          _buildChallengesSection(
+            context,
+            user,
+            profileService,
+          ),
+          const SizedBox(height: 24),
 
           // Settings Section
           _buildSettingsSection(),
@@ -194,7 +194,7 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildBadgesSection(
     BuildContext context,
-    String userId,
+    User? user,
     ProfileService profileService,
   ) {
     return Column(
@@ -213,75 +213,106 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 12),
-        StreamBuilder<List<badge_model.Badge>>(
-          stream: profileService.getUserBadges(userId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            final badges = snapshot.data ?? [];
-            final unlockedBadges = badges
-                .where((badge) => badge.isUnlocked)
-                .toList();
-            final lockedBadges = badges
-                .where((badge) => !badge.isUnlocked)
-                .toList();
-
-            return Card(
+        if (user == null)
+          // Show login prompt for unauthenticated users
+          Card(
+            child: InkWell(
+              onTap: () async {
+                await LoginRequiredDialog.show(context);
+              },
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.unlockedBadges(unlockedBadges.length, badges.length),
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          '${badges.isNotEmpty ? ((unlockedBadges.length / badges.length) * 100).toInt() : 0}%',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.emoji_events,
+                      size: 48,
+                      color: Colors.grey[400],
                     ),
                     const SizedBox(height: 12),
-                    LinearProgressIndicator(
-                      value: badges.isNotEmpty
-                          ? unlockedBadges.length / badges.length
-                          : 0,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        Colors.green,
+                    Text(
+                      AppLocalizations.of(context)!.loginToAccessFullFeatures,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
-                      itemCount: badges.length,
-                      itemBuilder: (context, index) {
-                        final badge = badges[index];
-                        return _buildBadgeItem(context, badge);
-                      },
                     ),
                   ],
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          )
+        else
+          // Show actual badges for authenticated users
+          StreamBuilder<List<badge_model.Badge>>(
+            stream: profileService.getUserBadges(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final badges = snapshot.data ?? [];
+              final unlockedBadges = badges
+                  .where((badge) => badge.isUnlocked)
+                  .toList();
+              final lockedBadges = badges
+                  .where((badge) => !badge.isUnlocked)
+                  .toList();
+
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.unlockedBadges(unlockedBadges.length, badges.length),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            '${badges.isNotEmpty ? ((unlockedBadges.length / badges.length) * 100).toInt() : 0}%',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      LinearProgressIndicator(
+                        value: badges.isNotEmpty
+                            ? unlockedBadges.length / badges.length
+                            : 0,
+                        backgroundColor: Colors.grey[300],
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.green,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                            ),
+                        itemCount: badges.length,
+                        itemBuilder: (context, index) {
+                          final badge = badges[index];
+                          return _buildBadgeItem(context, badge);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
       ],
     );
   }
@@ -364,7 +395,7 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildTravelCoverSection(
     BuildContext context,
-    String userId,
+    User? user,
     ProfileService profileService,
   ) {
     return Column(
@@ -375,7 +406,7 @@ class ProfileScreen extends ConsumerWidget {
             const Icon(Icons.collections, color: Colors.blue),
             const SizedBox(width: 8),
             Text(
-              'Coleção de Capas',
+              AppLocalizations.of(context)!.travelCoverCollection,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -383,77 +414,108 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 12),
-        StreamBuilder<TravelCoverCollection?>(
-          stream: profileService.getUserTravelCovers(userId),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            final collection = snapshot.data;
-            final unlockedCovers = collection?.unlockedCovers ?? [];
-            final totalCovers = collection?.covers.length ?? 0;
-
-            return Card(
+        if (user == null)
+          // Show login prompt for unauthenticated users
+          Card(
+            child: InkWell(
+              onTap: () async {
+                await LoginRequiredDialog.show(context);
+              },
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Desbloqueadas: ${unlockedCovers.length}/$totalCovers',
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                        Text(
-                          '${collection?.completionPercentage.toInt() ?? 0}%',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                color: Colors.blue,
-                                fontWeight: FontWeight.bold,
-                              ),
-                        ),
-                      ],
+                    Icon(
+                      Icons.collections,
+                      size: 48,
+                      color: Colors.grey[400],
                     ),
                     const SizedBox(height: 12),
-                    LinearProgressIndicator(
-                      value: (collection?.completionPercentage ?? 0) / 100,
-                      backgroundColor: Colors.grey[300],
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        Colors.blue,
+                    Text(
+                      AppLocalizations.of(context)!.loginToAccessFullFeatures,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    if (unlockedCovers.isEmpty)
-                      Text(
-                        AppLocalizations.of(context)!.noCoversUnlockedYet,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.grey),
-                      )
-                    else
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                              childAspectRatio: 0.8,
-                            ),
-                        itemCount: unlockedCovers.length,
-                        itemBuilder: (context, index) {
-                          final cover = unlockedCovers[index];
-                          return _buildCoverItem(context, cover);
-                        },
-                      ),
                   ],
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          )
+        else
+          // Show actual travel covers for authenticated users
+          StreamBuilder<TravelCoverCollection?>(
+            stream: profileService.getUserTravelCovers(user.uid),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final collection = snapshot.data;
+              final unlockedCovers = collection?.unlockedCovers ?? [];
+              final totalCovers = collection?.covers.length ?? 0;
+
+              return Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.unlockedCovers(unlockedCovers.length, totalCovers),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            '${collection?.completionPercentage.toInt() ?? 0}%',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      LinearProgressIndicator(
+                        value: (collection?.completionPercentage ?? 0) / 100,
+                        backgroundColor: Colors.grey[300],
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.blue,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      if (unlockedCovers.isEmpty)
+                        Text(
+                          AppLocalizations.of(context)!.noCoversUnlockedYet,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.grey),
+                        )
+                      else
+                        GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.8,
+                              ),
+                          itemCount: unlockedCovers.length,
+                          itemBuilder: (context, index) {
+                            final cover = unlockedCovers[index];
+                            return _buildCoverItem(context, cover);
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
       ],
     );
   }
@@ -507,7 +569,7 @@ class ProfileScreen extends ConsumerWidget {
 
   Widget _buildChallengesSection(
     BuildContext context,
-    String userId,
+    User? user,
     ProfileService profileService,
   ) {
     return Column(
@@ -526,48 +588,79 @@ class ProfileScreen extends ConsumerWidget {
           ],
         ),
         const SizedBox(height: 12),
-        StreamBuilder<List<Challenge>>(
-          stream: profileService.getActiveChallenges(userId),
-          builder: (context, challengeSnapshot) {
-            return StreamBuilder<Map<String, int>>(
-              stream: profileService.getUserChallengeProgress(userId),
-              builder: (context, progressSnapshot) {
-                if (challengeSnapshot.connectionState ==
-                        ConnectionState.waiting ||
-                    progressSnapshot.connectionState ==
-                        ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                final challenges = challengeSnapshot.data ?? [];
-                final progress = progressSnapshot.data ?? {};
-
-                if (challenges.isEmpty) {
-                  return Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        'Nenhum desafio ativo no momento.\nNovos desafios chegam semanalmente!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Colors.grey[600]),
+        if (user == null)
+          // Show login prompt for unauthenticated users
+          Card(
+            child: InkWell(
+              onTap: () async {
+                await LoginRequiredDialog.show(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.flag,
+                      size: 48,
+                      color: Colors.grey[400],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      AppLocalizations.of(context)!.loginToAccessFullFeatures,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[600],
                       ),
                     ),
-                  );
-                }
+                  ],
+                ),
+              ),
+            ),
+          )
+        else
+          // Show actual challenges for authenticated users
+          StreamBuilder<List<Challenge>>(
+            stream: profileService.getActiveChallenges(user.uid),
+            builder: (context, challengeSnapshot) {
+              return StreamBuilder<Map<String, int>>(
+                stream: profileService.getUserChallengeProgress(user.uid),
+                builder: (context, progressSnapshot) {
+                  if (challengeSnapshot.connectionState ==
+                          ConnectionState.waiting ||
+                      progressSnapshot.connectionState ==
+                          ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                return Column(
-                  children: challenges.map((challenge) {
-                    final currentProgress = progress[challenge.id] ?? 0;
-                    final updatedChallenge = challenge.copyWith(
-                      currentProgress: currentProgress,
+                  final challenges = challengeSnapshot.data ?? [];
+                  final progress = progressSnapshot.data ?? {};
+
+                  if (challenges.isEmpty) {
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          AppLocalizations.of(context)!.noChallengesActive,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                      ),
                     );
-                    return _buildChallengeItem(context, updatedChallenge);
-                  }).toList(),
-                );
-              },
-            );
-          },
-        ),
+                  }
+
+                  return Column(
+                    children: challenges.map((challenge) {
+                      final currentProgress = progress[challenge.id] ?? 0;
+                      final updatedChallenge = challenge.copyWith(
+                        currentProgress: currentProgress,
+                      );
+                      return _buildChallengeItem(context, updatedChallenge);
+                    }).toList(),
+                  );
+                },
+              );
+            },
+          ),
       ],
     );
   }
@@ -657,6 +750,7 @@ class ProfileScreen extends ConsumerWidget {
         const LanguageSettingsTile(),
         const DarkModeToggleTile(),
         const LogoutTile(),
+        const DeleteAccountTile(),
       ],
     );
   }
