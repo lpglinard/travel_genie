@@ -12,7 +12,7 @@ class UserDeletionService {
   final http.Client _client;
 
   // Base URL following the pattern from other services
-  static const String baseUrl = 'https://sophisticated-chimera.odsy.to';
+  static const String baseUrl = 'https://sophisticated-chimera.odsy.to/user-management';
   static const String deleteUserDataEndpoint = '/delete-user-data';
 
   Future<UserDeletionResponse> deleteAllUserData(String userId) async {
@@ -32,14 +32,31 @@ class UserDeletionService {
       // Create the request body
       final UserDeletionRequest request = UserDeletionRequest(userId: userId);
 
+      // Log request details
+      print('=== Request Details ===');
+      print('URL: $baseUrl$deleteUserDataEndpoint');
+      print('Headers:');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $idToken',
+        'User-Agent': 'Flutter App',
+      };
+      headers.forEach((key, value) {
+        // Oculta o token real por segurança
+        if (key == 'Authorization') {
+          print('  $key: Bearer ${value}');
+        } else {
+          print('  $key: $value');
+        }
+      });
+      print('Request Body:');
+      print(const JsonEncoder.withIndent('  ').convert(request.toJson()));
+      print('==================\n');
+
       // Make the HTTP POST request
       final response = await _client.post(
         Uri.parse('$baseUrl$deleteUserDataEndpoint'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $idToken',
-          'User-Agent': 'Flutter App', // Optional: helps with server logging
-        },
+        headers: headers,
         body: jsonEncode(request.toJson()),
       );
 
