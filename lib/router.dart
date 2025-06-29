@@ -214,6 +214,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
+      // Create Trip screen route (outside the shell) - Alternative path for CTA
+      GoRoute(
+        path: '/create-trip',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const CreateTripPage(),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+
       // Trip Itinerary screen route (outside the shell)
       GoRoute(
         path: '/trip/:id',

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/destination.dart';
 import '../services/firestore_service.dart';
@@ -40,6 +41,19 @@ class MyHomePage extends ConsumerWidget {
             const HeroImage(imagePath: heroImage),
             const SizedBox(height: 16),
             const GreetingSection(),
+            const SizedBox(height: 16),
+            // CTA Button for creating trip with AI
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () => context.go('/create-trip'),
+                icon: const Icon(Icons.auto_awesome),
+                label: const Text('Criar Roteiro com IA'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
             const SizedBox(height: 12),
             const SearchSection(),
             const SizedBox(height: 24),
