@@ -220,6 +220,48 @@ class DraggablePlace extends StatelessWidget {
 - Better performance through widget caching
 - Follows Flutter framework conventions
 
+#### Widget Text and Internationalization
+- **CRITICAL REQUIREMENT**: No widget should EVER display fixed/hardcoded text strings
+- **ALL text displayed in widgets MUST use the project's internationalization strategy**
+- Always use `AppLocalizations.of(context)` or equivalent localization methods for any user-facing text
+- This applies to ALL text including: labels, buttons, error messages, placeholders, tooltips, and any other user-visible strings
+- Even temporary or debug text should use localization keys to maintain consistency
+
+**Prohibited Pattern** (NEVER do this):
+```dart
+// WRONG - Fixed text strings are FORBIDDEN
+Text('Welcome to Travel Genie'),
+ElevatedButton(
+  onPressed: () {},
+  child: Text('Search Places'),
+),
+TextField(
+  decoration: InputDecoration(
+    hintText: 'Enter destination',
+  ),
+),
+```
+
+**Required Pattern** (ALWAYS do this):
+```dart
+// CORRECT - Always use localization
+Text(AppLocalizations.of(context)!.welcomeMessage),
+ElevatedButton(
+  onPressed: () {},
+  child: Text(AppLocalizations.of(context)!.searchPlaces),
+),
+TextField(
+  decoration: InputDecoration(
+    hintText: AppLocalizations.of(context)!.enterDestination,
+  ),
+),
+```
+
+**Exception Handling:**
+- If `AppLocalizations.of(context)` might be null, use null-aware operators or provide fallbacks
+- For debugging purposes, you may use fixed strings in `debugPrint()` or similar debug-only functions
+- API keys, URLs, and other non-user-facing configuration strings are exempt from this rule
+
 #### State Management
 - The project uses Riverpod for state management
 - Providers are organized in the `providers/` directory
@@ -237,10 +279,15 @@ class DraggablePlace extends StatelessWidget {
 - Follow the existing lint rules; avoid disabling lints unless absolutely necessary
 
 ### Internationalization
+- **MANDATORY**: ALL user-facing text in widgets MUST use internationalization - NO EXCEPTIONS
+- **ZERO TOLERANCE** for hardcoded/fixed text strings in any widget
 - Support for English (`en`) and Portuguese (`pt`) locales
 - Locale detection with device locale fallback to English
 - Use `flutter gen-l10n` to regenerate localization files after changes
 - Localization files are in ARB format in `lib/l10n/`
+- Always use `AppLocalizations.of(context)` for any text displayed to users
+- This requirement applies to ALL text: buttons, labels, hints, error messages, tooltips, etc.
+- Refer to the "Widget Text and Internationalization" section in Code Conventions for detailed examples
 
 ## Development Best Practices
 
