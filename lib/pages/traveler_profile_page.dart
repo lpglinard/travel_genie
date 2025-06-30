@@ -104,7 +104,9 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorGeneric(e.toString())),
+            content: Text(
+              AppLocalizations.of(context)!.errorGeneric(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );

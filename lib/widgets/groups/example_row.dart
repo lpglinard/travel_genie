@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Row widget used in feedback examples list.
 class ExampleRow extends StatelessWidget {
-  const ExampleRow({
-    super.key,
-    required this.emoji,
-    required this.text,
-  });
+  const ExampleRow({super.key, required this.emoji, required this.text});
 
   final String emoji;
   final String text;

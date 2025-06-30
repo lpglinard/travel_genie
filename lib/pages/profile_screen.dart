@@ -36,6 +36,7 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
 class ProfileView extends StatelessWidget {
   const ProfileView({
@@ -96,14 +97,14 @@ class LoginSection extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.guest,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       Text(
                         AppLocalizations.of(context)!.loginToAccessFullFeatures,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
+                          color: Colors.grey[600],
+                        ),
                       ),
                     ],
                   ),
@@ -168,16 +169,15 @@ class UserIdentificationSection extends StatelessWidget {
                         user.email ??
                         AppLocalizations.of(context)!.user,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   if (userData?.email != null || user.email != null)
                     Text(
                       userData?.email ?? user.email!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     ),
                 ],
               ),
@@ -210,8 +210,9 @@ class TravelCoverSection extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context)!.travelCoverCollection,
-              style:
-                  Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -231,10 +232,9 @@ class TravelCoverSection extends StatelessWidget {
                     Text(
                       AppLocalizations.of(context)!.loginToAccessFullFeatures,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -243,7 +243,7 @@ class TravelCoverSection extends StatelessWidget {
           )
         else
           StreamBuilder<TravelCoverCollection?>(
-            stream: profileService.getUserTravelCovers(user.uid),
+            stream: profileService.getUserTravelCovers(user!.uid),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -270,9 +270,7 @@ class TravelCoverSection extends StatelessWidget {
                           ),
                           Text(
                             '${collection?.completionPercentage.toInt() ?? 0}%',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
+                            style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,
@@ -299,12 +297,13 @@ class TravelCoverSection extends StatelessWidget {
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                            childAspectRatio: 0.8,
-                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.8,
+                              ),
                           itemCount: unlockedCovers.length,
                           itemBuilder: (context, index) {
                             final cover = unlockedCovers[index];
@@ -323,10 +322,7 @@ class TravelCoverSection extends StatelessWidget {
 }
 
 class CoverItem extends StatelessWidget {
-  const CoverItem({
-    super.key,
-    required this.cover,
-  });
+  const CoverItem({super.key, required this.cover});
 
   final TravelCover cover;
 
@@ -356,7 +352,8 @@ class CoverItem extends StatelessWidget {
                         cover.imageUrl,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image),
+                        errorBuilder: (context, error, stackTrace) =>
+                            const Icon(Icons.image),
                       ),
                     )
                   : const Center(child: Icon(Icons.image, size: 40)),
@@ -394,8 +391,6 @@ class SettingsSection extends StatelessWidget {
         DeleteAccountTile(),
       ],
     );
-  }
-}
   }
 
   IconData _getIconFromName(String iconName) {

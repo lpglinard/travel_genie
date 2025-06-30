@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_genie/widgets/groups/feedback_stat_card.dart';
 
 import '../../l10n/app_localizations.dart';
 
@@ -210,7 +211,6 @@ class FeedbackSummary extends StatelessWidget {
       ),
     );
   }
-
 
   String _getEncouragingMessage(BuildContext context, int yesPercentage) {
     final l10n = AppLocalizations.of(context);

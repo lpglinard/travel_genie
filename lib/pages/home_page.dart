@@ -93,7 +93,9 @@ class MyHomePage extends ConsumerWidget {
               data: (destinations) =>
                   RecommendedDestinationsSection(destinations: destinations),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stackTrace) => Text(AppLocalizations.of(context)!.errorGeneric(error.toString())),
+              error: (error, stackTrace) => Text(
+                AppLocalizations.of(context)!.errorGeneric(error.toString()),
+              ),
             ),
 
             const SizedBox(height: 24),

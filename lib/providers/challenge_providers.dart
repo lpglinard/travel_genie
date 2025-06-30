@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/challenge.dart';
+import '../services/challenge_actions_service.dart';
 import '../services/challenge_progress_service.dart';
 import '../services/challenge_service.dart';
-import '../services/challenge_actions_service.dart';
 
 /// Provider for ChallengeService
 final challengeServiceProvider = Provider<ChallengeService>((ref) {

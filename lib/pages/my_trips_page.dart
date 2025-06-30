@@ -72,6 +72,7 @@ class MyTripsPage extends ConsumerWidget {
         },
         child: const Icon(Icons.add),
         tooltip: AppLocalizations.of(context)!.createNewTrip,
+      ),
     );
   }
 }

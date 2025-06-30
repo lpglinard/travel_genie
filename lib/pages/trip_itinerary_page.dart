@@ -108,7 +108,10 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                           );
                       _showMagicAiOptimizerBottomSheet();
                     },
-              tooltip: AppLocalizations.of(context)!.magicAiTripOptimizerTooltip,
+              tooltip: AppLocalizations.of(
+                context,
+              )!.magicAiTripOptimizerTooltip,
+            ),
           ],
         ),
         body: daysAsync.when(
