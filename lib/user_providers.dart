@@ -7,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'config.dart';
 import 'models/user_data.dart';
 import 'services/analytics_service.dart';
+import 'services/challenge_progress_service.dart';
+import 'services/challenge_service.dart';
 import 'services/firestore_service.dart';
 import 'services/places_service.dart';
 import 'services/preferences_service.dart';
@@ -59,9 +61,25 @@ final recommendationServiceProvider = Provider<RecommendationService>((ref) {
   return RecommendationService();
 });
 
+final challengeServiceProvider = Provider<ChallengeService>((ref) {
+  return ChallengeService(FirebaseFirestore.instance);
+});
+
+final challengeProgressServiceProvider = Provider<ChallengeProgressService>((
+  ref,
+) {
+  return ChallengeProgressService(FirebaseFirestore.instance);
+});
+
 final profileServiceProvider = Provider<ProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  return ProfileService(firestoreService);
+  final challengeService = ref.watch(challengeServiceProvider);
+  final challengeProgressService = ref.watch(challengeProgressServiceProvider);
+  return ProfileService(
+    firestoreService,
+    challengeService,
+    challengeProgressService,
+  );
 });
 
 final travelerProfileServiceProvider = Provider<TravelerProfileService>((ref) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../l10n/app_localizations.dart';
+import 'example_row.dart';
 
 class FeedbackCard extends StatelessWidget {
   const FeedbackCard({
@@ -96,28 +97,24 @@ class FeedbackCard extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  _buildExampleRow(
-                    context,
-                    '👨‍👩‍👧‍👦',
-                    l10n.groupsFeedbackExampleFamily,
+                  ExampleRow(
+                    emoji: '👨‍👩‍👧‍👦',
+                    text: l10n.groupsFeedbackExampleFamily,
                   ),
                   const SizedBox(height: 8),
-                  _buildExampleRow(
-                    context,
-                    '👥',
-                    l10n.groupsFeedbackExampleFriends,
+                  ExampleRow(
+                    emoji: '👥',
+                    text: l10n.groupsFeedbackExampleFriends,
                   ),
                   const SizedBox(height: 8),
-                  _buildExampleRow(
-                    context,
-                    '💼',
-                    l10n.groupsFeedbackExampleColleagues,
+                  ExampleRow(
+                    emoji: '💼',
+                    text: l10n.groupsFeedbackExampleColleagues,
                   ),
                   const SizedBox(height: 8),
-                  _buildExampleRow(
-                    context,
-                    '💕',
-                    l10n.groupsFeedbackExamplePartner,
+                  ExampleRow(
+                    emoji: '💕',
+                    text: l10n.groupsFeedbackExamplePartner,
                   ),
                 ],
               ),
@@ -163,24 +160,6 @@ class FeedbackCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildExampleRow(BuildContext context, String emoji, String text) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        Text(emoji, style: const TextStyle(fontSize: 16)),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            text,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onTertiaryContainer.withOpacity(0.8),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

@@ -10,16 +10,19 @@
   "logout": "Sair",
   "toggleDarkMode": "Usar tema escuro",
   "greeting": "Olá",
-  "searchPlaceholder": "Para onde você quer ir?",
+  "searchPlaceholder": "Onde você quer ir?",
   "popularDestinations": "Destinos Populares",
   "navHome": "Início",
   "navExplore": "Explorar",
   "navMyTrips": "Minhas Viagens",
+  "navProfile": "Perfil",
   "navGroups": "Grupos",
   "tripItinerary": "Itinerário da Viagem",
   "savedPlaces": "Lugares Salvos",
   "errorGeneric": "Erro: {error}",
   "errorLoadingSavedPlaces": "Erro ao carregar lugares salvos: {error}",
+  "errorLoadingTrips": "Erro ao carregar viagens: {error}",
+  "magicAiTripOptimizerTooltip": "Otimizador Mágico de Viagens IA",
   "noResults": "Nenhum resultado",
   "openingHours": "Horário de funcionamento:",
   "openInMaps": "Abrir no Google Maps",
@@ -351,5 +354,42 @@
     }
   },
   "deleteAccountReauthRequired": "Por motivos de segurança, faça login novamente para excluir sua conta",
-  "typeDeleteToConfirm": "Digite EXCLUIR para confirmar"
+  "typeDeleteToConfirm": "Digite EXCLUIR para confirmar",
+  "homeCtaButton": "Criar Roteiro com o Travel Genie",
+  "homeCtaSubtitle": "Em poucos segundos, um roteiro com seu estilo e preferências.",
+  "homeActiveTripTitle": "{count, plural, =1{Sua Viagem Ativa} other{Suas Viagens Ativas}}",
+  "@homeActiveTripTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPlanningStatus": "{planned} de {total} dias planejados",
+  "@tripPlanningStatus": {
+    "placeholders": {
+      "planned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "continuePlanning": "Continuar planejamento",
+  "homeRecommendedTitle": "Sugestões baseadas no seu estilo",
+  "homeTrendingTitle": "Destinos em Alta",
+  "homeProgressTitle": "Seu Progresso de Viajante",
+  "homeCommunityTitle": "Roteiros de Viajantes como Você",
+
+  "challengeCreateAccountTitle": "Criar Conta",
+  "challengeCreateAccountDescription": "Junte-se ao Travel Genie para desbloquear recomendações personalizadas",
+  "challengeCompleteProfileTitle": "Completar Perfil",
+  "challengeCompleteProfileDescription": "Preencha seu perfil de viajante para melhores sugestões",
+  "challengeCreateTripTitle": "Criar Sua Primeira Viagem",
+  "challengeCreateTripDescription": "Comece a planejar sua próxima aventura",
+  "challengeSavePlaceTitle": "Salvar um Local",
+  "challengeSavePlaceDescription": "Salve lugares interessantes nos seus favoritos",
+  "challengeGenerateItineraryTitle": "Gerar Roteiro com IA",
+  "challengeGenerateItineraryDescription": "Deixe a IA criar um roteiro personalizado para você"
 }

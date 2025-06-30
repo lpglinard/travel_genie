@@ -7,12 +7,13 @@ import 'package:travel_genie/models/user_deletion_response.dart';
 
 class UserDeletionService {
   UserDeletionService({http.Client? client})
-      : _client = client ?? http.Client();
+    : _client = client ?? http.Client();
 
   final http.Client _client;
 
   // Base URL following the pattern from other services
-  static const String baseUrl = 'https://sophisticated-chimera.odsy.to/user-management';
+  static const String baseUrl =
+      'https://sophisticated-chimera.odsy.to/user-management';
   static const String deleteUserDataEndpoint = '/delete-user-data';
 
   Future<UserDeletionResponse> deleteAllUserData(String userId) async {

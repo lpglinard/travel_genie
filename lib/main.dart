@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
@@ -29,10 +28,7 @@ Future<void> main() async {
 
     firebase_ui_auth.FirebaseUIAuth.configureProviders([
       firebase_ui_auth.EmailAuthProvider(),
-      GoogleProvider(
-        clientId: googleClientId,
-        iOSPreferPlist: true,
-      ),
+      GoogleProvider(clientId: googleClientId, iOSPreferPlist: true),
       AppleProvider(),
     ]);
 
@@ -50,7 +46,6 @@ Future<void> main() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-
   } catch (error, stackTrace) {
     // Error during Firebase initialization
   }

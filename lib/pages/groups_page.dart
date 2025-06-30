@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/app_localizations.dart';
-import '../providers/user_providers.dart';
 import '../services/groups_service.dart';
+import '../user_providers.dart' as user_providers;
 import '../widgets/groups/feedback_card.dart';
 import '../widgets/groups/feedback_summary.dart';
 
 // Provider for groups service
 final groupsServiceProvider = Provider<GroupsService>((ref) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
+  final firestoreService = ref.watch(user_providers.firestoreServiceProvider);
   return GroupsService(firestoreService);
 });
 

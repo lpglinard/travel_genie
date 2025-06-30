@@ -3,12 +3,20 @@ import 'package:flutter/material.dart';
 import '../models/badge.dart' as badge_model;
 import '../models/challenge.dart';
 import '../models/travel_cover.dart';
+import 'challenge_progress_service.dart';
+import 'challenge_service.dart';
 import 'firestore_service.dart';
 
 class ProfileService {
-  ProfileService(this._firestoreService);
+  ProfileService(
+    this._firestoreService,
+    this._challengeService,
+    this._challengeProgressService,
+  );
 
   final FirestoreService _firestoreService;
+  final ChallengeService _challengeService;
+  final ChallengeProgressService _challengeProgressService;
 
   /// Get user badges
   Stream<List<badge_model.Badge>> getUserBadges(String userId) {
@@ -33,12 +41,12 @@ class ProfileService {
 
   /// Get active challenges for user
   Stream<List<Challenge>> getActiveChallenges(String userId) {
-    return _firestoreService.getActiveChallenges(userId);
+    return _challengeService.getActiveChallenges();
   }
 
   /// Get user's challenge progress
   Stream<Map<String, int>> getUserChallengeProgress(String userId) {
-    return _firestoreService.getUserChallengeProgress(userId);
+    return _challengeProgressService.getUserChallengeProgress(userId);
   }
 
   /// Initialize user profile with default badges and challenges
@@ -62,7 +70,7 @@ class ProfileService {
     String challengeId,
     int progress,
   ) async {
-    return _firestoreService.updateChallengeProgress(
+    return _challengeProgressService.updateChallengeProgress(
       userId,
       challengeId,
       progress,
@@ -106,7 +114,7 @@ class ProfileService {
   Future<void> _updateTripChallenges(String userId) async {
     final activeChallenges = await getActiveChallenges(userId).first;
     final tripChallenges = activeChallenges.where(
-      (c) => c.type == ChallengeType.createTrips,
+      (c) => c.type == 'create_trip',
     );
 
     for (final challenge in tripChallenges) {
@@ -118,7 +126,7 @@ class ProfileService {
   Future<void> _updatePlaceChallenges(String userId, int placeCount) async {
     final activeChallenges = await getActiveChallenges(userId).first;
     final placeChallenges = activeChallenges.where(
-      (c) => c.type == ChallengeType.addPlaces,
+      (c) => c.type == 'save_place',
     );
 
     for (final challenge in placeChallenges) {
@@ -134,7 +142,7 @@ class ProfileService {
   Future<void> _updateInviteChallenges(String userId) async {
     final activeChallenges = await getActiveChallenges(userId).first;
     final inviteChallenges = activeChallenges.where(
-      (c) => c.type == ChallengeType.inviteFriends,
+      (c) => c.type == 'invite_friends',
     );
 
     for (final challenge in inviteChallenges) {
@@ -146,7 +154,7 @@ class ProfileService {
   Future<void> _updateCoverChallenges(String userId, String? coverStyle) async {
     final activeChallenges = await getActiveChallenges(userId).first;
     final coverChallenges = activeChallenges.where(
-      (c) => c.type == ChallengeType.generateCovers,
+      (c) => c.type == 'generate_itinerary',
     );
 
     for (final challenge in coverChallenges) {
@@ -178,7 +186,7 @@ class ProfileService {
   }
 
   Future<int> _getChallengeProgress(String userId, String challengeId) async {
-    return _firestoreService.getChallengeProgress(userId, challengeId);
+    return _challengeProgressService.getChallengeProgress(userId, challengeId);
   }
 
   /// Get user profile statistics

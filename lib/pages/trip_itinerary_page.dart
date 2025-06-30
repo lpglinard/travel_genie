@@ -108,7 +108,9 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                           );
                       _showMagicAiOptimizerBottomSheet();
                     },
-              tooltip: 'Magic AI Trip Optimizer',
+              tooltip: AppLocalizations.of(
+                context,
+              )!.magicAiTripOptimizerTooltip,
             ),
           ],
         ),
@@ -283,7 +285,9 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context)!.optimizationCompleteMessage(result.strategyName),
+              AppLocalizations.of(
+                context,
+              )!.optimizationCompleteMessage(result.strategyName),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),

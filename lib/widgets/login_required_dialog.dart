@@ -9,13 +9,13 @@ class LoginRequiredDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
+
     return AlertDialog(
       title: Text(
         l10n.loginRequiredTitle,
-        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+        style: Theme.of(
+          context,
+        ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
       ),
       content: Text(
         l10n.loginRequiredMessage,
