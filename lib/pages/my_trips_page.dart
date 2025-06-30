@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +7,7 @@ import '../providers/trip_service_provider.dart';
 import '../widgets/login_required_dialog.dart';
 import '../widgets/my_trips/empty_trip_state.dart';
 import '../widgets/my_trips/trip_list.dart';
+import '../services/auth_service.dart';
 
 /// Main page for displaying user's trips
 class MyTripsPage extends ConsumerWidget {
@@ -25,7 +25,7 @@ class MyTripsPage extends ConsumerWidget {
             if (trips.isEmpty) {
               // Check if user is authenticated
               try {
-                final user = FirebaseAuth.instance.currentUser;
+                final user = ref.read(authServiceProvider).currentUser;
                 if (user == null) {
                   // User is not authenticated, show login dialog
                   WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -56,7 +56,7 @@ class MyTripsPage extends ConsumerWidget {
         onPressed: () async {
           // Check if user is authenticated before navigating to create trip
           try {
-            final user = FirebaseAuth.instance.currentUser;
+            final user = ref.read(authServiceProvider).currentUser;
             if (user == null) {
               // Show login required dialog
               await LoginRequiredDialog.show(context);

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +8,7 @@ import '../../core/extensions/string_extension.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 import '../../providers/user_providers.dart';
+import '../../services/auth_service.dart';
 import '../login_required_dialog.dart';
 import 'photo_attribution.dart';
 
@@ -40,7 +40,7 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
 
   Future<void> _checkIfSaved() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = ref.read(authServiceProvider).currentUser;
       if (user != null) {
         try {
           final firestoreService = ref.read(firestoreServiceProvider);
@@ -68,7 +68,7 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
     try {
       User? user;
       try {
-        user = FirebaseAuth.instance.currentUser;
+        user = ref.read(authServiceProvider).currentUser;
         if (user == null) {
           // Show login required dialog
           if (mounted) {

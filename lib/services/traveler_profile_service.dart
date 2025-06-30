@@ -1,15 +1,16 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'auth_service.dart';
 
 import '../models/traveler_profile.dart';
 import 'firestore_service.dart';
 
 class TravelerProfileService {
-  TravelerProfileService(this._firestoreService);
+  TravelerProfileService(this._firestoreService, this._authService);
 
   final FirestoreService _firestoreService;
+  final AuthService _authService;
 
   /// Get the current user ID
-  String? get _currentUserId => FirebaseAuth.instance.currentUser?.uid;
+  String? get _currentUserId => _authService.currentUser?.uid;
 
   /// Get the saved traveler profile
   Future<TravelerProfile?> getProfile() async {

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/drag_drop_models.dart';
 import '../models/place.dart';
 import '../providers/trip_service_provider.dart';
+import 'trip_service.dart';
 
 /// Service that handles the business logic for drag-and-drop operations in the trip itinerary.
 ///
@@ -10,17 +11,17 @@ import '../providers/trip_service_provider.dart';
 /// reordering places within days, and adding places from the saved places bin.
 /// It provides a clean separation between UI components and business logic.
 class ItineraryDragDropService {
-  /// Reference to the Riverpod container for accessing providers
-  final ProviderRef<ItineraryDragDropService> _ref;
+  /// Trip service used for itinerary modifications
+  final TripService _tripService;
 
   /// The ID of the current trip
   final String _tripId;
 
   /// Creates a new [ItineraryDragDropService].
   ///
-  /// [ref] is the Riverpod reference for accessing providers.
+  /// [tripService] handles trip data operations.
   /// [tripId] is the ID of the trip being managed.
-  const ItineraryDragDropService(this._ref, this._tripId);
+  const ItineraryDragDropService(this._tripService, this._tripId);
 
   /// Handles a place being dropped on a specific day at a specific position.
   ///
@@ -39,13 +40,11 @@ class ItineraryDragDropService {
     required int insertIndex,
     required List<Place> currentPlaces,
   }) async {
-    final tripService = _ref.read(tripServiceProvider);
-
     try {
       // Handle different drop scenarios
       if (data.isFromSavedPlaces) {
         await _handleDropFromSavedPlaces(
-          tripService: tripService,
+          tripService: _tripService,
           place: data.place,
           targetDayId: targetDayId,
           insertIndex: insertIndex,
@@ -53,7 +52,7 @@ class ItineraryDragDropService {
         );
       } else if (data.fromDayId != targetDayId) {
         await _handleDropBetweenDays(
-          tripService: tripService,
+          tripService: _tripService,
           data: data,
           targetDayId: targetDayId,
           insertIndex: insertIndex,
@@ -61,7 +60,7 @@ class ItineraryDragDropService {
         );
       } else {
         await _handleReorderWithinDay(
-          tripService: tripService,
+          tripService: _tripService,
           data: data,
           targetDayId: targetDayId,
           insertIndex: insertIndex,
@@ -76,7 +75,7 @@ class ItineraryDragDropService {
 
   /// Handles dropping a place from the saved places bin to a day
   Future<void> _handleDropFromSavedPlaces({
-    required dynamic tripService,
+    required TripService tripService,
     required Place place,
     required String targetDayId,
     required int insertIndex,
@@ -95,7 +94,7 @@ class ItineraryDragDropService {
 
   /// Handles dropping a place from one day to another day
   Future<void> _handleDropBetweenDays({
-    required dynamic tripService,
+    required TripService tripService,
     required DraggedPlaceData data,
     required String targetDayId,
     required int insertIndex,
@@ -121,7 +120,7 @@ class ItineraryDragDropService {
 
   /// Handles reordering a place within the same day
   Future<void> _handleReorderWithinDay({
-    required dynamic tripService,
+    required TripService tripService,
     required DraggedPlaceData data,
     required String targetDayId,
     required int insertIndex,
@@ -177,5 +176,8 @@ class ItineraryDragDropException implements Exception {
 /// Usage: `ref.read(itineraryDragDropServiceProvider(tripId))`
 final itineraryDragDropServiceProvider =
     Provider.family<ItineraryDragDropService, String>(
-      (ref, tripId) => ItineraryDragDropService(ref, tripId),
-    );
+  (ref, tripId) {
+    final tripService = ref.watch(tripServiceProvider);
+    return ItineraryDragDropService(tripService, tripId);
+  },
+);

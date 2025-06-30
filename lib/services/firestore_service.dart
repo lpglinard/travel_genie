@@ -243,6 +243,7 @@ class FirestoreService {
     required String dayId,
     required Place place,
     int? position,
+    String? userId,
   }) async {
     // Check if placeId is empty to avoid Firestore error
     if (place.placeId.isEmpty) {
@@ -250,7 +251,6 @@ class FirestoreService {
       return;
     }
 
-    final userId = FirebaseAuth.instance.currentUser?.uid;
     final placesRef = _firestore
         .collection('trips')
         .doc(tripId)

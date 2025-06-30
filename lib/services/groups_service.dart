@@ -1,14 +1,15 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'auth_service.dart';
 
 import 'firestore_service.dart';
 
 class GroupsService {
-  GroupsService(this._firestoreService);
+  GroupsService(this._firestoreService, this._authService);
 
   final FirestoreService _firestoreService;
+  final AuthService _authService;
 
   // Get current user ID
-  String? get _currentUserId => FirebaseAuth.instance.currentUser?.uid;
+  String? get _currentUserId => _authService.currentUser?.uid;
 
   // Stream groups feedback summary
   Stream<Map<String, dynamic>?> streamGroupsFeedbackSummary() {

@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +14,7 @@ import '../widgets/place_detail/image_carousel.dart';
 import '../widgets/place_detail/location_map_section.dart';
 import '../widgets/place_detail/photo_gallery.dart';
 import '../widgets/place_detail/place_info_section.dart';
+import '../services/auth_service.dart';
 
 class PlaceDetailPage extends ConsumerStatefulWidget {
   const PlaceDetailPage({super.key, required this.place, this.heroTagIndex});
@@ -42,7 +42,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
 
   void _getCurrentUser() {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = ref.read(authServiceProvider).currentUser;
       if (user != null) {
         setState(() {
           _currentUserId = user.uid;
@@ -55,7 +55,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
 
   Future<void> _checkIfPlaceIsSaved() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = ref.read(authServiceProvider).currentUser;
       if (user == null) return;
 
       setState(() {
@@ -110,7 +110,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
 
   Future<void> _toggleSaved() async {
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = ref.read(authServiceProvider).currentUser;
       if (user == null) {
         // Show login required dialog
         await LoginRequiredDialog.show(context);

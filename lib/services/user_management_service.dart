@@ -3,8 +3,8 @@ import 'package:travel_genie/models/user_deletion_response.dart';
 import 'package:travel_genie/services/user_deletion_service.dart';
 
 class UserManagementService {
-  UserManagementService({UserDeletionService? userDeletionService})
-    : _userDeletionService = userDeletionService ?? UserDeletionService();
+  UserManagementService({required UserDeletionService userDeletionService})
+      : _userDeletionService = userDeletionService;
 
   final UserDeletionService _userDeletionService;
 

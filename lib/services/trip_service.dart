@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:travel_genie/services/day_summary_service.dart';
 
@@ -6,21 +5,24 @@ import '../models/itinerary_day.dart';
 import '../models/place.dart';
 import '../models/trip.dart';
 import 'firestore_service.dart';
+import 'auth_service.dart';
 
 class TripService {
   final FirestoreService _firestoreService;
   final DaySummaryService _daySummaryService;
+  final AuthService _authService;
   final String? _languageCode;
 
   TripService(
     this._firestoreService,
     this._daySummaryService,
+    this._authService,
     this._languageCode,
   );
 
   /// Stream trips for the current user
   Stream<List<Trip>> getUserTrips() {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _authService.currentUser;
 
     // If no user is logged in, return an empty list
     if (user == null) {
@@ -39,7 +41,7 @@ class TripService {
     required DateTime endDate,
     bool isArchived = false,
   }) async {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _authService.currentUser;
     if (user == null) {
       throw Exception('User not logged in');
     }
@@ -70,7 +72,7 @@ class TripService {
   }
 
   Stream<List<Place>> streamSavedPlacesForCurrentUser() {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = _authService.currentUser;
     if (user == null) return const Stream.empty();
     return _firestoreService.streamSavedPlacesAsPlaces(user.uid);
   }
@@ -87,6 +89,7 @@ class TripService {
           dayId: dayId,
           place: place,
           position: position,
+          userId: _authService.currentUser?.uid,
         )
         .then((onValue) {
           _daySummaryService

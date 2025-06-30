@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +6,7 @@ import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../providers/trip_service_provider.dart';
 import '../providers/user_providers.dart';
+import '../services/auth_service.dart';
 import '../widgets/login_required_dialog.dart';
 
 class CreateTripPage extends ConsumerStatefulWidget {
@@ -72,7 +72,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
 
     // Check if user is authenticated
     try {
-      final user = FirebaseAuth.instance.currentUser;
+      final user = ref.read(authServiceProvider).currentUser;
       if (user == null) {
         // Show login required dialog
         if (mounted) {

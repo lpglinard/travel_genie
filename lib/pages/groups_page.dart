@@ -10,7 +10,8 @@ import '../widgets/groups/feedback_summary.dart';
 // Provider for groups service
 final groupsServiceProvider = Provider<GroupsService>((ref) {
   final firestoreService = ref.watch(user_providers.firestoreServiceProvider);
-  return GroupsService(firestoreService);
+  final authService = ref.watch(user_providers.authServiceProvider);
+  return GroupsService(firestoreService, authService);
 });
 
 final groupsFeedbackProvider = StreamProvider<Map<String, dynamic>?>((ref) {

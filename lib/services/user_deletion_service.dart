@@ -1,15 +1,17 @@
 import 'dart:convert';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel_genie/models/user_deletion_request.dart';
 import 'package:travel_genie/models/user_deletion_response.dart';
 
 class UserDeletionService {
-  UserDeletionService({http.Client? client})
-    : _client = client ?? http.Client();
+  UserDeletionService({http.Client? client, required AuthService authService})
+      : _client = client ?? http.Client(),
+        _authService = authService;
 
   final http.Client _client;
+  final AuthService _authService;
 
   // Base URL following the pattern from other services
   static const String baseUrl =
@@ -19,7 +21,7 @@ class UserDeletionService {
   Future<UserDeletionResponse> deleteAllUserData(String userId) async {
     try {
       // Get the current Firebase user and ID token
-      final User? currentUser = FirebaseAuth.instance.currentUser;
+      final User? currentUser = _authService.currentUser;
       if (currentUser == null) {
         throw Exception('User not authenticated');
       }

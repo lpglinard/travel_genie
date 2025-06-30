@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,13 +13,14 @@ import '../widgets/profile/delete_account_tile.dart';
 import '../widgets/profile/language_settings_tile.dart';
 import '../widgets/profile/logout_tile.dart';
 import '../widgets/profile/traveler_profile_summary.dart';
+import '../services/auth_service.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = ref.watch(authServiceProvider).currentUser;
     final userData = ref.watch(userDataProvider).valueOrNull;
     final profileService = ref.watch(profileServiceProvider);
 

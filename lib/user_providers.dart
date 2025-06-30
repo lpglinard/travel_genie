@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'config.dart';
 import 'models/user_data.dart';
 import 'services/analytics_service.dart';
+import 'services/auth_service.dart';
 import 'services/challenge_progress_service.dart';
 import 'services/challenge_service.dart';
 import 'services/firestore_service.dart';
@@ -37,15 +38,19 @@ final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
   return AnalyticsService();
 });
 
+/// Provides access to authentication related utilities.
+final authServiceProvider = Provider<AuthService>((ref) {
+  return AuthService(FirebaseAuth.instance);
+});
+
 final authStateChangesProvider = StreamProvider<User?>(
-  (ref) => FirebaseAuth.instance.authStateChanges(),
+  (ref) => ref.watch(authServiceProvider).authStateChanges(),
 );
 
 final userDataProvider = StreamProvider<UserData?>((ref) {
   final service = ref.watch(firestoreServiceProvider);
-  return FirebaseAuth.instance.authStateChanges().asyncExpand(
-    (user) =>
-        user == null ? const Stream.empty() : service.streamUser(user.uid),
+  return ref.watch(authServiceProvider).authStateChanges().asyncExpand(
+    (user) => user == null ? const Stream.empty() : service.streamUser(user.uid),
   );
 });
 
@@ -84,11 +89,13 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 
 final travelerProfileServiceProvider = Provider<TravelerProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  return TravelerProfileService(firestoreService);
+  final authService = ref.watch(authServiceProvider);
+  return TravelerProfileService(firestoreService, authService);
 });
 
 final userDeletionServiceProvider = Provider<UserDeletionService>((ref) {
-  return UserDeletionService();
+  final authService = ref.watch(authServiceProvider);
+  return UserDeletionService(authService: authService);
 });
 
 final userManagementServiceProvider = Provider<UserManagementService>((ref) {

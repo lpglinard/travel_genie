@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/challenge.dart';
 import '../services/challenge_progress_service.dart';
 import '../services/challenge_service.dart';
+import '../services/auth_service.dart';
 
 /// Provider for ChallengeService
 final challengeServiceProvider = Provider<ChallengeService>((ref) {
@@ -44,7 +44,7 @@ final completedChallengesProvider = StreamProvider.family<List<String>, String>(
 final userChallengesWithProgressProvider = StreamProvider<List<Challenge>>((
   ref,
 ) {
-  final user = FirebaseAuth.instance.currentUser;
+  final user = ref.watch(authServiceProvider).currentUser;
 
   // For non-logged users, return only the create_account challenge
   if (user == null) {
@@ -63,7 +63,7 @@ final userChallengesWithProgressProvider = StreamProvider<List<Challenge>>((
 /// Provider for a specific challenge with user progress
 final challengeWithProgressProvider = StreamProvider.family<Challenge?, String>(
   (ref, challengeId) {
-    final user = FirebaseAuth.instance.currentUser;
+    final user = ref.watch(authServiceProvider).currentUser;
 
     // For non-logged users, only return create_account challenge
     if (user == null) {

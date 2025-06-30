@@ -14,8 +14,14 @@ import 'day_summary_service_provider.dart';
 final tripServiceProvider = Provider<TripService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   final daySummaryService = ref.watch(daySummaryServiceProvider);
+  final authService = ref.watch(authServiceProvider);
   final locale = ref.watch(localeProvider);
-  return TripService(firestoreService, daySummaryService, locale?.languageCode);
+  return TripService(
+    firestoreService,
+    daySummaryService,
+    authService,
+    locale?.languageCode,
+  );
 });
 
 /// Provider that exposes a stream of user trips
