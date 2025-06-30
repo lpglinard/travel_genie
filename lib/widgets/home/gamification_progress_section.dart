@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/challenge.dart';
 import '../../providers/challenge_providers.dart';
+import '../../core/extensions/challenge_localization_extension.dart';
 
 class GamificationProgressSection extends ConsumerWidget {
   const GamificationProgressSection({super.key});
@@ -27,136 +28,89 @@ class GamificationProgressSection extends ConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            _buildChallengeProgress(context, ref, user),
+            ChallengeProgressContent(user: user),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildChallengeProgress(
-    BuildContext context,
-    WidgetRef ref,
-    User? user,
-  ) {
-    // For non-logged users, show only the create_account challenge
+class ChallengeProgressContent extends ConsumerWidget {
+  const ChallengeProgressContent({super.key, required this.user});
+
+  final User? user;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     if (user == null) {
       final challengeService = ref.watch(challengeServiceProvider);
-      final createAccountChallenge = challengeService
-          .getCreateAccountChallenge();
-      return _buildChallengeItem(context, createAccountChallenge);
+      final challenge = challengeService.getCreateAccountChallenge();
+      return ChallengeItem(challenge: challenge);
     }
 
-    // For logged users, show challenge progress from challengeProgress collection
     final activeChallengesAsync = ref.watch(activeChallengesProvider);
     final completedChallengesAsync = ref.watch(
-      completedChallengesProvider(user.uid),
+      completedChallengesProvider(user!.uid),
     );
 
     return activeChallengesAsync.when(
-      data: (allChallenges) {
-        return completedChallengesAsync.when(
-          data: (completedChallengeIds) {
-            final totalChallenges = allChallenges.length;
-            final completedCount = completedChallengeIds.length;
+      data: (allChallenges) => completedChallengesAsync.when(
+        data: (completedIds) {
+          final totalChallenges = allChallenges.length;
+          final completedCount = completedIds.length;
 
-            // Find first uncompleted challenge (sorted by displayOrder)
-            final sortedChallenges = List<Challenge>.from(allChallenges)
-              ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
+          final sortedChallenges = List<Challenge>.from(allChallenges)
+            ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
-            final firstUncompletedChallenge = sortedChallenges
-                .where(
-                  (challenge) => !completedChallengeIds.contains(challenge.id),
-                )
-                .firstOrNull;
+          final firstUncompleted = sortedChallenges
+              .where((challenge) => !completedIds.contains(challenge.id))
+              .firstOrNull;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Challenge progress
-                Text(
-                  AppLocalizations.of(
-                    context,
-                  ).unlockedBadges(completedCount, totalChallenges),
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 4),
-                LinearProgressIndicator(
-                  value: totalChallenges > 0
-                      ? completedCount / totalChallenges
-                      : 0,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-                ),
-                const SizedBox(height: 12),
-                // First uncompleted challenge
-                if (firstUncompletedChallenge != null)
-                  _buildChallengeItem(context, firstUncompletedChallenge),
-              ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => const SizedBox.shrink(),
-        );
-      },
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppLocalizations.of(
+                  context,
+                ).unlockedBadges(completedCount, totalChallenges),
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 4),
+              LinearProgressIndicator(
+                value: totalChallenges > 0
+                    ? completedCount / totalChallenges
+                    : 0,
+                backgroundColor: Colors.grey[300],
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+              ),
+              const SizedBox(height: 12),
+              if (firstUncompleted != null)
+                ChallengeItem(challenge: firstUncompleted),
+            ],
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => const SizedBox.shrink(),
+      ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => const SizedBox.shrink(),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
+}
 
-  Widget _buildChallengeItem(BuildContext context, Challenge challenge) {
+class ChallengeItem extends StatelessWidget {
+  const ChallengeItem({super.key, required this.challenge});
+
+  final Challenge challenge;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-
-    // Get localized title and description
-    String title;
-    String description;
-
-    try {
-      // Use reflection-like approach to get localized strings
-      switch (challenge.titleKey) {
-        case 'challengeCreateAccountTitle':
-          title = l10n.challengeCreateAccountTitle;
-          break;
-        case 'challengeCompleteProfileTitle':
-          title = l10n.challengeCompleteProfileTitle;
-          break;
-        case 'challengeCreateTripTitle':
-          title = l10n.challengeCreateTripTitle;
-          break;
-        case 'challengeSavePlaceTitle':
-          title = l10n.challengeSavePlaceTitle;
-          break;
-        case 'challengeGenerateItineraryTitle':
-          title = l10n.challengeGenerateItineraryTitle;
-          break;
-        default:
-          title = challenge.titleKey; // Fallback to key
-      }
-
-      switch (challenge.descriptionKey) {
-        case 'challengeCreateAccountDescription':
-          description = l10n.challengeCreateAccountDescription;
-          break;
-        case 'challengeCompleteProfileDescription':
-          description = l10n.challengeCompleteProfileDescription;
-          break;
-        case 'challengeCreateTripDescription':
-          description = l10n.challengeCreateTripDescription;
-          break;
-        case 'challengeSavePlaceDescription':
-          description = l10n.challengeSavePlaceDescription;
-          break;
-        case 'challengeGenerateItineraryDescription':
-          description = l10n.challengeGenerateItineraryDescription;
-          break;
-        default:
-          description = challenge.descriptionKey; // Fallback to key
-      }
-    } catch (e) {
-      // Fallback to the keys if localization fails
-      title = challenge.titleKey;
-      description = challenge.descriptionKey;
-    }
+    final title = l10n.challengeTitleFromKey(challenge.titleKey);
+    final description = l10n.challengeDescriptionFromKey(
+      challenge.descriptionKey,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +126,6 @@ class GamificationProgressSection extends ConsumerWidget {
         const SizedBox(height: 8),
         LinearProgressIndicator(
           value: 0.0,
-          // For display purposes only, actual progress is handled separately
           backgroundColor: Colors.grey[300],
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
         ),
