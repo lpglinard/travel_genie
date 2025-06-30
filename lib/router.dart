@@ -10,6 +10,7 @@ import 'package:travel_genie/pages/trip_itinerary_page.dart';
 
 import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
+import 'models/challenge.dart';
 import 'models/place.dart';
 import 'pages/create_trip_page.dart';
 import 'pages/groups_page.dart';
@@ -299,9 +300,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     // Track login analytics
                     try {
                       final analyticsService = ref.read(analyticsServiceProvider);
-                      await analyticsService.logLogin(method: 'email');
+                      final user = state.user;
+                      final method = user != null && user.providerData.isNotEmpty
+                          ? user.providerData.first.providerId
+                          : 'unknown';
+                      await analyticsService.logSignUp(method: method);
                     } catch (e) {
-                      debugPrint('Error tracking login analytics: $e');
+                      debugPrint('Error tracking sign-in analytics: $e');
                     }
 
                     // Track challenge progress for account creation
@@ -317,13 +322,32 @@ final routerProvider = Provider<GoRouter>((ref) {
                     }
                     context.go('/');
                   }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((context, firebase_ui.UserCreated state) async {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((BuildContext context, firebase_ui.UserCreated state) async {
                     // Track sign-up analytics
                     try {
                       final analyticsService = ref.read(analyticsServiceProvider);
-                      await analyticsService.logSignUp(method: 'email');
+                      final user = state.credential.user;
+                      final method = user != null && user.providerData.isNotEmpty
+                          ? user.providerData.first.providerId
+                          : 'unknown';
+                      await analyticsService.logSignUp(method: method);
                     } catch (e) {
                       debugPrint('Error tracking sign-up analytics: $e');
+                    }
+
+                    // Initialize user progress for all challenges
+                    try {
+                      final user = state.credential.user;
+                      if (user != null) {
+                        final challengeActions = ref.read(challengeActionsProvider);
+                        final challengeIds = PredefinedChallenges.getActiveChallenges()
+                            .map((challenge) => challenge.id)
+                            .toList();
+                        await challengeActions.initializeUserProgress(user.uid, challengeIds);
+                      }
+                    } catch (e) {
+                      // Log error but don't prevent navigation
+                      debugPrint('Error initializing user progress: $e');
                     }
 
                     // Track challenge progress for account creation
