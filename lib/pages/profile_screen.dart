@@ -29,44 +29,54 @@ class ProfileScreen extends ConsumerWidget {
         title: Text(AppLocalizations.of(context)!.profileTitle),
         elevation: 0,
       ),
-      body: _buildUnifiedView(context, user, userData, profileService),
+      body: ProfileView(
+        user: user,
+        userData: userData,
+        profileService: profileService,
+      ),
     );
   }
 
-  Widget _buildUnifiedView(
-    BuildContext context,
-    User? user,
-    dynamic userData,
-    ProfileService profileService,
-  ) {
+class ProfileView extends StatelessWidget {
+  const ProfileView({
+    super.key,
+    required this.user,
+    required this.userData,
+    required this.profileService,
+  });
+
+  final User? user;
+  final dynamic userData;
+  final ProfileService profileService;
+
+  @override
+  Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Top Section - Login for Unauthenticated, User Info for Authenticated
           if (user == null)
-            _buildLoginSection(context)
+            const LoginSection()
           else
-            _buildUserIdentificationSection(context, user, userData),
+            UserIdentificationSection(user: user!, userData: userData),
           const SizedBox(height: 24),
-
-          // Traveler Profile Summary Section
           const TravelerProfileSummary(),
           const SizedBox(height: 24),
-
-          // Travel Cover Collection Section
-          _buildTravelCoverSection(context, user, profileService),
+          TravelCoverSection(user: user, profileService: profileService),
           const SizedBox(height: 24),
-
-          // Settings Section
-          _buildSettingsSection(),
+          const SettingsSection(),
         ],
       ),
     );
   }
+}
 
-  Widget _buildLoginSection(BuildContext context) {
+class LoginSection extends StatelessWidget {
+  const LoginSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -86,14 +96,14 @@ class ProfileScreen extends ConsumerWidget {
                       Text(
                         AppLocalizations.of(context)!.guest,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       Text(
                         AppLocalizations.of(context)!.loginToAccessFullFeatures,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                              color: Colors.grey[600],
+                            ),
                       ),
                     ],
                   ),
@@ -103,7 +113,6 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               onPressed: () {
-                // Navigate to sign-in screen
                 context.go('/signin');
               },
               icon: const Icon(Icons.login),
@@ -120,12 +129,20 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildUserIdentificationSection(
-    BuildContext context,
-    User user,
-    dynamic userData,
-  ) {
+class UserIdentificationSection extends StatelessWidget {
+  const UserIdentificationSection({
+    super.key,
+    required this.user,
+    required this.userData,
+  });
+
+  final User user;
+  final dynamic userData;
+
+  @override
+  Widget build(BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -151,15 +168,16 @@ class ProfileScreen extends ConsumerWidget {
                         user.email ??
                         AppLocalizations.of(context)!.user,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   if (userData?.email != null || user.email != null)
                     Text(
                       userData?.email ?? user.email!,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey[600]),
                     ),
                 ],
               ),
@@ -169,12 +187,20 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildTravelCoverSection(
-    BuildContext context,
-    User? user,
-    ProfileService profileService,
-  ) {
+class TravelCoverSection extends StatelessWidget {
+  const TravelCoverSection({
+    super.key,
+    required this.user,
+    required this.profileService,
+  });
+
+  final User? user;
+  final ProfileService profileService;
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -184,15 +210,13 @@ class ProfileScreen extends ConsumerWidget {
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context)!.travelCoverCollection,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style:
+                  Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],
         ),
         const SizedBox(height: 12),
         if (user == null)
-          // Show login prompt for unauthenticated users
           Card(
             child: InkWell(
               onTap: () async {
@@ -207,9 +231,10 @@ class ProfileScreen extends ConsumerWidget {
                     Text(
                       AppLocalizations.of(context)!.loginToAccessFullFeatures,
                       textAlign: TextAlign.center,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -217,7 +242,6 @@ class ProfileScreen extends ConsumerWidget {
             ),
           )
         else
-          // Show actual travel covers for authenticated users
           StreamBuilder<TravelCoverCollection?>(
             stream: profileService.getUserTravelCovers(user.uid),
             builder: (context, snapshot) {
@@ -246,7 +270,9 @@ class ProfileScreen extends ConsumerWidget {
                           ),
                           Text(
                             '${collection?.completionPercentage.toInt() ?? 0}%',
-                            style: Theme.of(context).textTheme.titleMedium
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
                                 ?.copyWith(
                                   color: Colors.blue,
                                   fontWeight: FontWeight.bold,
@@ -273,17 +299,16 @@ class ProfileScreen extends ConsumerWidget {
                         GridView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                                childAspectRatio: 0.8,
-                              ),
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                            childAspectRatio: 0.8,
+                          ),
                           itemCount: unlockedCovers.length,
                           itemBuilder: (context, index) {
                             final cover = unlockedCovers[index];
-                            return _buildCoverItem(context, cover);
+                            return CoverItem(cover: cover);
                           },
                         ),
                     ],
@@ -295,8 +320,18 @@ class ProfileScreen extends ConsumerWidget {
       ],
     );
   }
+}
 
-  Widget _buildCoverItem(BuildContext context, TravelCover cover) {
+class CoverItem extends StatelessWidget {
+  const CoverItem({
+    super.key,
+    required this.cover,
+  });
+
+  final TravelCover cover;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -321,8 +356,7 @@ class ProfileScreen extends ConsumerWidget {
                         cover.imageUrl,
                         fit: BoxFit.cover,
                         width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.image),
+                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.image),
                       ),
                     )
                   : const Center(child: Icon(Icons.image, size: 40)),
@@ -342,19 +376,26 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildSettingsSection() {
+class SettingsSection extends StatelessWidget {
+  const SettingsSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Divider(),
-        const SizedBox(height: 16),
-        const LanguageSettingsTile(),
-        const DarkModeToggleTile(),
-        const LogoutTile(),
-        const DeleteAccountTile(),
+      children: const [
+        Divider(),
+        SizedBox(height: 16),
+        LanguageSettingsTile(),
+        DarkModeToggleTile(),
+        LogoutTile(),
+        DeleteAccountTile(),
       ],
     );
+  }
+}
   }
 
   IconData _getIconFromName(String iconName) {

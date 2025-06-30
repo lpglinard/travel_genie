@@ -21,6 +21,8 @@
   "savedPlaces": "Saved Places",
   "errorGeneric": "Error: {error}",
   "errorLoadingSavedPlaces": "Error loading saved places: {error}",
+  "errorLoadingTrips": "Error loading trips: {error}",
+  "magicAiTripOptimizerTooltip": "Magic AI Trip Optimizer",
   "noResults": "No results",
   "openingHours": "Opening hours:",
   "openInMaps": "Open in Google Maps",
