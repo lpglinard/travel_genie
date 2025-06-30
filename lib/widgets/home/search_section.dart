@@ -53,7 +53,7 @@ class _SearchSectionState extends ConsumerState<SearchSection> {
             },
             onSubmitted: _submitSearch,
             suffixIcon: IconButton(
-              icon: const Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.search),
               onPressed: () => _submitSearch(searchController.text),
             ),
           ),
