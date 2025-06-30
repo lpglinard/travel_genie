@@ -70,70 +70,44 @@ class DeleteAccountTile extends ConsumerWidget {
         builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
-      // Delete all user data using UserManagementService
+      // Clear local preferences first
+      final prefs = await ref.read(preferencesServiceProvider.future);
+      await prefs.clearAll();
+
+      // Delete user using Firebase's default implementation
       final userManagementService = ref.read(userManagementServiceProvider);
       final deletionResponse = await userManagementService.deleteAllUserData(
         user.uid,
         ref,
       );
 
+      // Close loading dialog
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
+
       // Check if deletion was successful
-      if (!deletionResponse.success) {
-        throw Exception(
-          deletionResponse.errorMessage ?? 'Failed to delete user data',
-        );
-      }
-
-      // Clear local preferences
-      final prefs = await ref.read(preferencesServiceProvider.future);
-      await prefs.clearAll();
-
-      // Delete the Firebase Auth account
-      await user.delete();
-
-      // Close loading dialog
-      if (context.mounted) {
-        Navigator.of(context).pop();
-
-        // Show success message and navigate to home
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.deleteAccountSuccess),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Navigate to home and clear navigation stack
-        context.go('/');
-      }
-    } on FirebaseAuthException catch (e) {
-      // Close loading dialog
-      if (context.mounted) {
-        Navigator.of(context).pop();
-
-        if (e.code == 'requires-recent-login') {
-          // Show re-authentication required message
+      if (deletionResponse.success) {
+        // Show success message and navigate to main screen unauthenticated
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                AppLocalizations.of(context)!.deleteAccountReauthRequired,
-              ),
-              backgroundColor: Colors.orange,
-              duration: const Duration(seconds: 5),
+              content: Text(AppLocalizations.of(context)!.deleteAccountSuccess),
+              backgroundColor: Colors.green,
             ),
           );
 
-          // Navigate to sign-in screen
-          context.go('/signin');
-        } else {
-          // Show error message
+          // Navigate to home and clear navigation stack
+          // User will be automatically unauthenticated since Firebase Auth user was deleted
+          context.go('/');
+        }
+      } else {
+        // Handle deletion failure
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                AppLocalizations.of(
-                  context,
-                )!.deleteAccountError(e.message ?? e.code),
-              ),
+              content: Text(AppLocalizations.of(context)!.deleteAccountError(
+                deletionResponse.errorMessage?.toString() ?? 'Unknown error')),
               backgroundColor: Colors.red,
             ),
           );
@@ -144,12 +118,9 @@ class DeleteAccountTile extends ConsumerWidget {
       if (context.mounted) {
         Navigator.of(context).pop();
 
-        // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.deleteAccountError(e.toString()),
-            ),
+            content: Text(AppLocalizations.of(context)!.deleteAccountError(e.toString())),
             backgroundColor: Colors.red,
           ),
         );

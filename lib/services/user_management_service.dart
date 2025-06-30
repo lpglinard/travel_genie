@@ -8,7 +8,7 @@ class UserManagementService {
 
   final UserDeletionService _userDeletionService;
 
-  /// Delete all user data using the HTTP-based service
+  /// Delete all user data using Firebase's default implementation
   /// Returns a UserDeletionResponse indicating success or failure
   Future<UserDeletionResponse> deleteAllUserData(
     String userId,
