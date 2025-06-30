@@ -351,5 +351,24 @@
     }
   },
   "deleteAccountReauthRequired": "For security reasons, please sign in again to delete your account",
-  "typeDeleteToConfirm": "Type DELETE to confirm"
+  "typeDeleteToConfirm": "Type DELETE to confirm",
+  "homeCtaButton": "Create Itinerary with Travel Genie",
+  "homeCtaSubtitle": "In seconds, an itinerary with your style and preferences.",
+  "homeActiveTripTitle": "Your Active Trip",
+  "tripPlanningStatus": "{planned} of {total} days planned",
+  "@tripPlanningStatus": {
+    "placeholders": {
+      "planned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "continuePlanning": "Continue planning",
+  "homeRecommendedTitle": "Suggestions based on your style",
+  "homeTrendingTitle": "Trending Destinations",
+  "homeProgressTitle": "Your Traveler Progress",
+  "homeCommunityTitle": "Itineraries from Travelers Like You"
 }
