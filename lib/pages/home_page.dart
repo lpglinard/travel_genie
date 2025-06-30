@@ -89,6 +89,8 @@ class MyHomePage extends ConsumerWidget {
               ActiveTripSection(trips: activeTrips),
               const SizedBox(height: 24),
             ],
+            const SizedBox(height: 24),
+            const GamificationProgressSection(),
             recommendedDestinationsAsync.when(
               data: (destinations) =>
                   RecommendedDestinationsSection(destinations: destinations),
@@ -96,6 +98,7 @@ class MyHomePage extends ConsumerWidget {
               error: (error, stackTrace) =>
                   Text('Error loading destinations: $error'),
             ),
+
             const SizedBox(height: 24),
             // Trending destinations independent of profile
             recommendedDestinationsAsync.when(
@@ -104,8 +107,7 @@ class MyHomePage extends ConsumerWidget {
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             ),
-            const SizedBox(height: 24),
-            const GamificationProgressSection(),
+
           ],
         ),
       ),

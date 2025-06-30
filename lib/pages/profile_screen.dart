@@ -56,25 +56,8 @@ class ProfileScreen extends ConsumerWidget {
           const TravelerProfileSummary(),
           const SizedBox(height: 24),
 
-          // Profile features sections - show for all users
-          // Badges and Achievements Section
-          _buildBadgesSection(
-            context,
-            user,
-            profileService,
-          ),
-          const SizedBox(height: 24),
-
           // Travel Cover Collection Section
           _buildTravelCoverSection(
-            context,
-            user,
-            profileService,
-          ),
-          const SizedBox(height: 24),
-
-          // Challenges Section
-          _buildChallengesSection(
             context,
             user,
             profileService,
@@ -192,206 +175,6 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBadgesSection(
-    BuildContext context,
-    User? user,
-    ProfileService profileService,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Icon(Icons.emoji_events, color: Colors.amber),
-            const SizedBox(width: 8),
-            Text(
-              AppLocalizations.of(context)!.achievements,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (user == null)
-          // Show login prompt for unauthenticated users
-          Card(
-            child: InkWell(
-              onTap: () async {
-                await LoginRequiredDialog.show(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.emoji_events,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      AppLocalizations.of(context)!.loginToAccessFullFeatures,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        else
-          // Show actual badges for authenticated users
-          StreamBuilder<List<badge_model.Badge>>(
-            stream: profileService.getUserBadges(user.uid),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-
-              final badges = snapshot.data ?? [];
-              final unlockedBadges = badges
-                  .where((badge) => badge.isUnlocked)
-                  .toList();
-              final lockedBadges = badges
-                  .where((badge) => !badge.isUnlocked)
-                  .toList();
-
-              return Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.unlockedBadges(unlockedBadges.length, badges.length),
-                            style: Theme.of(context).textTheme.titleMedium,
-                          ),
-                          Text(
-                            '${badges.isNotEmpty ? ((unlockedBadges.length / badges.length) * 100).toInt() : 0}%',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      LinearProgressIndicator(
-                        value: badges.isNotEmpty
-                            ? unlockedBadges.length / badges.length
-                            : 0,
-                        backgroundColor: Colors.grey[300],
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          Colors.green,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
-                        itemCount: badges.length,
-                        itemBuilder: (context, index) {
-                          final badge = badges[index];
-                          return _buildBadgeItem(context, badge);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-      ],
-    );
-  }
-
-  Widget _buildBadgeItem(BuildContext context, badge_model.Badge badge) {
-    final translatedName = _getTranslatedBadgeName(context, badge.name);
-    final translatedDescription = _getTranslatedBadgeDescription(
-      context,
-      badge.description,
-    );
-
-    return Tooltip(
-      message: '$translatedName\n$translatedDescription',
-      child: Container(
-        decoration: BoxDecoration(
-          color: badge.isUnlocked ? Colors.amber[100] : Colors.grey[200],
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: badge.isUnlocked ? Colors.amber : Colors.grey,
-            width: 2,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              _getIconFromName(badge.iconName),
-              size: 24,
-              color: badge.isUnlocked ? Colors.amber[700] : Colors.grey,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              translatedName,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: badge.isUnlocked ? Colors.amber[700] : Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _getTranslatedBadgeName(BuildContext context, String key) {
-    final appLocalizations = AppLocalizations.of(context)!;
-    switch (key) {
-      case 'badgesFirstTripName':
-        return appLocalizations.badgesFirstTripName;
-      case 'badgesFirstLoginName':
-        return appLocalizations.badgesFirstLoginName;
-      case 'badgesFirstInviteName':
-        return appLocalizations.badgesFirstInviteName;
-      case 'badgesFirstAiCoverName':
-        return appLocalizations.badgesFirstAiCoverName;
-      default:
-        return key; // Fallback to the key if no translation found
-    }
-  }
-
-  String _getTranslatedBadgeDescription(BuildContext context, String key) {
-    final appLocalizations = AppLocalizations.of(context)!;
-    switch (key) {
-      case 'badgesFirstTripDescription':
-        return appLocalizations.badgesFirstTripDescription;
-      case 'badgesFirstLoginDescription':
-        return appLocalizations.badgesFirstLoginDescription;
-      case 'badgesFirstInviteDescription':
-        return appLocalizations.badgesFirstInviteDescription;
-      case 'badgesFirstAiCoverDescription':
-        return appLocalizations.badgesFirstAiCoverDescription;
-      default:
-        return key; // Fallback to the key if no translation found
-    }
-  }
 
   Widget _buildTravelCoverSection(
     BuildContext context,
@@ -567,179 +350,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildChallengesSection(
-    BuildContext context,
-    User? user,
-    ProfileService profileService,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Icon(Icons.flag, color: Colors.orange),
-            const SizedBox(width: 8),
-            Text(
-              AppLocalizations.of(context)!.activeChallenges,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        if (user == null)
-          // Show login prompt for unauthenticated users
-          Card(
-            child: InkWell(
-              onTap: () async {
-                await LoginRequiredDialog.show(context);
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.flag,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      AppLocalizations.of(context)!.loginToAccessFullFeatures,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )
-        else
-          // Show actual challenges for authenticated users
-          StreamBuilder<List<Challenge>>(
-            stream: profileService.getActiveChallenges(user.uid),
-            builder: (context, challengeSnapshot) {
-              return StreamBuilder<Map<String, int>>(
-                stream: profileService.getUserChallengeProgress(user.uid),
-                builder: (context, progressSnapshot) {
-                  if (challengeSnapshot.connectionState ==
-                          ConnectionState.waiting ||
-                      progressSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
 
-                  final challenges = challengeSnapshot.data ?? [];
-                  final progress = progressSnapshot.data ?? {};
-
-                  if (challenges.isEmpty) {
-                    return Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          AppLocalizations.of(context)!.noChallengesActive,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ),
-                    );
-                  }
-
-                  return Column(
-                    children: challenges.map((challenge) {
-                      final currentProgress = progress[challenge.id] ?? 0;
-                      final updatedChallenge = challenge.copyWith(
-                        currentProgress: currentProgress,
-                      );
-                      return _buildChallengeItem(context, updatedChallenge);
-                    }).toList(),
-                  );
-                },
-              );
-            },
-          ),
-      ],
-    );
-  }
-
-  Widget _buildChallengeItem(BuildContext context, Challenge challenge) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(_getIconFromName(challenge.type.iconName)),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    challenge.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Text(
-                  challenge.timeRemainingText,
-                  style: TextStyle(
-                    color: challenge.isExpired ? Colors.red : Colors.orange,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              challenge.description,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: LinearProgressIndicator(
-                    value: challenge.progressPercentage,
-                    backgroundColor: Colors.grey[300],
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      challenge.isCompleted ? Colors.green : Colors.orange,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  '${challenge.currentProgress}/${challenge.targetValue}',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Icon(
-                  challenge.rewardType == RewardType.badge
-                      ? Icons.emoji_events
-                      : Icons.collections,
-                  size: 16,
-                  color: Colors.grey[600],
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  'Recompensa: ${challenge.rewardType.displayName}',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildSettingsSection() {
     return Column(
@@ -757,6 +368,16 @@ class ProfileScreen extends ConsumerWidget {
 
   IconData _getIconFromName(String iconName) {
     switch (iconName) {
+      case 'create_account':
+        return Icons.person_add;
+      case 'complete_profile':
+        return Icons.person;
+      case 'create_trip':
+        return Icons.flight_takeoff;
+      case 'save_place':
+        return Icons.place;
+      case 'generate_itinerary':
+        return Icons.auto_awesome;
       case 'flight_takeoff':
         return Icons.flight_takeoff;
       case 'login':
@@ -773,6 +394,33 @@ class ProfileScreen extends ConsumerWidget {
         return Icons.checklist;
       default:
         return Icons.star;
+    }
+  }
+
+  String _getRewardTypeDisplayName(String rewardType) {
+    switch (rewardType) {
+      case 'badge':
+        return 'Conquista';
+      case 'unlock':
+        return 'Desbloqueio';
+      case 'progress':
+        return 'Progresso';
+      default:
+        return rewardType;
+    }
+  }
+
+  String _getTimeRemainingText(Challenge challenge, int currentProgress) {
+    if (challenge.isExpired) return 'Expirado';
+    if (currentProgress >= challenge.goal) return 'Concluído';
+
+    final remaining = challenge.timeRemaining;
+    if (remaining.inDays > 0) {
+      return '${remaining.inDays} dias restantes';
+    } else if (remaining.inHours > 0) {
+      return '${remaining.inHours} horas restantes';
+    } else {
+      return '${remaining.inMinutes} minutos restantes';
     }
   }
 }

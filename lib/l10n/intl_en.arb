@@ -378,5 +378,16 @@
   "homeRecommendedTitle": "Suggestions based on your style",
   "homeTrendingTitle": "Trending Destinations",
   "homeProgressTitle": "Your Traveler Progress",
-  "homeCommunityTitle": "Itineraries from Travelers Like You"
+  "homeCommunityTitle": "Itineraries from Travelers Like You",
+
+  "challengeCreateAccountTitle": "Create Account",
+  "challengeCreateAccountDescription": "Join Travel Genie to unlock personalized recommendations",
+  "challengeCompleteProfileTitle": "Complete Profile",
+  "challengeCompleteProfileDescription": "Fill out your traveler profile for better suggestions",
+  "challengeCreateTripTitle": "Create Your First Trip",
+  "challengeCreateTripDescription": "Start planning your next adventure",
+  "challengeSavePlaceTitle": "Save a Place",
+  "challengeSavePlaceDescription": "Save interesting places to your favorites",
+  "challengeGenerateItineraryTitle": "Generate AI Itinerary",
+  "challengeGenerateItineraryDescription": "Let AI create a personalized itinerary for you"
 }

@@ -516,10 +516,9 @@ class FirestoreService {
     batch.set(coverCollectionRef, emptyCollection.toFirestore());
 
     // Initialize challenge progress for current challenges
-    final weeklyChallenges = PredefinedChallenges.getWeeklyChallenges();
-    final monthlyChallenges = PredefinedChallenges.getMonthlyChallenges();
+    final activeChallenges = PredefinedChallenges.getActiveChallenges();
 
-    for (final challenge in [...weeklyChallenges, ...monthlyChallenges]) {
+    for (final challenge in activeChallenges) {
       final progressRef = _firestore
           .collection('users')
           .doc(userId)

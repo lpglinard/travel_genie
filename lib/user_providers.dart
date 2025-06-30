@@ -15,6 +15,8 @@ import 'services/recommendation_service.dart';
 import 'services/traveler_profile_service.dart';
 import 'services/user_deletion_service.dart';
 import 'services/user_management_service.dart';
+import 'services/challenge_service.dart';
+import 'services/challenge_progress_service.dart';
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);
@@ -59,9 +61,19 @@ final recommendationServiceProvider = Provider<RecommendationService>((ref) {
   return RecommendationService();
 });
 
+final challengeServiceProvider = Provider<ChallengeService>((ref) {
+  return ChallengeService(FirebaseFirestore.instance);
+});
+
+final challengeProgressServiceProvider = Provider<ChallengeProgressService>((ref) {
+  return ChallengeProgressService(FirebaseFirestore.instance);
+});
+
 final profileServiceProvider = Provider<ProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  return ProfileService(firestoreService);
+  final challengeService = ref.watch(challengeServiceProvider);
+  final challengeProgressService = ref.watch(challengeProgressServiceProvider);
+  return ProfileService(firestoreService, challengeService, challengeProgressService);
 });
 
 final travelerProfileServiceProvider = Provider<TravelerProfileService>((ref) {

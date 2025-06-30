@@ -1,253 +1,157 @@
 class Challenge {
   const Challenge({
     required this.id,
-    required this.title,
-    required this.description,
+    required this.titleKey,
+    required this.descriptionKey,
+    required this.goal,
     required this.type,
-    required this.startDate,
+    required this.isActive,
     required this.endDate,
-    required this.targetValue,
+    required this.displayOrder,
     required this.rewardType,
     required this.rewardValue,
-    this.isActive = true,
-    this.currentProgress = 0,
-    this.isCompleted = false,
-    this.completedAt,
   });
 
   final String id;
-  final String title;
-  final String description;
-  final ChallengeType type;
-  final DateTime startDate;
-  final DateTime endDate;
-  final int targetValue;
-  final RewardType rewardType;
-  final String rewardValue;
+  final String titleKey;
+  final String descriptionKey;
+  final int goal;
+  final String type;
   final bool isActive;
-  final int currentProgress;
-  final bool isCompleted;
-  final DateTime? completedAt;
+  final int endDate;
+  final int displayOrder;
+  final String rewardType;
+  final String rewardValue;
 
   factory Challenge.fromFirestore(Map<String, dynamic> data) {
     return Challenge(
       id: data['id'] as String? ?? '',
-      title: data['title'] as String? ?? '',
-      description: data['description'] as String? ?? '',
-      type: ChallengeType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => ChallengeType.createTrips,
-      ),
-      startDate: data['startDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(data['startDate'] as int)
-          : DateTime.now(),
-      endDate: data['endDate'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(data['endDate'] as int)
-          : DateTime.now().add(const Duration(days: 7)),
-      targetValue: data['targetValue'] as int? ?? 1,
-      rewardType: RewardType.values.firstWhere(
-        (e) => e.name == data['rewardType'],
-        orElse: () => RewardType.badge,
-      ),
-      rewardValue: data['rewardValue'] as String? ?? '',
+      titleKey: data['titleKey'] as String? ?? '',
+      descriptionKey: data['descriptionKey'] as String? ?? '',
+      goal: data['goal'] as int? ?? 1,
+      type: data['type'] as String? ?? '',
       isActive: data['isActive'] as bool? ?? true,
-      currentProgress: data['currentProgress'] as int? ?? 0,
-      isCompleted: data['isCompleted'] as bool? ?? false,
-      completedAt: data['completedAt'] != null
-          ? DateTime.fromMillisecondsSinceEpoch(data['completedAt'] as int)
-          : null,
+      endDate: data['endDate'] as int? ?? 9999999999999,
+      displayOrder: data['displayOrder'] as int? ?? 1,
+      rewardType: data['rewardType'] as String? ?? 'badge',
+      rewardValue: data['rewardValue'] as String? ?? '',
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
       'id': id,
-      'title': title,
-      'description': description,
-      'type': type.name,
-      'startDate': startDate.millisecondsSinceEpoch,
-      'endDate': endDate.millisecondsSinceEpoch,
-      'targetValue': targetValue,
-      'rewardType': rewardType.name,
-      'rewardValue': rewardValue,
+      'titleKey': titleKey,
+      'descriptionKey': descriptionKey,
+      'goal': goal,
+      'type': type,
       'isActive': isActive,
-      'currentProgress': currentProgress,
-      'isCompleted': isCompleted,
-      'completedAt': completedAt?.millisecondsSinceEpoch,
+      'endDate': endDate,
+      'displayOrder': displayOrder,
+      'rewardType': rewardType,
+      'rewardValue': rewardValue,
     };
   }
 
   Challenge copyWith({
     String? id,
-    String? title,
-    String? description,
-    ChallengeType? type,
-    DateTime? startDate,
-    DateTime? endDate,
-    int? targetValue,
-    RewardType? rewardType,
-    String? rewardValue,
+    String? titleKey,
+    String? descriptionKey,
+    int? goal,
+    String? type,
     bool? isActive,
-    int? currentProgress,
-    bool? isCompleted,
-    DateTime? completedAt,
+    int? endDate,
+    int? displayOrder,
+    String? rewardType,
+    String? rewardValue,
   }) {
     return Challenge(
       id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
+      titleKey: titleKey ?? this.titleKey,
+      descriptionKey: descriptionKey ?? this.descriptionKey,
+      goal: goal ?? this.goal,
       type: type ?? this.type,
-      startDate: startDate ?? this.startDate,
+      isActive: isActive ?? this.isActive,
       endDate: endDate ?? this.endDate,
-      targetValue: targetValue ?? this.targetValue,
+      displayOrder: displayOrder ?? this.displayOrder,
       rewardType: rewardType ?? this.rewardType,
       rewardValue: rewardValue ?? this.rewardValue,
-      isActive: isActive ?? this.isActive,
-      currentProgress: currentProgress ?? this.currentProgress,
-      isCompleted: isCompleted ?? this.isCompleted,
-      completedAt: completedAt ?? this.completedAt,
     );
   }
 
-  double get progressPercentage =>
-      targetValue > 0 ? (currentProgress / targetValue).clamp(0.0, 1.0) : 0.0;
-
-  bool get isExpired => DateTime.now().isAfter(endDate);
+  bool get isExpired => DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(endDate));
 
   Duration get timeRemaining =>
-      isExpired ? Duration.zero : endDate.difference(DateTime.now());
+      isExpired ? Duration.zero : DateTime.fromMillisecondsSinceEpoch(endDate).difference(DateTime.now());
 
-  String get timeRemainingText {
-    if (isExpired) return 'Expirado';
-    if (isCompleted) return 'Concluído';
-
-    final remaining = timeRemaining;
-    if (remaining.inDays > 0) {
-      return '${remaining.inDays} dias restantes';
-    } else if (remaining.inHours > 0) {
-      return '${remaining.inHours} horas restantes';
-    } else {
-      return '${remaining.inMinutes} minutos restantes';
-    }
-  }
+  // Helper getters for backward compatibility with UI components
+  String get title => titleKey; // UI components can use localization to resolve this
+  String get description => descriptionKey; // UI components can use localization to resolve this
 }
 
-enum ChallengeType {
-  createTrips,
-  addPlaces,
-  inviteFriends,
-  generateCovers,
-  completeItinerary,
-}
-
-extension ChallengeTypeExtension on ChallengeType {
-  String get displayName {
-    switch (this) {
-      case ChallengeType.createTrips:
-        return 'Criar Viagens';
-      case ChallengeType.addPlaces:
-        return 'Adicionar Locais';
-      case ChallengeType.inviteFriends:
-        return 'Convidar Amigos';
-      case ChallengeType.generateCovers:
-        return 'Gerar Capas';
-      case ChallengeType.completeItinerary:
-        return 'Completar Roteiro';
-    }
-  }
-
-  String get iconName {
-    switch (this) {
-      case ChallengeType.createTrips:
-        return 'add_location';
-      case ChallengeType.addPlaces:
-        return 'place';
-      case ChallengeType.inviteFriends:
-        return 'group_add';
-      case ChallengeType.generateCovers:
-        return 'auto_awesome';
-      case ChallengeType.completeItinerary:
-        return 'checklist';
-    }
-  }
-}
-
-enum RewardType { badge, travelCover, points }
-
-extension RewardTypeExtension on RewardType {
-  String get displayName {
-    switch (this) {
-      case RewardType.badge:
-        return 'Conquista';
-      case RewardType.travelCover:
-        return 'Capa de Viagem';
-      case RewardType.points:
-        return 'Pontos';
-    }
-  }
-}
-
-// Predefined challenges based on the requirements
+// Predefined challenges based on the new requirements
 class PredefinedChallenges {
-  static List<Challenge> getWeeklyChallenges() {
-    final now = DateTime.now();
-    final weekStart = now.subtract(Duration(days: now.weekday - 1));
-    final weekEnd = weekStart.add(const Duration(days: 7));
-
+  static List<Challenge> getActiveChallenges() {
     return [
       Challenge(
-        id: 'weekly_trip_creator',
-        title: 'Criador de Aventuras',
-        description:
-            'Crie uma viagem com pelo menos 5 locais para desbloquear uma capa personalizada surpresa!',
-        type: ChallengeType.addPlaces,
-        startDate: weekStart,
-        endDate: weekEnd,
-        targetValue: 5,
-        rewardType: RewardType.travelCover,
-        rewardValue: 'surprise_cover',
+        id: "create_account",
+        titleKey: "challengeCreateAccountTitle",
+        descriptionKey: "challengeCreateAccountDescription",
+        goal: 1,
+        type: "create_account",
+        isActive: true,
+        endDate: 9999999999999,
+        displayOrder: 1,
+        rewardType: "badge",
+        rewardValue: "starter_badge",
       ),
       Challenge(
-        id: 'weekly_social_explorer',
-        title: 'Explorador Social',
-        description: 'Convide 2 amigos para colaborar em suas viagens',
-        type: ChallengeType.inviteFriends,
-        startDate: weekStart,
-        endDate: weekEnd,
-        targetValue: 2,
-        rewardType: RewardType.badge,
-        rewardValue: 'social_explorer',
-      ),
-    ];
-  }
-
-  static List<Challenge> getMonthlyChallenges() {
-    final now = DateTime.now();
-    final monthStart = DateTime(now.year, now.month, 1);
-    final monthEnd = DateTime(now.year, now.month + 1, 0);
-
-    return [
-      Challenge(
-        id: 'monthly_trip_master',
-        title: 'Mestre das Viagens',
-        description: 'Crie 3 viagens completas este mês',
-        type: ChallengeType.createTrips,
-        startDate: monthStart,
-        endDate: monthEnd,
-        targetValue: 3,
-        rewardType: RewardType.badge,
-        rewardValue: 'trip_master',
+        id: "complete_profile",
+        titleKey: "challengeCompleteProfileTitle",
+        descriptionKey: "challengeCompleteProfileDescription",
+        goal: 1,
+        type: "complete_profile",
+        isActive: true,
+        endDate: 9999999999999,
+        displayOrder: 2,
+        rewardType: "unlock",
+        rewardValue: "personalized_recommendations",
       ),
       Challenge(
-        id: 'monthly_cover_collector',
-        title: 'Colecionador de Capas',
-        description: 'Gere 10 capas personalizadas com diferentes estilos',
-        type: ChallengeType.generateCovers,
-        startDate: monthStart,
-        endDate: monthEnd,
-        targetValue: 10,
-        rewardType: RewardType.travelCover,
-        rewardValue: 'exclusive_style_pack',
+        id: "create_trip",
+        titleKey: "challengeCreateTripTitle",
+        descriptionKey: "challengeCreateTripDescription",
+        goal: 1,
+        type: "create_trip",
+        isActive: true,
+        endDate: 9999999999999,
+        displayOrder: 3,
+        rewardType: "progress",
+        rewardValue: "trip_started",
+      ),
+      Challenge(
+        id: "save_place",
+        titleKey: "challengeSavePlaceTitle",
+        descriptionKey: "challengeSavePlaceDescription",
+        goal: 1,
+        type: "save_place",
+        isActive: true,
+        endDate: 9999999999999,
+        displayOrder: 4,
+        rewardType: "badge",
+        rewardValue: "explorer_badge",
+      ),
+      Challenge(
+        id: "generate_itinerary",
+        titleKey: "challengeGenerateItineraryTitle",
+        descriptionKey: "challengeGenerateItineraryDescription",
+        goal: 1,
+        type: "generate_itinerary",
+        isActive: true,
+        endDate: 9999999999999,
+        displayOrder: 5,
+        rewardType: "badge",
+        rewardValue: "ai_master_badge",
       ),
     ];
   }

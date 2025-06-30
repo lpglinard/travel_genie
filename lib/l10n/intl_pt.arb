@@ -378,5 +378,16 @@
   "homeRecommendedTitle": "Sugestões baseadas no seu estilo",
   "homeTrendingTitle": "Destinos em Alta",
   "homeProgressTitle": "Seu Progresso de Viajante",
-  "homeCommunityTitle": "Roteiros de Viajantes como Você"
+  "homeCommunityTitle": "Roteiros de Viajantes como Você",
+
+  "challengeCreateAccountTitle": "Criar Conta",
+  "challengeCreateAccountDescription": "Junte-se ao Travel Genie para desbloquear recomendações personalizadas",
+  "challengeCompleteProfileTitle": "Completar Perfil",
+  "challengeCompleteProfileDescription": "Preencha seu perfil de viajante para melhores sugestões",
+  "challengeCreateTripTitle": "Criar Sua Primeira Viagem",
+  "challengeCreateTripDescription": "Comece a planejar sua próxima aventura",
+  "challengeSavePlaceTitle": "Salvar um Local",
+  "challengeSavePlaceDescription": "Salve lugares interessantes nos seus favoritos",
+  "challengeGenerateItineraryTitle": "Gerar Roteiro com IA",
+  "challengeGenerateItineraryDescription": "Deixe a IA criar um roteiro personalizado para você"
 }
