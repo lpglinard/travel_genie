@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travel_genie/widgets/groups/feedback_stat_card.dart';
 
 import '../../l10n/app_localizations.dart';
 
@@ -157,8 +158,7 @@ class FeedbackSummary extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: _buildStatCard(
-                    context,
+                  child: FeedbackStatCard(
                     icon: Icons.thumb_up_rounded,
                     label: l10n.groupsFeedbackYes,
                     count: yesCount,
@@ -169,8 +169,7 @@ class FeedbackSummary extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildStatCard(
-                    context,
+                  child: FeedbackStatCard(
                     icon: Icons.thumb_down_rounded,
                     label: l10n.groupsFeedbackNo,
                     count: noCount,
@@ -209,55 +208,6 @@ class FeedbackSummary extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildStatCard(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required int count,
-    required int percentage,
-    required Color color,
-    required Color backgroundColor,
-  }) {
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: backgroundColor.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3), width: 1),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            '$count',
-            style: theme.textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          Text(
-            '$percentage%',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: color.withOpacity(0.8),
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
       ),
     );
   }

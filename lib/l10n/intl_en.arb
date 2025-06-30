@@ -15,11 +15,14 @@
   "navHome": "Home",
   "navExplore": "Explore",
   "navMyTrips": "My Trips",
+  "navProfile": "Profile",
   "navGroups": "Groups",
   "tripItinerary": "Trip Itinerary",
   "savedPlaces": "Saved Places",
   "errorGeneric": "Error: {error}",
   "errorLoadingSavedPlaces": "Error loading saved places: {error}",
+  "errorLoadingTrips": "Error loading trips: {error}",
+  "magicAiTripOptimizerTooltip": "Magic AI Trip Optimizer",
   "noResults": "No results",
   "openingHours": "Opening hours:",
   "openInMaps": "Open in Google Maps",
@@ -351,5 +354,42 @@
     }
   },
   "deleteAccountReauthRequired": "For security reasons, please sign in again to delete your account",
-  "typeDeleteToConfirm": "Type DELETE to confirm"
+  "typeDeleteToConfirm": "Type DELETE to confirm",
+  "homeCtaButton": "Create Itinerary with Travel Genie",
+  "homeCtaSubtitle": "In seconds, an itinerary with your style and preferences.",
+  "homeActiveTripTitle": "{count, plural, =1{Your Active Trip} other{Your Active Trips}}",
+  "@homeActiveTripTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tripPlanningStatus": "{planned} of {total} days planned",
+  "@tripPlanningStatus": {
+    "placeholders": {
+      "planned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "continuePlanning": "Continue planning",
+  "homeRecommendedTitle": "Suggestions based on your style",
+  "homeTrendingTitle": "Trending Destinations",
+  "homeProgressTitle": "Your Traveler Progress",
+  "homeCommunityTitle": "Itineraries from Travelers Like You",
+
+  "challengeCreateAccountTitle": "Create Account",
+  "challengeCreateAccountDescription": "Join Travel Genie to unlock personalized recommendations",
+  "challengeCompleteProfileTitle": "Complete Profile",
+  "challengeCompleteProfileDescription": "Fill out your traveler profile for better suggestions",
+  "challengeCreateTripTitle": "Create Your First Trip",
+  "challengeCreateTripDescription": "Start planning your next adventure",
+  "challengeSavePlaceTitle": "Save a Place",
+  "challengeSavePlaceDescription": "Save interesting places to your favorites",
+  "challengeGenerateItineraryTitle": "Generate AI Itinerary",
+  "challengeGenerateItineraryDescription": "Let AI create a personalized itinerary for you"
 }

@@ -27,8 +27,11 @@ class DeleteAccountTile extends ConsumerWidget {
     );
   }
 
-  Widget _buildDeleteAccountTile(BuildContext context, WidgetRef ref, User user) {
-
+  Widget _buildDeleteAccountTile(
+    BuildContext context,
+    WidgetRef ref,
+    User user,
+  ) {
     return ListTile(
       leading: const Icon(Icons.delete_forever, color: Colors.red),
       title: Text(
@@ -64,18 +67,21 @@ class DeleteAccountTile extends ConsumerWidget {
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (context) => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        builder: (context) => const Center(child: CircularProgressIndicator()),
       );
 
       // Delete all user data using UserManagementService
       final userManagementService = ref.read(userManagementServiceProvider);
-      final deletionResponse = await userManagementService.deleteAllUserData(user.uid, ref);
+      final deletionResponse = await userManagementService.deleteAllUserData(
+        user.uid,
+        ref,
+      );
 
       // Check if deletion was successful
       if (!deletionResponse.success) {
-        throw Exception(deletionResponse.errorMessage ?? 'Failed to delete user data');
+        throw Exception(
+          deletionResponse.errorMessage ?? 'Failed to delete user data',
+        );
       }
 
       // Clear local preferences
@@ -109,7 +115,9 @@ class DeleteAccountTile extends ConsumerWidget {
           // Show re-authentication required message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)!.deleteAccountReauthRequired),
+              content: Text(
+                AppLocalizations.of(context)!.deleteAccountReauthRequired,
+              ),
               backgroundColor: Colors.orange,
               duration: const Duration(seconds: 5),
             ),
@@ -122,7 +130,9 @@ class DeleteAccountTile extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                AppLocalizations.of(context)!.deleteAccountError(e.message ?? e.code),
+                AppLocalizations.of(
+                  context,
+                )!.deleteAccountError(e.message ?? e.code),
               ),
               backgroundColor: Colors.red,
             ),
@@ -171,8 +181,9 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
 
   void _checkConfirmation() {
     final text = _confirmationController.text.trim().toUpperCase();
-    final expectedText = AppLocalizations.of(context)!.typeDeleteToConfirm.contains('DELETE') 
-        ? 'DELETE' 
+    final expectedText =
+        AppLocalizations.of(context)!.typeDeleteToConfirm.contains('DELETE')
+        ? 'DELETE'
         : 'EXCLUIR';
 
     setState(() {

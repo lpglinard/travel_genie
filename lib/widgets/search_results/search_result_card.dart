@@ -8,6 +8,7 @@ import '../../core/config/config.dart';
 import '../../core/extensions/string_extension.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/place.dart';
+import '../../providers/challenge_providers.dart';
 import '../../providers/user_providers.dart';
 import '../login_required_dialog.dart';
 import 'photo_attribution.dart';
@@ -104,6 +105,17 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
         } else {
           // Add to saved places
           await firestoreService.savePlace(user.uid, widget.place);
+
+          // Track challenge progress for saving a place
+          try {
+            final challengeActions = ref.read(challengeActionsProvider);
+            await challengeActions.markCompleted(user.uid, 'save_place');
+            debugPrint('[DEBUG_LOG] Save place challenge marked as completed for user ${user.uid}');
+          } catch (e) {
+            // Log error but don't prevent the place save success flow
+            debugPrint('Error tracking save_place challenge: $e');
+          }
+
           ref
               .read(analyticsServiceProvider)
               .logButtonTap(

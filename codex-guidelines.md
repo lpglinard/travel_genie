@@ -392,26 +392,26 @@ class DraggablePlace extends StatelessWidget {
 **Prohibited Pattern** (NEVER do this):
 ```dart
 // WRONG - Fixed text strings are FORBIDDEN
-Text('Welcome to Travel Genie'),
+Text('Welcome to Travel Genie');
 ElevatedButton(
   onPressed: () {},
   child: Text('Search Places'),
-),
+);
 TextField(
   decoration: InputDecoration(
     hintText: 'Enter destination',
   ),
-),
+);
 ```
 
 **Required Pattern** (ALWAYS do this):
 ```dart
 // CORRECT - Always use localization
-Text(AppLocalizations.of(context)!.welcomeMessage),
+Text(AppLocalizations.of(context)!.welcomeMessage);
 ElevatedButton(
   onPressed: () {},
   child: Text(AppLocalizations.of(context)!.searchPlaces),
-),
+);
 TextField(
   decoration: InputDecoration(
     hintText: AppLocalizations.of(context)!.enterDestination,

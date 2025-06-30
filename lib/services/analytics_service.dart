@@ -332,6 +332,20 @@ class AnalyticsService {
     );
   }
 
+  // Challenge and Achievement Events
+  Future<void> logUnlockAchievement({
+    required String achievementId,
+    String? achievementName,
+    String? category,
+  }) {
+    return _analytics.logUnlockAchievement(id: achievementId, parameters: <String, Object>{
+      'achievement_id': achievementId,
+      if (achievementName != null) 'achievement_name': achievementName,
+      if (category != null) 'category': category,
+      'value': 1,
+    });
+  }
+
   // Custom Events
   Future<void> logCustomEvent({
     required String eventName,
