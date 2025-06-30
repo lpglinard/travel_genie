@@ -95,6 +95,21 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   }
 
   void _sharePlaceInfo() {
+    // Track place sharing analytics
+    try {
+      final analyticsService = ref.read(analyticsServiceProvider);
+      analyticsService.logCustomEvent(
+        eventName: 'share',
+        parameters: {
+          'content_type': 'place',
+          'item_id': widget.place.placeId,
+          'method': 'email',
+        },
+      );
+    } catch (e) {
+      debugPrint('Error tracking place share analytics: $e');
+    }
+
     final url = widget.place.googleMapsUri;
     final message = AppLocalizations.of(context).shareMessage(
       widget.place.formattedAddress,

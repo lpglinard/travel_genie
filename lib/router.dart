@@ -296,6 +296,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                     );
                   }),
                   firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((context, firebase_ui.SignedIn state) async {
+                    // Track login analytics
+                    try {
+                      final analyticsService = ref.read(analyticsServiceProvider);
+                      await analyticsService.logLogin(method: 'email');
+                    } catch (e) {
+                      debugPrint('Error tracking login analytics: $e');
+                    }
+
                     // Track challenge progress for account creation
                     try {
                       final user = state.user;
@@ -310,6 +318,14 @@ final routerProvider = Provider<GoRouter>((ref) {
                     context.go('/');
                   }),
                   firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((context, firebase_ui.UserCreated state) async {
+                    // Track sign-up analytics
+                    try {
+                      final analyticsService = ref.read(analyticsServiceProvider);
+                      await analyticsService.logSignUp(method: 'email');
+                    } catch (e) {
+                      debugPrint('Error tracking sign-up analytics: $e');
+                    }
+
                     // Track challenge progress for account creation
                     try {
                       final user = state.credential.user;

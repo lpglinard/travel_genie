@@ -204,6 +204,19 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
 
   /// Starts the magic AI optimization process
   void _startOptimization(OptimizationStrategy strategy) async {
+    // Track AI optimizer analytics - key conversion event
+    try {
+      final analyticsService = ref.read(analyticsServiceProvider);
+      await analyticsService.logOptimizeItinerary(
+        tripId: widget.tripId,
+        optimizerType: _getStrategyName(strategy),
+        value: 5.0, // Assign value for Google Ads bidding
+        currency: 'USD',
+      );
+    } catch (e) {
+      debugPrint('Error tracking optimize itinerary analytics: $e');
+    }
+
     setState(() {
       _isOptimizing = true;
       _currentOptimizationStrategy = _getStrategyName(strategy);
