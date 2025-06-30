@@ -8,9 +8,14 @@ import '../../providers/autocomplete_provider.dart';
 import '../../providers/user_providers.dart';
 
 class PopularDestinationsSection extends StatelessWidget {
-  const PopularDestinationsSection({super.key, required this.destinations});
+  const PopularDestinationsSection({
+    super.key,
+    required this.destinations,
+    required this.title,
+  });
 
   final List<Destination> destinations;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +23,7 @@ class PopularDestinationsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context).popularDestinations,
+          title,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),

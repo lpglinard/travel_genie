@@ -351,5 +351,15 @@
     }
   },
   "deleteAccountReauthRequired": "Por motivos de segurança, faça login novamente para excluir sua conta",
-  "typeDeleteToConfirm": "Digite EXCLUIR para confirmar"
+  "typeDeleteToConfirm": "Digite EXCLUIR para confirmar",
+  "homeHeroCta": "\u2728 Criar Roteiro com o Travel Genie",
+  "homeHeroSubtext": "Em poucos segundos, um roteiro com seu estilo e preferências.",
+  "homeRecommendedTitle": "Sugestões baseadas no seu estilo",
+  "homePopularTitle": "Destinos em Alta",
+  "homeProgressTitle": "Seu Progresso de Viajante",
+  "homeActiveTripTitle": "Sua Viagem Ativa",
+  "homeContinuePlanning": "Continuar planejamento",
+  "homeCommunityTitle": "Roteiros de Viajantes como Você",
+  "viewMore": "Ver mais",
+  "daysPlanned": "dias planejados"
 }

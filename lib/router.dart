@@ -12,7 +12,7 @@ import 'l10n/app_localizations.dart';
 import 'models/place.dart';
 import 'pages/create_trip_page.dart';
 import 'pages/groups_page.dart';
-import 'pages/home_page.dart';
+import 'pages/my_home.dart';
 import 'pages/my_trips_page.dart';
 import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;

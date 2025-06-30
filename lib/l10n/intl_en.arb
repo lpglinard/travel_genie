@@ -351,5 +351,15 @@
     }
   },
   "deleteAccountReauthRequired": "For security reasons, please sign in again to delete your account",
-  "typeDeleteToConfirm": "Type DELETE to confirm"
+  "typeDeleteToConfirm": "Type DELETE to confirm",
+  "homeHeroCta": "\u2728 Create Trip with Travel Genie",
+  "homeHeroSubtext": "In seconds, an itinerary tailored to your style and preferences.",
+  "homeRecommendedTitle": "Suggestions based on your style",
+  "homePopularTitle": "Trending Destinations",
+  "homeProgressTitle": "Your Traveler Progress",
+  "homeActiveTripTitle": "Your Active Trip",
+  "homeContinuePlanning": "Continue planning",
+  "homeCommunityTitle": "Trips from Travelers Like You",
+  "viewMore": "View more",
+  "daysPlanned": "days planned"
 }

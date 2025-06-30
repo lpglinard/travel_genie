@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:travel_genie/pages/home_page.dart';
+import 'package:travel_genie/pages/my_home.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
 void main() {
