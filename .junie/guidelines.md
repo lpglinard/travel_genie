@@ -103,6 +103,168 @@ lib/
 └── widgets/                # Reusable UI components
 ```
 
+### SOLID Principles (MANDATORY)
+
+**CRITICAL REQUIREMENT**: All source code in this project MUST adhere to SOLID principles as a fundamental standard. These principles are not optional and must be followed in every class, service, and component.
+
+#### S - Single Responsibility Principle (SRP)
+- **Rule**: Each class should have only one reason to change and should be responsible for only one part of the functionality
+- **Implementation**: 
+  - Services should handle only one specific domain (e.g., `ChallengeProgressService` only handles challenge progress, not user authentication)
+  - Models should only represent data structure, not business logic
+  - Widgets should focus on a single UI concern
+- **Example**: 
+  ```dart
+  // GOOD - Single responsibility
+  class UserAuthenticationService {
+    Future<User?> signIn(String email, String password) { /* ... */ }
+    Future<void> signOut() { /* ... */ }
+  }
+
+  class UserProfileService {
+    Future<UserProfile> getProfile(String userId) { /* ... */ }
+    Future<void> updateProfile(UserProfile profile) { /* ... */ }
+  }
+
+  // BAD - Multiple responsibilities
+  class UserService {
+    Future<User?> signIn(String email, String password) { /* ... */ }
+    Future<UserProfile> getProfile(String userId) { /* ... */ }
+    Future<void> sendNotification(String message) { /* ... */ }
+  }
+  ```
+
+#### O - Open/Closed Principle (OCP)
+- **Rule**: Classes should be open for extension but closed for modification
+- **Implementation**:
+  - Use abstract classes and interfaces for extensibility
+  - Prefer composition over inheritance
+  - Use strategy pattern for varying behaviors
+- **Example**:
+  ```dart
+  // GOOD - Open for extension, closed for modification
+  abstract class PaymentProcessor {
+    Future<PaymentResult> processPayment(double amount);
+  }
+
+  class CreditCardProcessor extends PaymentProcessor {
+    @override
+    Future<PaymentResult> processPayment(double amount) { /* ... */ }
+  }
+
+  class PayPalProcessor extends PaymentProcessor {
+    @override
+    Future<PaymentResult> processPayment(double amount) { /* ... */ }
+  }
+  ```
+
+#### L - Liskov Substitution Principle (LSP)
+- **Rule**: Objects of a superclass should be replaceable with objects of a subclass without breaking the application
+- **Implementation**:
+  - Subclasses must honor the contract of their parent class
+  - Don't strengthen preconditions or weaken postconditions
+  - Ensure behavioral compatibility
+- **Example**:
+  ```dart
+  // GOOD - Proper substitution
+  abstract class DataRepository {
+    Future<List<T>> getAll<T>();
+    Future<T?> getById<T>(String id);
+  }
+
+  class FirestoreRepository extends DataRepository {
+    @override
+    Future<List<T>> getAll<T>() {
+      // Implementation that maintains the contract
+    }
+
+    @override
+    Future<T?> getById<T>(String id) {
+      // Implementation that maintains the contract
+    }
+  }
+  ```
+
+#### I - Interface Segregation Principle (ISP)
+- **Rule**: Clients should not be forced to depend on interfaces they don't use
+- **Implementation**:
+  - Create specific, focused interfaces rather than large, general-purpose ones
+  - Split large interfaces into smaller, more specific ones
+  - Use mixins for optional functionality
+- **Example**:
+  ```dart
+  // GOOD - Segregated interfaces
+  abstract class Readable {
+    Future<String> read();
+  }
+
+  abstract class Writable {
+    Future<void> write(String data);
+  }
+
+  abstract class Cacheable {
+    Future<void> cache(String key, dynamic data);
+  }
+
+  // Classes implement only what they need
+  class FileReader implements Readable {
+    @override
+    Future<String> read() { /* ... */ }
+  }
+
+  class CachedFileManager implements Readable, Writable, Cacheable {
+    // Implements all interfaces because it needs all functionality
+  }
+
+  // BAD - Fat interface
+  abstract class FileManager {
+    Future<String> read();
+    Future<void> write(String data);
+    Future<void> cache(String key, dynamic data);
+    Future<void> compress(); // Not all implementations need this
+  }
+  ```
+
+#### D - Dependency Inversion Principle (DIP)
+- **Rule**: High-level modules should not depend on low-level modules. Both should depend on abstractions
+- **Implementation**:
+  - Use dependency injection through constructors
+  - Depend on abstractions (interfaces/abstract classes), not concrete implementations
+  - Use providers for dependency management (Riverpod in this project)
+- **Example**:
+  ```dart
+  // GOOD - Depends on abstraction
+  abstract class DatabaseService {
+    Future<Map<String, dynamic>?> getData(String id);
+  }
+
+  class UserService {
+    UserService(this._database); // Dependency injection
+
+    final DatabaseService _database; // Depends on abstraction
+
+    Future<User?> getUser(String id) async {
+      final data = await _database.getData(id);
+      return data != null ? User.fromJson(data) : null;
+    }
+  }
+
+  // BAD - Depends on concrete implementation
+  class UserService {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Direct dependency
+
+    Future<User?> getUser(String id) async {
+      // Tightly coupled to Firestore
+    }
+  }
+  ```
+
+### SOLID Principles Enforcement
+- **Code Reviews**: All code must be reviewed for SOLID compliance before merging
+- **Refactoring**: Existing code that violates SOLID principles should be refactored when touched
+- **Architecture Decisions**: All architectural decisions must consider SOLID principles
+- **Testing**: SOLID-compliant code is easier to test - use this as a quality indicator
+
 ### Code Conventions
 
 #### Data Models
