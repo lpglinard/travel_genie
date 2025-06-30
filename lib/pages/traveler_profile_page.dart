@@ -104,7 +104,7 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error saving profile: $e'),
+            content: Text(AppLocalizations.of(context)!.errorGeneric(e.toString())),
             backgroundColor: Colors.red,
           ),
         );

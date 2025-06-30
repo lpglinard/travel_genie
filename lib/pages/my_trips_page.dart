@@ -45,8 +45,7 @@ class MyTripsPage extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stackTrace) => Center(
             child: Text(
-              'Error loading trips: $error',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
+              AppLocalizations.of(context)!.errorLoadingTrips(error.toString()),
               textAlign: TextAlign.center,
             ),
           ),
@@ -72,8 +71,7 @@ class MyTripsPage extends ConsumerWidget {
           context.go('/new-trip');
         },
         child: const Icon(Icons.add),
-        tooltip: 'Create New Trip',
-      ),
+        tooltip: AppLocalizations.of(context)!.createNewTrip,
     );
   }
 }

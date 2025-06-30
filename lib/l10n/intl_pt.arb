@@ -21,6 +21,8 @@
   "savedPlaces": "Lugares Salvos",
   "errorGeneric": "Erro: {error}",
   "errorLoadingSavedPlaces": "Erro ao carregar lugares salvos: {error}",
+  "errorLoadingTrips": "Erro ao carregar viagens: {error}",
+  "magicAiTripOptimizerTooltip": "Otimizador Mágico de Viagens IA",
   "noResults": "Nenhum resultado",
   "openingHours": "Horário de funcionamento:",
   "openInMaps": "Abrir no Google Maps",
