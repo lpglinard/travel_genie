@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import '../models/challenge.dart';
 
 /// Service for managing global challenges collection
-/// 
+///
 /// This service handles the `/challenges/{challengeId}` collection in Firestore
 /// following the new architecture where challenges are stored globally
 /// and user progress is tracked separately.
@@ -20,9 +20,11 @@ class ChallengeService {
         .where('isActive', isEqualTo: true)
         .orderBy('displayOrder')
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Challenge.fromFirestore(doc.data()))
-            .toList());
+        .map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Challenge.fromFirestore(doc.data()))
+              .toList(),
+        );
   }
 
   /// Get a specific challenge by ID
@@ -32,7 +34,7 @@ class ChallengeService {
           .collection('challenges')
           .doc(challengeId)
           .get();
-      
+
       if (doc.exists && doc.data() != null) {
         return Challenge.fromFirestore(doc.data()!);
       }
@@ -73,10 +75,12 @@ class ChallengeService {
           .collection('challenges')
           .doc(challenge.id)
           .set(challenge.toFirestore());
-      
+
       debugPrint('ChallengeService: Upserted challenge ${challenge.id}');
     } catch (e) {
-      debugPrint('ChallengeService: Error upserting challenge ${challenge.id}: $e');
+      debugPrint(
+        'ChallengeService: Error upserting challenge ${challenge.id}: $e',
+      );
       rethrow;
     }
   }
@@ -85,11 +89,8 @@ class ChallengeService {
   /// This is typically used for admin operations
   Future<void> removeChallenge(String challengeId) async {
     try {
-      await _firestore
-          .collection('challenges')
-          .doc(challengeId)
-          .delete();
-      
+      await _firestore.collection('challenges').doc(challengeId).delete();
+
       debugPrint('ChallengeService: Removed challenge $challengeId');
     } catch (e) {
       debugPrint('ChallengeService: Error removing challenge $challengeId: $e');

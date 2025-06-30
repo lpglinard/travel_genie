@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/app_localizations.dart';
 import '../services/groups_service.dart';
+import '../user_providers.dart' as user_providers;
 import '../widgets/groups/feedback_card.dart';
 import '../widgets/groups/feedback_summary.dart';
-import '../user_providers.dart' as user_providers;
 
 // Provider for groups service
 final groupsServiceProvider = Provider<GroupsService>((ref) {

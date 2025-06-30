@@ -48,7 +48,9 @@ class _DestinationItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
-        ref.read(analyticsServiceProvider).logButtonTap(
+        ref
+            .read(analyticsServiceProvider)
+            .logButtonTap(
               buttonName: 'recommended_destination',
               screenName: 'home',
               context: destination.name,

@@ -115,13 +115,19 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
       if (mounted) {
         // Show success message and navigate back
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.tripCreatedSuccessfully)),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.tripCreatedSuccessfully,
+            ),
+          ),
         );
         context.go('/trips');
       }
     } catch (e) {
       setState(() {
-        _errorMessage = AppLocalizations.of(context)!.failedToCreateTrip(e.toString());
+        _errorMessage = AppLocalizations.of(
+          context,
+        )!.failedToCreateTrip(e.toString());
       });
     } finally {
       if (mounted) {

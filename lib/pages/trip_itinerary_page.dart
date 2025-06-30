@@ -283,7 +283,9 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppLocalizations.of(context)!.optimizationCompleteMessage(result.strategyName),
+              AppLocalizations.of(
+                context,
+              )!.optimizationCompleteMessage(result.strategyName),
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 16),

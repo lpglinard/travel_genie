@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import '../models/badge.dart' as badge_model;
 import '../models/challenge.dart';
 import '../models/travel_cover.dart';
-import 'firestore_service.dart';
-import 'challenge_service.dart';
 import 'challenge_progress_service.dart';
+import 'challenge_service.dart';
+import 'firestore_service.dart';
 
 class ProfileService {
   ProfileService(

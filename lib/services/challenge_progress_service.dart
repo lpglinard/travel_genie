@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
 /// Service for managing user challenge progress
-/// 
-/// This service handles the `/users/{userId}/challengeProgress/{challengeId}` 
+///
+/// This service handles the `/users/{userId}/challengeProgress/{challengeId}`
 /// collection in Firestore following the new architecture where user progress
 /// is tracked separately from the global challenges.
 class ChallengeProgressService {
@@ -19,13 +19,13 @@ class ChallengeProgressService {
         .collection('challengeProgress')
         .snapshots()
         .map((snapshot) {
-      final progressMap = <String, int>{};
-      for (final doc in snapshot.docs) {
-        final data = doc.data();
-        progressMap[doc.id] = data['progress'] as int? ?? 0;
-      }
-      return progressMap;
-    });
+          final progressMap = <String, int>{};
+          for (final doc in snapshot.docs) {
+            final data = doc.data();
+            progressMap[doc.id] = data['progress'] as int? ?? 0;
+          }
+          return progressMap;
+        });
   }
 
   /// Get user's progress for a specific challenge
@@ -43,7 +43,9 @@ class ChallengeProgressService {
       }
       return 0;
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error getting progress for $challengeId: $e');
+      debugPrint(
+        'ChallengeProgressService: Error getting progress for $challengeId: $e',
+      );
       return 0;
     }
   }
@@ -61,13 +63,17 @@ class ChallengeProgressService {
           .collection('challengeProgress')
           .doc(challengeId)
           .set({
-        'progress': newProgress,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
+            'progress': newProgress,
+            'updatedAt': FieldValue.serverTimestamp(),
+          }, SetOptions(merge: true));
 
-      debugPrint('ChallengeProgressService: Updated progress for $challengeId to $newProgress');
+      debugPrint(
+        'ChallengeProgressService: Updated progress for $challengeId to $newProgress',
+      );
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error updating progress for $challengeId: $e');
+      debugPrint(
+        'ChallengeProgressService: Error updating progress for $challengeId: $e',
+      );
       rethrow;
     }
   }
@@ -80,9 +86,15 @@ class ChallengeProgressService {
   }) async {
     try {
       final currentProgress = await getChallengeProgress(userId, challengeId);
-      await updateChallengeProgress(userId, challengeId, currentProgress + increment);
+      await updateChallengeProgress(
+        userId,
+        challengeId,
+        currentProgress + increment,
+      );
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error incrementing progress for $challengeId: $e');
+      debugPrint(
+        'ChallengeProgressService: Error incrementing progress for $challengeId: $e',
+      );
       rethrow;
     }
   }
@@ -111,18 +123,19 @@ class ChallengeProgressService {
       }
 
       await batch.commit();
-      debugPrint('ChallengeProgressService: Initialized progress for user $userId');
+      debugPrint(
+        'ChallengeProgressService: Initialized progress for user $userId',
+      );
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error initializing progress for user $userId: $e');
+      debugPrint(
+        'ChallengeProgressService: Error initializing progress for user $userId: $e',
+      );
       rethrow;
     }
   }
 
   /// Mark a challenge as completed for a user
-  Future<void> markChallengeCompleted(
-    String userId,
-    String challengeId,
-  ) async {
+  Future<void> markChallengeCompleted(String userId, String challengeId) async {
     try {
       await _firestore
           .collection('users')
@@ -130,14 +143,18 @@ class ChallengeProgressService {
           .collection('challengeProgress')
           .doc(challengeId)
           .update({
-        'completed': true,
-        'completedAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'completed': true,
+            'completedAt': FieldValue.serverTimestamp(),
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
-      debugPrint('ChallengeProgressService: Marked challenge $challengeId as completed for user $userId');
+      debugPrint(
+        'ChallengeProgressService: Marked challenge $challengeId as completed for user $userId',
+      );
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error marking challenge $challengeId as completed: $e');
+      debugPrint(
+        'ChallengeProgressService: Error marking challenge $challengeId as completed: $e',
+      );
       rethrow;
     }
   }
@@ -162,15 +179,19 @@ class ChallengeProgressService {
           .collection('challengeProgress')
           .doc(challengeId)
           .update({
-        'progress': 0,
-        'completed': false,
-        'completedAt': FieldValue.delete(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+            'progress': 0,
+            'completed': false,
+            'completedAt': FieldValue.delete(),
+            'updatedAt': FieldValue.serverTimestamp(),
+          });
 
-      debugPrint('ChallengeProgressService: Reset progress for challenge $challengeId');
+      debugPrint(
+        'ChallengeProgressService: Reset progress for challenge $challengeId',
+      );
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error resetting progress for $challengeId: $e');
+      debugPrint(
+        'ChallengeProgressService: Error resetting progress for $challengeId: $e',
+      );
       rethrow;
     }
   }
@@ -190,9 +211,13 @@ class ChallengeProgressService {
       }
 
       await batch.commit();
-      debugPrint('ChallengeProgressService: Deleted all progress for user $userId');
+      debugPrint(
+        'ChallengeProgressService: Deleted all progress for user $userId',
+      );
     } catch (e) {
-      debugPrint('ChallengeProgressService: Error deleting progress for user $userId: $e');
+      debugPrint(
+        'ChallengeProgressService: Error deleting progress for user $userId: $e',
+      );
       rethrow;
     }
   }

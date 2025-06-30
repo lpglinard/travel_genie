@@ -4,10 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../models/badge.dart' as badge_model;
 import '../../models/challenge.dart';
 import '../../providers/challenge_providers.dart';
-import '../../user_providers.dart';
 
 class GamificationProgressSection extends ConsumerWidget {
   const GamificationProgressSection({super.key});
@@ -15,7 +13,6 @@ class GamificationProgressSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = FirebaseAuth.instance.currentUser;
-    final challengesAsync = ref.watch(userChallengesWithProgressProvider);
 
     return InkWell(
       onTap: () => context.go('/profile'),
@@ -30,57 +27,80 @@ class GamificationProgressSection extends ConsumerWidget {
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 8),
-            challengesAsync.when(
-              data: (challenges) {
-                // For logged users, show badges and challenges
-                if (user != null) {
-                  final profileService = ref.watch(profileServiceProvider);
-                  return StreamBuilder<List<badge_model.Badge>>(
-                    stream: profileService.getUserBadges(user.uid),
-                    builder: (context, badgeSnapshot) {
-                      final badges = badgeSnapshot.data ?? [];
-                      final unlockedBadges = badges.where((b) => b.isUnlocked).toList();
-
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (badges.isNotEmpty) ...[
-                            Text(
-                              AppLocalizations.of(context)
-                                  .unlockedBadges(unlockedBadges.length, badges.length),
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                            const SizedBox(height: 4),
-                            LinearProgressIndicator(
-                              value: badges.isNotEmpty
-                                  ? unlockedBadges.length / badges.length
-                                  : 0,
-                              backgroundColor: Colors.grey[300],
-                              valueColor:
-                                  const AlwaysStoppedAnimation<Color>(Colors.green),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          if (challenges.isNotEmpty)
-                            _buildChallengeItem(context, challenges.first),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  // For non-logged users, show only the create_account challenge
-                  if (challenges.isNotEmpty) {
-                    return _buildChallengeItem(context, challenges.first);
-                  }
-                  return const SizedBox.shrink();
-                }
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => const SizedBox.shrink(),
-            ),
+            _buildChallengeProgress(context, ref, user),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildChallengeProgress(
+    BuildContext context,
+    WidgetRef ref,
+    User? user,
+  ) {
+    // For non-logged users, show only the create_account challenge
+    if (user == null) {
+      final challengeService = ref.watch(challengeServiceProvider);
+      final createAccountChallenge = challengeService
+          .getCreateAccountChallenge();
+      return _buildChallengeItem(context, createAccountChallenge);
+    }
+
+    // For logged users, show challenge progress from challengeProgress collection
+    final activeChallengesAsync = ref.watch(activeChallengesProvider);
+    final completedChallengesAsync = ref.watch(
+      completedChallengesProvider(user.uid),
+    );
+
+    return activeChallengesAsync.when(
+      data: (allChallenges) {
+        return completedChallengesAsync.when(
+          data: (completedChallengeIds) {
+            final totalChallenges = allChallenges.length;
+            final completedCount = completedChallengeIds.length;
+
+            // Find first uncompleted challenge (sorted by displayOrder)
+            final sortedChallenges = List<Challenge>.from(allChallenges)
+              ..sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
+
+            final firstUncompletedChallenge = sortedChallenges
+                .where(
+                  (challenge) => !completedChallengeIds.contains(challenge.id),
+                )
+                .firstOrNull;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Challenge progress
+                Text(
+                  AppLocalizations.of(
+                    context,
+                  ).unlockedBadges(completedCount, totalChallenges),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 4),
+                LinearProgressIndicator(
+                  value: totalChallenges > 0
+                      ? completedCount / totalChallenges
+                      : 0,
+                  backgroundColor: Colors.grey[300],
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
+                const SizedBox(height: 12),
+                // First uncompleted challenge
+                if (firstUncompletedChallenge != null)
+                  _buildChallengeItem(context, firstUncompletedChallenge),
+              ],
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stack) => const SizedBox.shrink(),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => const SizedBox.shrink(),
     );
   }
 
@@ -143,19 +163,16 @@ class GamificationProgressSection extends ConsumerWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
-        Text(
-          description,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        Text(description, style: Theme.of(context).textTheme.bodySmall),
         const SizedBox(height: 8),
         LinearProgressIndicator(
-          value: 0.0, // For display purposes only, actual progress is handled separately
+          value: 0.0,
+          // For display purposes only, actual progress is handled separately
           backgroundColor: Colors.grey[300],
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.orange),
         ),

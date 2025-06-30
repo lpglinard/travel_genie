@@ -836,14 +836,18 @@ class FirestoreService {
       }
 
       // Delete groups feedback submitted by user
-      final feedbackQuery = await _groupsFeedback.where('userId', isEqualTo: userId).get();
+      final feedbackQuery = await _groupsFeedback
+          .where('userId', isEqualTo: userId)
+          .get();
       for (final doc in feedbackQuery.docs) {
         batch.delete(doc.reference);
       }
 
       // Commit all deletions
       await batch.commit();
-      debugPrint('FirestoreService: Successfully deleted all data for user $userId');
+      debugPrint(
+        'FirestoreService: Successfully deleted all data for user $userId',
+      );
     } catch (e) {
       debugPrint('FirestoreService: Error deleting user data for $userId: $e');
       rethrow;

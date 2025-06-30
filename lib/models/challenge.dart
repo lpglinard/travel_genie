@@ -79,14 +79,18 @@ class Challenge {
     );
   }
 
-  bool get isExpired => DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(endDate));
+  bool get isExpired =>
+      DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(endDate));
 
-  Duration get timeRemaining =>
-      isExpired ? Duration.zero : DateTime.fromMillisecondsSinceEpoch(endDate).difference(DateTime.now());
+  Duration get timeRemaining => isExpired
+      ? Duration.zero
+      : DateTime.fromMillisecondsSinceEpoch(endDate).difference(DateTime.now());
 
   // Helper getters for backward compatibility with UI components
-  String get title => titleKey; // UI components can use localization to resolve this
-  String get description => descriptionKey; // UI components can use localization to resolve this
+  String get title =>
+      titleKey; // UI components can use localization to resolve this
+  String get description =>
+      descriptionKey; // UI components can use localization to resolve this
 }
 
 // Predefined challenges based on the new requirements

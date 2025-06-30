@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../l10n/app_localizations.dart';
-import '../models/badge.dart' as badge_model;
 import '../models/challenge.dart';
 import '../models/travel_cover.dart';
 import '../services/profile_service.dart';
@@ -57,11 +56,7 @@ class ProfileScreen extends ConsumerWidget {
           const SizedBox(height: 24),
 
           // Travel Cover Collection Section
-          _buildTravelCoverSection(
-            context,
-            user,
-            profileService,
-          ),
+          _buildTravelCoverSection(context, user, profileService),
           const SizedBox(height: 24),
 
           // Settings Section
@@ -175,7 +170,6 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-
   Widget _buildTravelCoverSection(
     BuildContext context,
     User? user,
@@ -208,18 +202,14 @@ class ProfileScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.collections,
-                      size: 48,
-                      color: Colors.grey[400],
-                    ),
+                    Icon(Icons.collections, size: 48, color: Colors.grey[400]),
                     const SizedBox(height: 12),
                     Text(
                       AppLocalizations.of(context)!.loginToAccessFullFeatures,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
                     ),
                   ],
                 ),
@@ -248,7 +238,10 @@ class ProfileScreen extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            AppLocalizations.of(context)!.unlockedCovers(unlockedCovers.length, totalCovers),
+                            AppLocalizations.of(context)!.unlockedCovers(
+                              unlockedCovers.length,
+                              totalCovers,
+                            ),
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           Text(
@@ -349,8 +342,6 @@ class ProfileScreen extends ConsumerWidget {
       ),
     );
   }
-
-
 
   Widget _buildSettingsSection() {
     return Column(

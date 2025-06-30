@@ -19,7 +19,8 @@ class UserDeletionResponse {
       success: json['success'] as bool? ?? false,
       errorMessage: json['errorMessage'] as String?,
       message: json['message'] as String?,
-      timestamp: json['timestamp'] as int? ?? DateTime.now().millisecondsSinceEpoch,
+      timestamp:
+          json['timestamp'] as int? ?? DateTime.now().millisecondsSinceEpoch,
     );
   }
 

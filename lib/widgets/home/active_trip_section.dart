@@ -21,9 +21,9 @@ class ActiveTripSection extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
             AppLocalizations.of(context).homeActiveTripTitle(trips.length),
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
         const SizedBox(height: 16),
@@ -64,9 +64,7 @@ class _TripCard extends ConsumerWidget {
       child: Card(
         clipBehavior: Clip.antiAlias,
         elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: InkWell(
           onTap: () => context.go('/trip/${trip.id}'),
           child: Column(
@@ -91,7 +89,9 @@ class _TripCard extends ConsumerWidget {
                           child: Icon(
                             Icons.image_not_supported,
                             size: 48,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
                           ),
                         ),
                       )
@@ -132,8 +132,9 @@ class _TripCard extends ConsumerWidget {
                       Expanded(
                         child: plannedDaysAsync.when(
                           data: (planned) => Text(
-                            AppLocalizations.of(context)
-                                .tripPlanningStatus(planned, totalDays),
+                            AppLocalizations.of(
+                              context,
+                            ).tripPlanningStatus(planned, totalDays),
                             style: Theme.of(context).textTheme.bodySmall,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
@@ -173,12 +174,16 @@ class _TripCard extends ConsumerWidget {
   }
 }
 
-final _plannedDaysProvider = FutureProvider.family<int, String>((ref, tripId) async {
+final _plannedDaysProvider = FutureProvider.family<int, String>((
+  ref,
+  tripId,
+) async {
   final days = await ref.read(itineraryDaysProvider(tripId).future);
   int planned = 0;
   for (final day in days) {
-    final places =
-        await ref.read(placesForDayProvider((tripId: tripId, dayId: day.id)).future);
+    final places = await ref.read(
+      placesForDayProvider((tripId: tripId, dayId: day.id)).future,
+    );
     if (places.isNotEmpty) {
       planned++;
     }
