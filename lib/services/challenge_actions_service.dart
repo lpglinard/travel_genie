@@ -1,10 +1,12 @@
+import 'analytics_service.dart';
 import 'challenge_progress_service.dart';
 
 /// Service providing actions for managing challenge progress.
 class ChallengeActionsService {
-  ChallengeActionsService(this._progressService);
+  ChallengeActionsService(this._progressService, this._analyticsService);
 
   final ChallengeProgressService _progressService;
+  final AnalyticsService _analyticsService;
 
   /// Update progress for a challenge.
   Future<void> updateProgress(
@@ -35,6 +37,16 @@ class ChallengeActionsService {
   /// Mark a challenge as completed.
   Future<void> markCompleted(String userId, String challengeId) async {
     await _progressService.markChallengeCompleted(userId, challengeId);
+
+    // Log the achievement unlock to analytics
+    try {
+      await _analyticsService.logUnlockAchievement(
+        achievementId: challengeId,
+      );
+    } catch (e) {
+      // Log error but don't prevent the challenge completion flow
+      print('Error logging challenge completion to analytics: $e');
+    }
   }
 
   /// Reset progress for a challenge.

@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_ui_auth/firebase_ui_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'pages/place_detail_page.dart';
 import 'pages/profile_screen.dart' as app_profile;
 import 'pages/search_results_page.dart';
 import 'pages/traveler_profile_page.dart';
+import 'providers/challenge_providers.dart';
 import 'services/analytics_service.dart';
 import 'user_providers.dart';
 
@@ -265,9 +267,9 @@ final routerProvider = Provider<GoRouter>((ref) {
                   }
                 }
               },
-              child: SignInScreen(
+              child: firebase_ui.SignInScreen(
                 providers: [
-                  EmailAuthProvider(),
+                  firebase_ui.EmailAuthProvider(),
                   GoogleProvider(
                     clientId: googleClientId,
                     iOSPreferPlist: true,
@@ -285,7 +287,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   );
                 },
                 actions: [
-                  AuthStateChangeAction<AuthFailed>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((context, state) {
                     final analyticsService = ref.read(analyticsServiceProvider);
                     analyticsService.logError(
                       errorType: 'auth_failed',
@@ -293,13 +295,25 @@ final routerProvider = Provider<GoRouter>((ref) {
                       screenName: 'signin_screen',
                     );
                   }),
-                  AuthStateChangeAction<SignedIn>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((context, state) {
                     context.go('/');
                   }),
-                  AuthStateChangeAction<UserCreated>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((context, firebase_ui.UserCreated state) async {
+                    // Track challenge progress for account creation
+                    try {
+                      final user = state.credential.user;
+                      if (user != null) {
+                        final challengeActions = ref.read(challengeActionsProvider);
+                        await challengeActions.markCompleted(user.uid, 'create_account');
+                      }
+                    } catch (e) {
+                      // Log error but don't prevent navigation
+                      debugPrint('Error tracking create_account challenge: $e');
+                    }
+
                     context.go('/');
                   }),
-                  AuthStateChangeAction<CredentialLinked>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((context, state) {
                     context.go('/');
                   }),
                 ],

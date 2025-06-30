@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
+import '../providers/challenge_providers.dart';
 import '../providers/trip_service_provider.dart';
 import '../providers/user_providers.dart';
 import '../widgets/login_required_dialog.dart';
@@ -104,6 +105,19 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
         endDate: _endDate,
         isArchived: false,
       );
+
+      // Track challenge progress for trip creation
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          final challengeActions = ref.read(challengeActionsProvider);
+          await challengeActions.markCompleted(user.uid, 'create_trip');
+          debugPrint('[DEBUG_LOG] Create trip challenge marked as completed for user ${user.uid}');
+        }
+      } catch (e) {
+        // Log error but don't prevent the trip creation success flow
+        debugPrint('Error tracking create_trip challenge: $e');
+      }
 
       ref
           .read(analyticsServiceProvider)

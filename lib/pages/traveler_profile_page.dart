@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/traveler_profile.dart';
+import '../providers/challenge_providers.dart';
 import '../user_providers.dart';
 
 class TravelerProfilePage extends ConsumerStatefulWidget {
@@ -90,6 +92,19 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
       // Get the service and save profile
       final service = ref.read(travelerProfileServiceProvider);
       await service.saveProfile(updatedProfile);
+
+      // Track challenge progress for profile completion
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null && updatedProfile.isComplete) {
+          final challengeActions = ref.read(challengeActionsProvider);
+          await challengeActions.markCompleted(user.uid, 'complete_profile');
+          debugPrint('[DEBUG_LOG] Complete profile challenge marked as completed for user ${user.uid}');
+        }
+      } catch (e) {
+        // Log error but don't prevent the profile save success flow
+        debugPrint('Error tracking complete_profile challenge: $e');
+      }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

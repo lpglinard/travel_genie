@@ -6,6 +6,7 @@ import '../models/challenge.dart';
 import '../services/challenge_actions_service.dart';
 import '../services/challenge_progress_service.dart';
 import '../services/challenge_service.dart';
+import '../user_providers.dart';
 
 /// Provider for ChallengeService
 final challengeServiceProvider = Provider<ChallengeService>((ref) {
@@ -88,5 +89,6 @@ final challengeWithProgressProvider = StreamProvider.family<Challenge?, String>(
 /// Provider for challenge actions (updating progress, marking complete, etc.)
 final challengeActionsProvider = Provider<ChallengeActionsService>((ref) {
   final progressService = ref.watch(challengeProgressServiceProvider);
-  return ChallengeActionsService(progressService);
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return ChallengeActionsService(progressService, analyticsService);
 });
