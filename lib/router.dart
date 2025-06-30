@@ -295,7 +295,18 @@ final routerProvider = Provider<GoRouter>((ref) {
                       screenName: 'signin_screen',
                     );
                   }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((context, firebase_ui.SignedIn state) async {
+                    // Track challenge progress for account creation
+                    try {
+                      final user = state.user;
+                      if (user != null) {
+                        final challengeActions = ref.read(challengeActionsProvider);
+                        await challengeActions.markCompleted(user.uid, 'create_account');
+                      }
+                    } catch (e) {
+                      // Log error but don't prevent navigation
+                      debugPrint('Error tracking create_account challenge: $e');
+                    }
                     context.go('/');
                   }),
                   firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((context, firebase_ui.UserCreated state) async {

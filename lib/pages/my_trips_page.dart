@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/models/trip.dart';
 
 import '../l10n/app_localizations.dart';
 import '../providers/trip_service_provider.dart';
@@ -15,13 +16,13 @@ class MyTripsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripsAsync = ref.watch(userTripsProvider);
+    final AsyncValue<List<Trip>> tripsAsync = ref.watch(userTripsProvider);
 
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.navMyTrips)),
       body: SafeArea(
         child: tripsAsync.when(
-          data: (trips) {
+          data: (List<Trip> trips) {
             if (trips.isEmpty) {
               // Check if user is authenticated
               try {

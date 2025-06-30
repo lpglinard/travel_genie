@@ -317,9 +317,15 @@
     }
   },
   "ok": "OK",
+  "magicAiTripOptimizer": "Magic AI Trip Optimizer",
+  "chooseOptimizationStrategy": "Choose your optimization strategy",
+  "startMagicOptimization": "Start Magic Optimization",
   "timeEfficient": "Time Efficient",
+  "timeEfficientDescription": "Minimize travel time between places and optimize routes for maximum efficiency",
   "costEffective": "Cost Effective",
+  "costEffectiveDescription": "Find budget-friendly options and optimize for the best value experiences",
   "experienceMaximizer": "Experience Maximizer",
+  "experienceMaximizerDescription": "Prioritize unique experiences and must-see attractions for unforgettable memories",
 
   "guest": "Guest",
   "loginToAccessFullFeatures": "Login to access full features",

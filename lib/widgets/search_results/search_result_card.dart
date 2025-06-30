@@ -95,12 +95,13 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
         if (_isSaved) {
           // Remove from saved places
           await firestoreService.removePlace(user.uid, widget.place.placeId);
+          // Track removing place from favorites using Firebase standard event
           ref
               .read(analyticsServiceProvider)
-              .logButtonTap(
-                buttonName: 'remove_from_favorites',
-                screenName: 'search_results',
-                context: 'place_card',
+              .logRemovePlaceFromItinerary(
+                placeId: widget.place.placeId,
+                placeName: widget.place.displayName,
+                category: widget.place.category.name,
               );
         } else {
           // Add to saved places
@@ -116,12 +117,13 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
             debugPrint('Error tracking save_place challenge: $e');
           }
 
+          // Track adding place to favorites using Firebase standard event
           ref
               .read(analyticsServiceProvider)
-              .logButtonTap(
-                buttonName: 'add_to_favorites',
-                screenName: 'search_results',
-                context: 'place_card',
+              .logAddPlaceToItinerary(
+                placeId: widget.place.placeId,
+                placeName: widget.place.displayName,
+                category: widget.place.category.name,
               );
         }
 

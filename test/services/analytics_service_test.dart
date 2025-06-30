@@ -37,14 +37,15 @@ void main() {
 
       // AI and Optimization Events
       const aiEvents = [
-        'logUseAIOptimizer - Track AI optimizer usage with itinerary and type',
+        'logOptimizeItinerary - Track AI optimizer usage with trip and type',
         'logAIRecommendation - Track AI recommendations with type and acceptance',
       ];
 
       // User Engagement Events
       const engagementEvents = [
         'logScreenView - Track screen views with name and class',
-        'logUserEngagement - Track user engagement with type, duration, content',
+        'logTutorialBegin - Track tutorial start',
+        'logTutorialComplete - Track tutorial completion',
       ];
 
       // App Settings Events
@@ -53,10 +54,9 @@ void main() {
         'logThemeChange - Track theme changes',
       ];
 
-      // Error and Performance Events
+      // Error Events
       const errorEvents = [
         'logError - Track errors with type, message, and screen',
-        'logPerformanceMetric - Track performance metrics with name and value',
       ];
 
       // Custom Events and User Properties
@@ -66,11 +66,15 @@ void main() {
         'setUserId - Set user ID for tracking',
       ];
 
-      // Performance Monitoring
+      // Gamification Events
+      const gamificationEvents = [
+        'logUnlockAchievement - Track achievement unlocks',
+        'logLevelUp - Track level progression',
+      ];
+
+      // Performance Monitoring and Utilities
       const performanceEvents = [
         'newTrace - Create new performance trace',
-        'startTrace - Start performance trace',
-        'stopTrace - Stop performance trace',
         'observer - Get Firebase Analytics observer for navigation',
       ];
 
@@ -79,11 +83,12 @@ void main() {
       expect(tripEvents.length, equals(5));
       expect(placeEvents.length, equals(4));
       expect(aiEvents.length, equals(2));
-      expect(engagementEvents.length, equals(2));
+      expect(engagementEvents.length, equals(3));
       expect(settingsEvents.length, equals(2));
-      expect(errorEvents.length, equals(2));
+      expect(errorEvents.length, equals(1));
       expect(customEvents.length, equals(3));
-      expect(performanceEvents.length, equals(4));
+      expect(gamificationEvents.length, equals(2));
+      expect(performanceEvents.length, equals(2));
 
       // Total methods should be comprehensive
       final totalMethods = authenticationEvents.length +
@@ -94,6 +99,7 @@ void main() {
           settingsEvents.length +
           errorEvents.length +
           customEvents.length +
+          gamificationEvents.length +
           performanceEvents.length;
 
       expect(totalMethods, equals(27));

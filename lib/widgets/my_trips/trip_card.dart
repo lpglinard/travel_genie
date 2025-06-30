@@ -22,7 +22,7 @@ class TripCard extends ConsumerWidget {
         onTap: () {
           ref
               .read(analyticsServiceProvider)
-              .logViewItinerary(id: trip.id, destination: trip.title);
+              .logViewItinerary(tripId: trip.id, destination: trip.title);
           // Navigate to trip itinerary page
           context.go('/trip/${trip.id}');
         },

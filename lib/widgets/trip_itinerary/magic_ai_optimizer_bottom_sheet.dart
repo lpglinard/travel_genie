@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/app_localizations.dart';
-import '../../providers/user_providers.dart';
 
 /// Optimization strategies available for the magic AI trip optimizer
 enum OptimizationStrategy { timeEfficient, costEffective, experienceMaximizer }
@@ -65,7 +64,7 @@ class _MagicAiOptimizerBottomSheetState
               ),
               const SizedBox(width: 12),
               Text(
-                'Magic AI Trip Optimizer',
+                l10n.magicAiTripOptimizer,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.onSurface,
@@ -76,7 +75,7 @@ class _MagicAiOptimizerBottomSheetState
           const SizedBox(height: 8),
 
           Text(
-            'Choose an optimization strategy to enhance your trip itinerary',
+            l10n.chooseOptimizationStrategy,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onSurfaceVariant,
             ),
@@ -87,9 +86,8 @@ class _MagicAiOptimizerBottomSheetState
           _buildStrategyOption(
             strategy: OptimizationStrategy.timeEfficient,
             icon: Icons.schedule,
-            title: 'Time Efficient',
-            description:
-                'Minimize travel time between locations and optimize your schedule',
+            title: l10n.timeEfficient,
+            description: l10n.timeEfficientDescription,
             theme: theme,
           ),
           const SizedBox(height: 16),
@@ -97,9 +95,8 @@ class _MagicAiOptimizerBottomSheetState
           _buildStrategyOption(
             strategy: OptimizationStrategy.costEffective,
             icon: Icons.savings,
-            title: 'Cost Effective',
-            description:
-                'Find budget-friendly alternatives and reduce overall trip costs',
+            title: l10n.costEffective,
+            description: l10n.costEffectiveDescription,
             theme: theme,
           ),
           const SizedBox(height: 16),
@@ -107,8 +104,8 @@ class _MagicAiOptimizerBottomSheetState
           _buildStrategyOption(
             strategy: OptimizationStrategy.experienceMaximizer,
             icon: Icons.star,
-            title: 'Experience Maximizer',
-            description: 'Discover hidden gems and maximize unique experiences',
+            title: l10n.experienceMaximizer,
+            description: l10n.experienceMaximizerDescription,
             theme: theme,
           ),
           const SizedBox(height: 32),
@@ -117,13 +114,7 @@ class _MagicAiOptimizerBottomSheetState
           ElevatedButton(
             onPressed: _selectedStrategy != null
                 ? () {
-                    ref
-                        .read(analyticsServiceProvider)
-                        .logButtonTap(
-                          buttonName: 'start_magic_optimization',
-                          screenName: 'magic_ai_optimizer_bottom_sheet',
-                          context: 'strategy_${_selectedStrategy!.name}',
-                        );
+                    // Analytics tracking will be handled when optimization actually starts
                     Navigator.of(context).pop();
                     widget.onOptimizationStart(_selectedStrategy!);
                   }
@@ -142,7 +133,7 @@ class _MagicAiOptimizerBottomSheetState
                 Icon(Icons.auto_fix_high, size: 20),
                 const SizedBox(width: 8),
                 Text(
-                  'Start Magic Optimization',
+                  l10n.startMagicOptimization,
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.onPrimary,
@@ -168,14 +159,7 @@ class _MagicAiOptimizerBottomSheetState
 
     return GestureDetector(
       onTap: () {
-        ref
-            .read(analyticsServiceProvider)
-            .logWidgetInteraction(
-              widgetType: 'strategy_option',
-              action: 'select',
-              widgetId: strategy.name,
-              screenName: 'magic_ai_optimizer_bottom_sheet',
-            );
+        // Removed granular widget interaction tracking as per analytics strategy refactor
         setState(() {
           _selectedStrategy = strategy;
         });

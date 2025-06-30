@@ -76,13 +76,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
               color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () {
-              ref
-                  .read(analyticsServiceProvider)
-                  .logButtonTap(
-                    buttonName: 'back_button',
-                    screenName: 'trip_itinerary',
-                    context: 'app_bar',
-                  );
+              // Removed granular button tracking as per analytics strategy refactor
               if (Navigator.canPop(context)) {
                 Navigator.pop(context);
               } else {
@@ -99,13 +93,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
               onPressed: _isOptimizing
                   ? null
                   : () {
-                      ref
-                          .read(analyticsServiceProvider)
-                          .logButtonTap(
-                            buttonName: 'magic_ai_optimizer',
-                            screenName: 'trip_itinerary',
-                            context: 'app_bar',
-                          );
+                      // AI optimizer usage will be tracked in the optimizer itself
                       _showMagicAiOptimizerBottomSheet();
                     },
               tooltip: AppLocalizations.of(
@@ -168,13 +156,15 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
                           places: places,
                           onPlaceAccepted:
                               (DraggedPlaceData data, int insertIndex) async {
+                                // Track place addition to itinerary using Firebase standard event
                                 ref
                                     .read(analyticsServiceProvider)
-                                    .logDragEnd(
-                                      itemType: 'place',
-                                      itemId: data.place.placeId,
-                                      toLocation: day.id,
-                                      successful: true,
+                                    .logAddPlaceToItinerary(
+                                      placeId: data.place.placeId,
+                                      placeName: data.place.displayName,
+                                      category: data.place.category.name,
+                                      tripId: widget.tripId,
+                                      dayId: day.id,
                                     );
                                 final dragDropService = ref.read(
                                   itineraryDragDropServiceProvider(
@@ -325,13 +315,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
         actions: [
           TextButton(
             onPressed: () {
-              ref
-                  .read(analyticsServiceProvider)
-                  .logDialogInteraction(
-                    dialogType: 'optimization_result',
-                    action: 'confirm',
-                    screenName: 'trip_itinerary',
-                  );
+              // Removed granular dialog tracking as per analytics strategy refactor
               Navigator.of(context).pop();
             },
             child: Text(AppLocalizations.of(context)!.great),
@@ -365,13 +349,7 @@ class _TripItineraryPageState extends ConsumerState<TripItineraryPage> {
         actions: [
           TextButton(
             onPressed: () {
-              ref
-                  .read(analyticsServiceProvider)
-                  .logDialogInteraction(
-                    dialogType: 'optimization_error',
-                    action: 'dismiss',
-                    screenName: 'trip_itinerary',
-                  );
+              // Removed granular dialog tracking as per analytics strategy refactor
               Navigator.of(context).pop();
             },
             child: Text(AppLocalizations.of(context)!.ok),

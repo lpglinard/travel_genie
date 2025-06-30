@@ -36,13 +36,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
   }
 
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
-    ref
-        .read(analyticsServiceProvider)
-        .logButtonTap(
-          buttonName: isStartDate ? 'select_start_date' : 'select_end_date',
-          screenName: 'create_trip',
-          context: 'date_picker',
-        );
+    // Removed granular button tracking as per analytics strategy refactor
 
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -122,7 +116,7 @@ class _CreateTripPageState extends ConsumerState<CreateTripPage> {
       ref
           .read(analyticsServiceProvider)
           .logCreateItinerary(
-            id: trip,
+            tripId: trip,
             destination: _titleController.text.trim(),
           );
 
