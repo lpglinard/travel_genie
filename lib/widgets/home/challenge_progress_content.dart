@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/challenge.dart';
 import '../../providers/challenge_providers.dart';
+import '../login_required_dialog.dart';
 import 'challenge_item.dart';
 
 class ChallengeProgressContent extends ConsumerWidget {
@@ -12,12 +14,45 @@ class ChallengeProgressContent extends ConsumerWidget {
 
   final User? user;
 
+  /// Generate appropriate onTap callback based on challenge type
+  VoidCallback? _getOnTapCallback(BuildContext context, Challenge challenge) {
+    switch (challenge.type) {
+      case 'create_account':
+        return () async {
+          await LoginRequiredDialog.show(context);
+        };
+      case 'complete_profile':
+        return () {
+          context.go('/profile');
+        };
+      case 'create_trip':
+        return () {
+          context.go('/create-trip');
+        };
+      case 'save_place':
+        return () {
+          // Navigate to explore page where users can find and save places
+          context.go('/explore');
+        };
+      case 'generate_itinerary':
+        return () {
+          // Navigate to create trip page where users can generate itineraries
+          context.go('/create-trip');
+        };
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (user == null) {
       final challengeService = ref.watch(challengeServiceProvider);
       final challenge = challengeService.getCreateAccountChallenge();
-      return ChallengeItem(challenge: challenge);
+      return ChallengeItem(
+        challenge: challenge,
+        onTap: _getOnTapCallback(context, challenge),
+      );
     }
 
     final activeChallengesAsync = ref.watch(activeChallengesProvider);
@@ -57,7 +92,10 @@ class ChallengeProgressContent extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               if (firstUncompleted != null)
-                ChallengeItem(challenge: firstUncompleted),
+                ChallengeItem(
+                  challenge: firstUncompleted,
+                  onTap: _getOnTapCallback(context, firstUncompleted),
+                ),
             ],
           );
         },
