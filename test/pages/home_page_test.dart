@@ -72,7 +72,7 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pumpAndSettle();
 
-      expect(router.location, '/explore?query=Fortaleza');
+      expect(router.routeInformationProvider.value.uri.toString(), '/explore?query=Fortaleza');
     });
   });
 }

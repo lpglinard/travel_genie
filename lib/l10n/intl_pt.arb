@@ -15,6 +15,7 @@
   "navHome": "Início",
   "navExplore": "Explorar",
   "navMyTrips": "Minhas Viagens",
+  "navProfile": "Perfil",
   "navGroups": "Grupos",
   "tripItinerary": "Itinerário da Viagem",
   "savedPlaces": "Lugares Salvos",
@@ -354,7 +355,14 @@
   "typeDeleteToConfirm": "Digite EXCLUIR para confirmar",
   "homeCtaButton": "Criar Roteiro com o Travel Genie",
   "homeCtaSubtitle": "Em poucos segundos, um roteiro com seu estilo e preferências.",
-  "homeActiveTripTitle": "Sua Viagem Ativa",
+  "homeActiveTripTitle": "{count, plural, =1{Sua Viagem Ativa} other{Suas Viagens Ativas}}",
+  "@homeActiveTripTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "tripPlanningStatus": "{planned} de {total} dias planejados",
   "@tripPlanningStatus": {
     "placeholders": {

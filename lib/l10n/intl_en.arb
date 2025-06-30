@@ -15,6 +15,7 @@
   "navHome": "Home",
   "navExplore": "Explore",
   "navMyTrips": "My Trips",
+  "navProfile": "Profile",
   "navGroups": "Groups",
   "tripItinerary": "Trip Itinerary",
   "savedPlaces": "Saved Places",
@@ -354,7 +355,14 @@
   "typeDeleteToConfirm": "Type DELETE to confirm",
   "homeCtaButton": "Create Itinerary with Travel Genie",
   "homeCtaSubtitle": "In seconds, an itinerary with your style and preferences.",
-  "homeActiveTripTitle": "Your Active Trip",
+  "homeActiveTripTitle": "{count, plural, =1{Your Active Trip} other{Your Active Trips}}",
+  "@homeActiveTripTitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "tripPlanningStatus": "{planned} of {total} days planned",
   "@tripPlanningStatus": {
     "placeholders": {

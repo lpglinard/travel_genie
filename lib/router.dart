@@ -361,8 +361,8 @@ class ScaffoldWithNavBar extends ConsumerWidget {
               label: AppLocalizations.of(context).navMyTrips,
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.group),
-              label: AppLocalizations.of(context).navGroups,
+              icon: const Icon(Icons.person),
+              label: AppLocalizations.of(context).navProfile,
             ),
           ],
         ),
@@ -373,7 +373,7 @@ class ScaffoldWithNavBar extends ConsumerWidget {
   int _calculateSelectedIndex(String location) {
     if (location.startsWith('/explore')) return 1;
     if (location.startsWith('/trips')) return 2;
-    if (location.startsWith('/groups')) return 3;
+    if (location.startsWith('/profile')) return 3;
     return 0; // Default to home
   }
 
@@ -399,8 +399,8 @@ class ScaffoldWithNavBar extends ConsumerWidget {
         screenName = 'trips_screen';
         break;
       case 3:
-        destination = '/groups';
-        screenName = 'groups_screen';
+        destination = '/profile';
+        screenName = 'profile_screen';
         break;
       default:
         destination = '/';

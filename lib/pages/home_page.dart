@@ -28,20 +28,17 @@ final recommendedDestinationsProvider = StreamProvider<List<Destination>>((
   return firestoreService.streamRecommendedDestinations();
 });
 
-final activeTripProvider = Provider<Trip?>(
+final activeTripsProvider = Provider<List<Trip>>(
   (ref) {
     final tripsAsync = ref.watch(userTripsProvider);
     return tripsAsync.maybeWhen(
       data: (trips) {
         final now = DateTime.now();
-        for (final trip in trips) {
-          if (!trip.isArchived && trip.endDate.isAfter(now)) {
-            return trip;
-          }
-        }
-        return null;
+        return trips
+            .where((trip) => !trip.isArchived && trip.endDate.isAfter(now))
+            .toList();
       },
-      orElse: () => null,
+      orElse: () => [],
     );
   },
 );
@@ -55,7 +52,7 @@ class MyHomePage extends ConsumerWidget {
     final recommendedDestinationsAsync = ref.watch(
       recommendedDestinationsProvider,
     );
-    final activeTrip = ref.watch(activeTripProvider);
+    final activeTrips = ref.watch(activeTripsProvider);
 
     return Scaffold(
       appBar: const HomeAppBar(),
@@ -88,8 +85,8 @@ class MyHomePage extends ConsumerWidget {
             const SizedBox(height: 12),
             const SearchSection(),
             const SizedBox(height: 24),
-            if (activeTrip != null) ...[
-              ActiveTripSection(trip: activeTrip),
+            if (activeTrips.isNotEmpty) ...[
+              ActiveTripSection(trips: activeTrips),
               const SizedBox(height: 24),
             ],
             recommendedDestinationsAsync.when(
