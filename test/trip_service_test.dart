@@ -4,6 +4,7 @@ import 'package:travel_genie/trip/services/trip_service.dart';
 import 'package:travel_genie/trip/models/trip_participant.dart';
 import 'package:travel_genie/models/trip.dart';
 import 'package:travel_genie/models/place.dart';
+import 'package:travel_genie/models/location.dart';
 import 'package:travel_genie/models/itinerary_day.dart';
 
 // Mock implementation for testing
@@ -12,6 +13,7 @@ class MockTripRepository implements TripRepository {
   final Map<String, List<TripParticipant>> _participants = {};
   final Map<String, List<Place>> _places = {};
   final Map<String, List<ItineraryDay>> _itinerary = {};
+  int _nextTripId = 1;
 
   void addMockTrip(Trip trip) {
     _trips[trip.id] = trip;
@@ -21,9 +23,30 @@ class MockTripRepository implements TripRepository {
     _participants[tripId] = List<TripParticipant>.from(participants);
   }
 
+  void addMockPlaces(String tripId, List<Place> places) {
+    _places[tripId] = List<Place>.from(places);
+  }
+
+  void addMockItinerary(String tripId, List<ItineraryDay> itinerary) {
+    _itinerary[tripId] = List<ItineraryDay>.from(itinerary);
+  }
+
+  @override
+  Future<String> createTrip(Trip trip) async {
+    final tripId = 'mock-trip-${_nextTripId++}';
+    final tripWithId = trip.copyWith(id: tripId);
+    _trips[tripId] = tripWithId;
+    return tripId;
+  }
+
   @override
   Future<Trip?> getTripById(String tripId) async {
     return _trips[tripId];
+  }
+
+  @override
+  Stream<Trip?> streamTripById(String tripId) {
+    return Stream.value(_trips[tripId]);
   }
 
   @override
@@ -200,6 +223,139 @@ void main() {
         () => tripService.getTripWithDetails('non-existent-trip'),
         throwsA(isA<TripServiceException>()),
       );
+    });
+
+    test('should create trip successfully', () async {
+      // Arrange
+      final trip = Trip(
+        id: '', // Will be set by createTrip
+        title: 'New York Adventure',
+        description: 'A wonderful trip to New York',
+        startDate: DateTime(2024, 12, 1),
+        endDate: DateTime(2024, 12, 8),
+        coverImageUrl: 'https://example.com/nyc.jpg',
+        userId: 'user-1',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      // Act
+      final tripId = await tripService.createTrip(trip);
+
+      // Assert
+      expect(tripId, isNotEmpty);
+      expect(tripId, startsWith('mock-trip-'));
+
+      // Verify trip was stored
+      final storedTrip = await tripService.getTripDetails(tripId);
+      expect(storedTrip, isNotNull);
+      expect(storedTrip!.title, equals('New York Adventure'));
+      expect(storedTrip.id, equals(tripId));
+    });
+
+    test('should stream trip details correctly', () async {
+      // Arrange
+      final trip = Trip(
+        id: 'stream-test-trip',
+        title: 'Stream Test Trip',
+        description: 'A trip for testing streaming',
+        startDate: DateTime(2024, 11, 1),
+        endDate: DateTime(2024, 11, 8),
+        coverImageUrl: 'https://example.com/stream.jpg',
+        userId: 'user-1',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      mockRepository.addMockTrip(trip);
+
+      // Act
+      final stream = tripService.streamTripDetails('stream-test-trip');
+
+      // Assert
+      await expectLater(
+        stream,
+        emits(predicate<Trip?>((t) => 
+          t != null && 
+          t.id == 'stream-test-trip' && 
+          t.title == 'Stream Test Trip'
+        )),
+      );
+    });
+
+    test('should stream null for non-existent trip', () async {
+      // Act
+      final stream = tripService.streamTripDetails('non-existent-trip');
+
+      // Assert
+      await expectLater(stream, emits(isNull));
+    });
+
+    test('should get trip with details including places and itinerary', () async {
+      // Arrange
+      final trip = Trip(
+        id: 'detailed-trip',
+        title: 'Detailed Trip',
+        description: 'A trip with places and itinerary',
+        startDate: DateTime(2024, 11, 15),
+        endDate: DateTime(2024, 11, 22),
+        coverImageUrl: 'https://example.com/detailed.jpg',
+        userId: 'user-1',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final places = [
+        Place(
+          placeId: 'place-1',
+          displayName: 'Eiffel Tower',
+          displayNameLanguageCode: 'en',
+          formattedAddress: 'Paris, France',
+          googleMapsUri: 'https://maps.google.com/?q=Eiffel+Tower',
+          location: const Location(lat: 48.8584, lng: 2.2945),
+          types: const ['tourist_attraction'],
+        ),
+        Place(
+          placeId: 'place-2',
+          displayName: 'Louvre Museum',
+          displayNameLanguageCode: 'en',
+          formattedAddress: 'Paris, France',
+          googleMapsUri: 'https://maps.google.com/?q=Louvre+Museum',
+          location: const Location(lat: 48.8606, lng: 2.3376),
+          types: const ['museum'],
+        ),
+      ];
+
+      final itinerary = [
+        ItineraryDay(
+          id: 'day-1',
+          date: DateTime(2024, 11, 15),
+          order: 0,
+          places: [],
+        ),
+        ItineraryDay(
+          id: 'day-2',
+          date: DateTime(2024, 11, 16),
+          order: 1,
+          places: [],
+        ),
+      ];
+
+      mockRepository.addMockTrip(trip);
+      mockRepository.addMockPlaces('detailed-trip', places);
+      mockRepository.addMockItinerary('detailed-trip', itinerary);
+
+      // Act
+      final result = await tripService.getTripWithDetails('detailed-trip');
+
+      // Assert
+      expect(result.id, equals('detailed-trip'));
+      expect(result.title, equals('Detailed Trip'));
+      expect(result.places, hasLength(2));
+      expect(result.places![0].displayName, equals('Eiffel Tower'));
+      expect(result.places![1].displayName, equals('Louvre Museum'));
+      expect(result.itinerary, hasLength(2));
+      expect(result.itinerary![0].date, equals(DateTime(2024, 11, 15)));
+      expect(result.itinerary![1].date, equals(DateTime(2024, 11, 16)));
     });
   });
 

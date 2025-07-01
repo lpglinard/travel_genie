@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +7,7 @@ import 'package:travel_genie/l10n/app_localizations.dart';
 import '../../models/trip.dart';
 import '../../user_providers.dart';
 import '../providers/trip_providers.dart';
+import '../services/city_autocomplete_service.dart';
 import '../widgets/date_range_picker_field.dart';
 import '../widgets/destination_autocomplete_field.dart';
 import '../widgets/profile_completeness_widget.dart';
@@ -59,16 +61,39 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
     });
 
     try {
-      // Get current user
-      final currentUser = ref.read(authStateChangesProvider).value;
+      // Get current user - Use Firebase Auth directly for immediate and reliable access
+      final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
         throw Exception('User not authenticated');
       }
 
       // Get the selected suggestion with rich data
-      final selectedSuggestion = ref.read(
+      var selectedSuggestion = ref.read(
         selectedDestinationSuggestionProvider,
       );
+
+      // If no suggestion was selected, fetch suggestions and use the first result
+      if (selectedSuggestion == null) {
+        final cityService = ref.read(cityAutocompleteServiceProvider);
+        final suggestions = await cityService.searchCities(destination);
+
+        if (suggestions.isNotEmpty) {
+          selectedSuggestion = suggestions.first;
+          // Store the fetched suggestion for consistency
+          ref.read(selectedDestinationSuggestionProvider.notifier).state = selectedSuggestion;
+        } else {
+          // If no suggestions found, show error
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('No valid destination found for "$destination". Please try a different location.'),
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+            );
+          }
+          return;
+        }
+      }
 
       // Get trip service
       final tripService = ref.read(tripServiceProvider);
