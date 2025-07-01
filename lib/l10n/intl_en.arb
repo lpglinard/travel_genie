@@ -397,5 +397,43 @@
   "challengeSavePlaceTitle": "Save a Place",
   "challengeSavePlaceDescription": "Save interesting places to your favorites",
   "challengeGenerateItineraryTitle": "Generate AI Itinerary",
-  "challengeGenerateItineraryDescription": "Let AI create a personalized itinerary for you"
+  "challengeGenerateItineraryDescription": "Let AI create a personalized itinerary for you",
+
+  "tripDetails": "Trip Details",
+  "tripOverview": "Overview",
+  "tripItineraryTab": "Itinerary",
+  "tripExplore": "Explore",
+  "tripSummary": "Trip Summary",
+  "tripParticipants": "Participants",
+  "organizer": "Organizer",
+  "participant": "Participant",
+  "addParticipant": "Add Participant",
+  "shareTrip": "Share Trip",
+  "tripNotFound": "Trip not found",
+  "errorLoadingTrip": "Error loading trip details",
+  "errorLoadingParticipants": "Error loading participants",
+  "tripSummaryPlaceholder": "Discover the magic of Paris with this carefully curated adventure through the City of Light. From iconic landmarks to hidden gems, this itinerary combines must-see attractions with authentic local experiences. Explore world-renowned museums, stroll along charming boulevards, and indulge in exquisite French cuisine while creating unforgettable memories in one of the world's most romantic cities.",
+
+  "planNewTrip": "Plan a New Trip",
+  "aiPersonalizationTitle": "Odsy's AI creates itineraries based on your profile. The more complete it is, the better your experience will be.",
+  "profileCompleteness": "Your profile is {percentage}% complete",
+  "@profileCompleteness": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "improveMyProfile": "Improve my profile",
+  "destinationPlaceholder": "e.g., Paris, Hawaii, Japan",
+  "destinationLabel": "Destination",
+  "destinationRequired": "Please enter a destination",
+  "selectDates": "Select dates",
+  "startPlanning": "Start planning",
+  "inviteTravelPartner": "Invite a travel partner",
+  "howManyDays": "How many days will your trip be?",
+  "numberOfDays": "Number of days",
+  "daysRequired": "Please enter a valid number of days",
+  "confirm": "Confirm",
+  "invalidDestination": "Please enter a valid destination"
 }

@@ -4,7 +4,7 @@ import 'itinerary_day.dart';
 import 'place.dart';
 
 class Trip {
-  Trip({
+  const Trip({
     required this.id,
     required this.title,
     required this.description,
@@ -14,7 +14,10 @@ class Trip {
     required this.userId,
     required this.createdAt,
     required this.updatedAt,
+    this.placeId,
     this.isArchived = false,
+    this.isLoadingCoverImage = false,
+    this.isLoadingDescription = false,
     this.participants = const [],
     this.places,
     this.itinerary,
@@ -29,7 +32,10 @@ class Trip {
   final String userId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? placeId;
   final bool isArchived;
+  final bool isLoadingCoverImage;
+  final bool isLoadingDescription;
   final List<String> participants;
 
   /// Dados carregados separadamente das subcoleções:
@@ -49,7 +55,10 @@ class Trip {
       userId: data['userId'] as String? ?? '',
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      placeId: data['placeId'] as String?,
       isArchived: data['isArchived'] as bool? ?? false,
+      isLoadingCoverImage: data['isLoadingCoverImage'] as bool? ?? false,
+      isLoadingDescription: data['isLoadingDescription'] as bool? ?? false,
       participants: (data['participants'] as List?)?.cast<String>() ?? const [],
       places: null,
       // serão carregados separadamente
@@ -67,7 +76,10 @@ class Trip {
       'userId': userId,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
+      'placeId': placeId,
       'isArchived': isArchived,
+      'isLoadingCoverImage': isLoadingCoverImage,
+      'isLoadingDescription': isLoadingDescription,
       'participants': participants,
       // NÃO incluir `places` ou `itinerary` aqui!
     };
@@ -83,7 +95,10 @@ class Trip {
     String? userId,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? placeId,
     bool? isArchived,
+    bool? isLoadingCoverImage,
+    bool? isLoadingDescription,
     List<String>? participants,
     List<Place>? places,
     List<ItineraryDay>? itinerary,
@@ -98,7 +113,10 @@ class Trip {
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      placeId: placeId ?? this.placeId,
       isArchived: isArchived ?? this.isArchived,
+      isLoadingCoverImage: isLoadingCoverImage ?? this.isLoadingCoverImage,
+      isLoadingDescription: isLoadingDescription ?? this.isLoadingDescription,
       participants: participants ?? this.participants,
       places: places ?? this.places,
       itinerary: itinerary ?? this.itinerary,

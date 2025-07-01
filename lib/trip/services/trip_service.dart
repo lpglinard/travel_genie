@@ -1,0 +1,244 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:travel_genie/models/itinerary_day.dart';
+import 'package:travel_genie/models/place.dart';
+import 'package:travel_genie/models/trip.dart';
+
+import '../models/trip_participant.dart';
+
+/// Abstract interface for trip data operations
+abstract class TripRepository {
+  Future<String> createTrip(Trip trip);
+
+  Future<Trip?> getTripById(String tripId);
+
+  /// Stream trip data for real-time updates
+  Stream<Trip?> streamTripById(String tripId);
+
+  Future<List<TripParticipant>> getTripParticipants(String tripId);
+
+  Future<List<Place>> getTripPlaces(String tripId);
+
+  Future<List<ItineraryDay>> getTripItinerary(String tripId);
+
+  Future<void> addParticipant(String tripId, TripParticipant participant);
+
+  Future<void> removeParticipant(String tripId, String userId);
+}
+
+/// Concrete implementation of TripRepository using Firestore
+class FirestoreTripRepository implements TripRepository {
+  FirestoreTripRepository(this._firestore);
+
+  final FirebaseFirestore _firestore;
+
+  @override
+  Future<String> createTrip(Trip trip) async {
+    try {
+      final docRef = await _firestore
+          .collection('trips')
+          .add(trip.toFirestore());
+      return docRef.id;
+    } catch (e) {
+      throw TripServiceException('Failed to create trip: $e');
+    }
+  }
+
+  @override
+  Future<Trip?> getTripById(String tripId) async {
+    try {
+      final doc = await _firestore.collection('trips').doc(tripId).get();
+      if (!doc.exists) return null;
+      return Trip.fromFirestore(doc);
+    } catch (e) {
+      throw TripServiceException('Failed to fetch trip: $e');
+    }
+  }
+
+  @override
+  Stream<Trip?> streamTripById(String tripId) {
+    try {
+      return _firestore
+          .collection('trips')
+          .doc(tripId)
+          .snapshots()
+          .map((doc) {
+        if (!doc.exists) return null;
+        return Trip.fromFirestore(doc);
+      });
+    } catch (e) {
+      throw TripServiceException('Failed to stream trip: $e');
+    }
+  }
+
+  @override
+  Future<List<TripParticipant>> getTripParticipants(String tripId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('participants')
+          .get();
+
+      return snapshot.docs
+          .map((doc) => TripParticipant.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      throw TripServiceException('Failed to fetch participants: $e');
+    }
+  }
+
+  @override
+  Future<List<Place>> getTripPlaces(String tripId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('places')
+          .get();
+
+      return snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList();
+    } catch (e) {
+      throw TripServiceException('Failed to fetch places: $e');
+    }
+  }
+
+  @override
+  Future<List<ItineraryDay>> getTripItinerary(String tripId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('itinerary')
+          .orderBy('date')
+          .get();
+
+      return snapshot.docs
+          .map((doc) => ItineraryDay.fromFirestore(doc))
+          .toList();
+    } catch (e) {
+      throw TripServiceException('Failed to fetch itinerary: $e');
+    }
+  }
+
+  @override
+  Future<void> addParticipant(
+    String tripId,
+    TripParticipant participant,
+  ) async {
+    try {
+      await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('participants')
+          .doc(participant.userId)
+          .set(participant.toFirestore());
+    } catch (e) {
+      throw TripServiceException('Failed to add participant: $e');
+    }
+  }
+
+  @override
+  Future<void> removeParticipant(String tripId, String userId) async {
+    try {
+      await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('participants')
+          .doc(userId)
+          .delete();
+    } catch (e) {
+      throw TripServiceException('Failed to remove participant: $e');
+    }
+  }
+}
+
+/// Service for trip-related business logic
+class TripService {
+  TripService(this._repository);
+
+  final TripRepository _repository;
+
+  Future<String> createTrip(Trip trip) async {
+    return await _repository.createTrip(trip);
+  }
+
+  Future<Trip?> getTripDetails(String tripId) async {
+    return await _repository.getTripById(tripId);
+  }
+
+  /// Stream trip details for real-time updates
+  Stream<Trip?> streamTripDetails(String tripId) {
+    return _repository.streamTripById(tripId);
+  }
+
+  Future<List<TripParticipant>> getParticipants(String tripId) async {
+    final participants = await _repository.getTripParticipants(tripId);
+    // Create a mutable copy and sort organizers first
+    final sortedParticipants = List<TripParticipant>.from(participants);
+    sortedParticipants.sort((a, b) {
+      if (a.isOrganizer && !b.isOrganizer) return -1;
+      if (!a.isOrganizer && b.isOrganizer) return 1;
+      return a.displayName.compareTo(b.displayName);
+    });
+    return sortedParticipants;
+  }
+
+  Future<Trip> getTripWithDetails(String tripId) async {
+    final trip = await _repository.getTripById(tripId);
+    if (trip == null) {
+      throw TripServiceException('Trip not found');
+    }
+
+    final places = await _repository.getTripPlaces(tripId);
+    final itinerary = await _repository.getTripItinerary(tripId);
+
+    return trip.copyWith(places: places, itinerary: itinerary);
+  }
+
+  Future<void> addParticipant(
+    String tripId,
+    TripParticipant participant,
+  ) async {
+    await _repository.addParticipant(tripId, participant);
+  }
+
+  Future<void> removeParticipant(String tripId, String userId) async {
+    await _repository.removeParticipant(tripId, userId);
+  }
+
+  String formatDateRange(DateTime startDate, DateTime endDate) {
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    final startMonth = months[startDate.month - 1];
+    final endMonth = months[endDate.month - 1];
+
+    if (startDate.month == endDate.month) {
+      return '$startMonth ${startDate.day} - ${endDate.day}';
+    } else {
+      return '$startMonth ${startDate.day} - $endMonth ${endDate.day}';
+    }
+  }
+}
+
+/// Custom exception for trip service operations
+class TripServiceException implements Exception {
+  const TripServiceException(this.message);
+
+  final String message;
+
+  @override
+  String toString() => 'TripServiceException: $message';
+}

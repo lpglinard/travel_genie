@@ -23,8 +23,8 @@ class TripCard extends ConsumerWidget {
           ref
               .read(analyticsServiceProvider)
               .logViewItinerary(tripId: trip.id, destination: trip.title);
-          // Navigate to trip itinerary page
-          context.go('/trip/${trip.id}');
+          // Navigate to trip details page
+          context.push('/trip/${trip.id}');
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

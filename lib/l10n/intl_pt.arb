@@ -397,5 +397,43 @@
   "challengeSavePlaceTitle": "Salvar um Local",
   "challengeSavePlaceDescription": "Salve lugares interessantes nos seus favoritos",
   "challengeGenerateItineraryTitle": "Gerar Roteiro com IA",
-  "challengeGenerateItineraryDescription": "Deixe a IA criar um roteiro personalizado para você"
+  "challengeGenerateItineraryDescription": "Deixe a IA criar um roteiro personalizado para você",
+
+  "tripDetails": "Detalhes da Viagem",
+  "tripOverview": "Visão Geral",
+  "tripItineraryTab": "Roteiro",
+  "tripExplore": "Explorar",
+  "tripSummary": "Resumo da Viagem",
+  "tripParticipants": "Participantes",
+  "organizer": "Organizador",
+  "participant": "Participante",
+  "addParticipant": "Adicionar Participante",
+  "shareTrip": "Compartilhar Viagem",
+  "tripNotFound": "Viagem não encontrada",
+  "errorLoadingTrip": "Erro ao carregar detalhes da viagem",
+  "errorLoadingParticipants": "Erro ao carregar participantes",
+  "tripSummaryPlaceholder": "Descubra a magia de Paris com esta aventura cuidadosamente curada pela Cidade Luz. De marcos icônicos a joias escondidas, este roteiro combina atrações imperdíveis com experiências locais autênticas. Explore museus mundialmente famosos, passeie por boulevards encantadores e delicie-se com a requintada culinária francesa enquanto cria memórias inesquecíveis em uma das cidades mais românticas do mundo.",
+
+  "planNewTrip": "Planejar uma Nova Viagem",
+  "aiPersonalizationTitle": "A IA do Odsy cria roteiros com base no seu perfil. Quanto mais completo ele estiver, melhor será sua experiência.",
+  "profileCompleteness": "Seu perfil está {percentage}% completo",
+  "@profileCompleteness": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "improveMyProfile": "Melhorar meu perfil",
+  "destinationPlaceholder": "p.ex., Paris, Havaí, Japão",
+  "destinationLabel": "Destino",
+  "destinationRequired": "Por favor, insira um destino",
+  "selectDates": "Selecionar datas",
+  "startPlanning": "Comece a planejar",
+  "inviteTravelPartner": "Convide um parceiro de viagem",
+  "howManyDays": "Quantos dias terá sua viagem?",
+  "numberOfDays": "Número de dias",
+  "daysRequired": "Por favor, insira um número válido de dias",
+  "confirm": "Confirmar",
+  "invalidDestination": "Por favor, insira um destino válido"
 }

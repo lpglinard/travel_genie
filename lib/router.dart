@@ -22,6 +22,8 @@ import 'pages/search_results_page.dart';
 import 'pages/traveler_profile_page.dart';
 import 'providers/challenge_providers.dart';
 import 'services/analytics_service.dart';
+import 'trip/pages/new_trip_screen.dart';
+import 'trip/pages/trip_details_page.dart';
 import 'user_providers.dart';
 
 // Navigation destinations
@@ -202,20 +204,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
-      // New Trip screen route (outside the shell)
-      GoRoute(
-        path: '/new-trip',
-        pageBuilder: (context, state) {
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: const CreateTripPage(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-          );
-        },
-      ),
 
       // Create Trip screen route (outside the shell) - Alternative path for CTA
       GoRoute(
@@ -232,14 +220,75 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Trip Itinerary screen route (outside the shell)
+      // Trip Details screen route (outside the shell)
       GoRoute(
         path: '/trip/:id',
         pageBuilder: (context, state) {
           final tripId = state.pathParameters['id']!;
           return CustomTransitionPage(
             key: state.pageKey,
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to trips page
+                    context.go('/trips');
+                  }
+                }
+              },
+              child: TripDetailsPage(tripId: tripId),
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+
+      // Trip Itinerary screen route (outside the shell)
+      GoRoute(
+        path: '/trip/:id/itinerary',
+        pageBuilder: (context, state) {
+          final tripId = state.pathParameters['id']!;
+          return CustomTransitionPage(
+            key: state.pageKey,
             child: TripItineraryPage(tripId: tripId),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+
+      // Plan New Trip screen route (outside the shell)
+      GoRoute(
+        path: '/new-trip',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to home
+                    context.go('/');
+                  }
+                }
+              },
+              child: const NewTripScreen(),
+            ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   return FadeTransition(opacity: animation, child: child);
