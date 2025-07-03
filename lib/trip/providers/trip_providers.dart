@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:travel_genie/models/trip.dart';
+import 'package:travel_genie/user_providers.dart';
 
 import '../models/autocomplete_models.dart';
 import '../models/trip_participant.dart';
@@ -21,7 +22,8 @@ final tripRepositoryProvider = Provider<TripRepository>((ref) {
 /// Provider for TripService
 final tripServiceProvider = Provider<TripService>((ref) {
   final repository = ref.watch(tripRepositoryProvider);
-  return TripService(repository);
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return TripService(repository, analyticsService);
 });
 
 /// Provider for trip details by ID with real-time updates
@@ -40,6 +42,29 @@ final tripWithDetailsProvider = FutureProvider.family<Trip, String>((
 ) async {
   final tripService = ref.watch(tripServiceProvider);
   return await tripService.getTripWithDetails(tripId);
+});
+
+/// Provider for trip with full details with real-time updates
+/// This combines real-time trip updates with detailed data fetching
+final tripWithDetailsStreamProvider = StreamProvider.family<Trip, String>((
+  ref,
+  tripId,
+) async* {
+  final tripService = ref.watch(tripServiceProvider);
+
+  // Listen to real-time trip updates
+  await for (final trip in tripService.streamTripDetails(tripId)) {
+    if (trip != null) {
+      // When trip updates, fetch the full details
+      try {
+        final tripWithDetails = await tripService.getTripWithDetails(tripId);
+        yield tripWithDetails;
+      } catch (e) {
+        // If fetching details fails, yield the basic trip data
+        yield trip;
+      }
+    }
+  }
 });
 
 /// Provider for trip participants

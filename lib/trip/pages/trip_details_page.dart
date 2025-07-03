@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/models/trip.dart';
+import 'package:travel_genie/user_providers.dart';
 
 import '../providers/trip_providers.dart';
 import '../widgets/trip_cover_image.dart';
+import '../widgets/trip_itinerary_tab.dart';
 import '../widgets/trip_overview_content.dart';
 import '../widgets/trip_participants_avatars.dart';
 
@@ -32,7 +34,7 @@ class TripDetailsPage extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.share),
-            onPressed: () => _shareTrip(context, tripAsync.value),
+            onPressed: () => _shareTripWithAnalytics(context, ref, tripAsync.value),
             tooltip: AppLocalizations.of(context)!.shareTrip,
           ),
         ],
@@ -157,13 +159,11 @@ class TripDetailsPage extends ConsumerWidget {
                         participantsAsync: participantsAsync,
                       ),
 
-                      // Itinerary Tab (placeholder)
-                      const Center(
-                        child: Text('Itinerary content coming soon'),
-                      ),
+                      // Itinerary Tab
+                      TripItineraryTab(tripId: tripId),
 
                       // Explore Tab (placeholder)
-                      const Center(child: Text('Explore content coming soon')),
+                      Center(child: Text(AppLocalizations.of(context)!.exploreContentComingSoon)),
                     ],
                   ),
                 ),
@@ -181,8 +181,15 @@ class TripDetailsPage extends ConsumerWidget {
     );
   }
 
-  void _shareTrip(BuildContext context, Trip? trip) {
+  void _shareTripWithAnalytics(BuildContext context, WidgetRef ref, Trip? trip) {
     if (trip == null) return;
+
+    // Log trip sharing using Firebase standard share event
+    ref.read(analyticsServiceProvider).logShareItinerary(
+      tripId: tripId,
+      method: 'native_share',
+      contentType: 'trip',
+    );
 
     final shareText = '${trip.title}\n${trip.description}';
     Share.share(shareText, subject: AppLocalizations.of(context)!.shareTrip);

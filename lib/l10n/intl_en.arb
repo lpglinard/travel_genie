@@ -435,5 +435,79 @@
   "numberOfDays": "Number of days",
   "daysRequired": "Please enter a valid number of days",
   "confirm": "Confirm",
-  "invalidDestination": "Please enter a valid destination"
+  "invalidDestination": "Please enter a valid destination",
+
+  "mondayAbbr": "MON",
+  "tuesdayAbbr": "TUE",
+  "wednesdayAbbr": "WED",
+  "thursdayAbbr": "THU",
+  "fridayAbbr": "FRI",
+  "saturdayAbbr": "SAT",
+  "sundayAbbr": "SUN",
+
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December",
+
+  "ofPreposition": "of",
+  "noItineraryYet": "No itinerary yet",
+  "noItineraryDescription": "Your itinerary will appear here once you start planning your trip.",
+  "placesCount": "{count, plural, =1{1 place} other{{count} places}}",
+  "@placesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noPlacesForDay": "No places planned for this day",
+
+  "creatingMagicalItinerary": "Creating your magical itinerary...",
+  "aiWorkingMagic": "Our AI is working its magic to create the perfect trip for you",
+  "pleaseSelectTravelDates": "Please select your travel dates",
+  "friends": "Friends",
+  "inviteByEmail": "Invite by Email",
+  "noFriendsFound": "No friends found",
+  "addFriendsToInvite": "Add friends to invite them to your trips",
+  "invitationSentTo": "Invitation sent to {name}",
+  "@invitationSentTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "emailAddress": "Email address",
+  "enterFriendEmail": "Enter friend's email",
+  "pleaseEnterEmailAddress": "Please enter an email address",
+  "pleaseEnterValidEmailAddress": "Please enter a valid email address",
+  "sendInvitation": "Send Invitation",
+  "invite": "Invite",
+  "pleaseSelectTravelDatesToContinue": "Please select travel dates to continue",
+  "errorCreatingTrip": "Error creating trip: {error}",
+  "@errorCreatingTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noValidDestinationFound": "No valid destination found for \"{destination}\". Please try a different location.",
+  "@noValidDestinationFound": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreContentComingSoon": "Explore content coming soon"
 }

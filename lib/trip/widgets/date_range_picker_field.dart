@@ -30,7 +30,7 @@ class DateRangePickerField extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8, left: 12),
             child: Text(
-              'Please select your travel dates',
+              AppLocalizations.of(context)!.pleaseSelectTravelDates,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Theme.of(context).colorScheme.error,
               ),

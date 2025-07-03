@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
+import 'package:travel_genie/user_providers.dart';
 
 import '../../models/trip.dart';
-import '../../user_providers.dart';
 import '../providers/trip_providers.dart';
 import '../services/city_autocomplete_service.dart';
 import '../widgets/date_range_picker_field.dart';
@@ -28,6 +28,21 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
   bool _isLoading = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Log trip creation flow started
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(analyticsServiceProvider).analytics.logEvent(
+        name: 'begin_trip_creation',
+        parameters: {
+          'screen_name': 'new_trip_screen',
+          'content_type': 'trip_creation_flow',
+        },
+      );
+    });
+  }
+
+  @override
   void dispose() {
     _destinationController.dispose();
     super.dispose();
@@ -48,7 +63,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Please select travel dates to continue'),
+            content: Text(AppLocalizations.of(context)!.pleaseSelectTravelDatesToContinue),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -86,7 +101,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('No valid destination found for "$destination". Please try a different location.'),
+                content: Text(AppLocalizations.of(context)!.noValidDestinationFound(destination)),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
@@ -111,6 +126,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
         coverImageUrl: '',
         isLoadingCoverImage: true,
         isLoadingDescription: true,
+        isLoadingItinerary: true,
         userId: currentUser.uid,
         createdAt: now,
         updatedAt: now,
@@ -134,7 +150,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error creating trip: $e'),
+            content: Text(AppLocalizations.of(context)!.errorCreatingTrip(e.toString())),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

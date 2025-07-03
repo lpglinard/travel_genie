@@ -19,7 +19,8 @@ class Place {
     this.photos = const [],
     this.generativeSummary = '',
     this.disclosureText = '',
-    this.order = 0,
+    this.orderInDay = 0,
+    this.estimatedDurationMinutes,
     PlaceCategory? category,
   }) : category = category ?? PlaceCategories.determineCategoryFromTypes(types);
 
@@ -37,13 +38,14 @@ class Place {
   final List<Photo> photos;
   final String generativeSummary;
   final String disclosureText;
-  final int order;
+  final int orderInDay;
+  final int? estimatedDurationMinutes;
   final PlaceCategory category;
 
   factory Place.fromJson(Map<String, dynamic> json) {
     String displayName = '';
     String displayNameLanguageCode = '';
-    final displayNameField = json['displayName'] ?? json['display_name'];
+    final displayNameField = json['displayName'] ?? json['display_name'] ?? json['name'];
     if (displayNameField is Map<String, dynamic>) {
       displayName = displayNameField['text'] as String? ?? '';
       displayNameLanguageCode =
@@ -110,7 +112,8 @@ class Place {
         }).toList();
         return photosList ?? const [];
       }(),
-      order: (json['order'] as int?) ?? 0,
+      orderInDay: (json['orderInDay'] as int?) ?? 0,
+      estimatedDurationMinutes: (json['estimatedDurationMinutes'] as int?),
     );
   }
 
@@ -138,7 +141,8 @@ class Place {
           'disclosureText': {'text': disclosureText},
         },
       'category': category.id,
-      'order': order,
+      'orderInDay': orderInDay,
+      if (estimatedDurationMinutes != null) 'estimatedDurationMinutes': estimatedDurationMinutes,
     };
   }
 }

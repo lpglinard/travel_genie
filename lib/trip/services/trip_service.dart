@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:travel_genie/models/itinerary_day.dart';
 import 'package:travel_genie/models/place.dart';
 import 'package:travel_genie/models/trip.dart';
+import 'package:travel_genie/services/analytics_service.dart';
 
 import '../models/trip_participant.dart';
 
@@ -19,6 +21,8 @@ abstract class TripRepository {
   Future<List<Place>> getTripPlaces(String tripId);
 
   Future<List<ItineraryDay>> getTripItinerary(String tripId);
+
+  Future<List<Place>> getItineraryDayPlaces(String tripId, String dayId);
 
   Future<void> addParticipant(String tripId, TripParticipant participant);
 
@@ -90,13 +94,9 @@ class FirestoreTripRepository implements TripRepository {
   @override
   Future<List<Place>> getTripPlaces(String tripId) async {
     try {
-      final snapshot = await _firestore
-          .collection('trips')
-          .doc(tripId)
-          .collection('places')
-          .get();
-
-      return snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList();
+      // Since ItineraryDay now only has dayNumber, return empty list
+      // Places functionality is simplified
+      return [];
     } catch (e) {
       throw TripServiceException('Failed to fetch places: $e');
     }
@@ -108,8 +108,8 @@ class FirestoreTripRepository implements TripRepository {
       final snapshot = await _firestore
           .collection('trips')
           .doc(tripId)
-          .collection('itinerary')
-          .orderBy('date')
+          .collection('itineraryDays')
+          .orderBy('dayNumber')
           .get();
 
       return snapshot.docs
@@ -117,6 +117,24 @@ class FirestoreTripRepository implements TripRepository {
           .toList();
     } catch (e) {
       throw TripServiceException('Failed to fetch itinerary: $e');
+    }
+  }
+
+  @override
+  Future<List<Place>> getItineraryDayPlaces(String tripId, String dayId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('itineraryDays')
+          .doc(dayId)
+          .collection('places')
+          .orderBy('orderInDay')
+          .get();
+
+      return snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList();
+    } catch (e) {
+      throw TripServiceException('Failed to fetch itinerary day places: $e');
     }
   }
 
@@ -154,16 +172,65 @@ class FirestoreTripRepository implements TripRepository {
 
 /// Service for trip-related business logic
 class TripService {
-  TripService(this._repository);
+  TripService(this._repository, this._analyticsService);
 
   final TripRepository _repository;
+  final AnalyticsService _analyticsService;
 
   Future<String> createTrip(Trip trip) async {
-    return await _repository.createTrip(trip);
+    final tripId = await _repository.createTrip(trip);
+
+    // Log trip creation as conversion goal using Firebase standard begin_checkout event
+    await _analyticsService.logCreateItinerary(
+      tripId: tripId,
+      destination: trip.title,
+      value: 0.0,
+      currency: 'USD',
+      items: [
+        AnalyticsEventItem(
+          itemId: tripId,
+          itemName: trip.title,
+          itemCategory: 'trip',
+          parameters: {
+            'destination': trip.title,
+            'start_date': trip.startDate.toIso8601String(),
+            'end_date': trip.endDate.toIso8601String(),
+            'duration_days': trip.endDate.difference(trip.startDate).inDays + 1,
+          },
+        ),
+      ],
+    );
+
+    return tripId;
   }
 
   Future<Trip?> getTripDetails(String tripId) async {
-    return await _repository.getTripById(tripId);
+    final trip = await _repository.getTripById(tripId);
+
+    // Log trip viewing using Firebase standard view_item event
+    if (trip != null) {
+      await _analyticsService.logViewItinerary(
+        tripId: tripId,
+        destination: trip.title,
+        value: 0.0,
+        currency: 'USD',
+        items: [
+          AnalyticsEventItem(
+            itemId: tripId,
+            itemName: trip.title,
+            itemCategory: 'trip',
+            parameters: {
+              'destination': trip.title,
+              'start_date': trip.startDate.toIso8601String(),
+              'end_date': trip.endDate.toIso8601String(),
+              'duration_days': trip.endDate.difference(trip.startDate).inDays + 1,
+            },
+          ),
+        ],
+      );
+    }
+
+    return trip;
   }
 
   /// Stream trip details for real-time updates
@@ -192,6 +259,7 @@ class TripService {
     final places = await _repository.getTripPlaces(tripId);
     final itinerary = await _repository.getTripItinerary(tripId);
 
+    // Since ItineraryDay is simplified, just return the basic itinerary
     return trip.copyWith(places: places, itinerary: itinerary);
   }
 

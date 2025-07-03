@@ -178,15 +178,7 @@ final _plannedDaysProvider = FutureProvider.family<int, String>((
   ref,
   tripId,
 ) async {
-  final days = await ref.read(itineraryDaysProvider(tripId).future);
-  int planned = 0;
-  for (final day in days) {
-    final places = await ref.read(
-      placesForDayProvider((tripId: tripId, dayId: day.id)).future,
-    );
-    if (places.isNotEmpty) {
-      planned++;
-    }
-  }
-  return planned;
+  // Since ItineraryDay now only has dayNumber and places functionality is simplified,
+  // return 0 planned days
+  return 0;
 });

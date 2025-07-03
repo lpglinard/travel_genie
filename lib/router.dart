@@ -1,18 +1,15 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_genie/pages/trip_itinerary_page.dart';
 
 import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
 import 'models/challenge.dart';
 import 'models/place.dart';
-import 'pages/create_trip_page.dart';
 import 'pages/groups_page.dart';
 import 'pages/home_page.dart';
 import 'pages/my_trips_page.dart';
@@ -205,20 +202,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Create Trip screen route (outside the shell) - Alternative path for CTA
-      GoRoute(
-        path: '/create-trip',
-        pageBuilder: (context, state) {
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: const CreateTripPage(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-          );
-        },
-      ),
 
       // Trip Details screen route (outside the shell)
       GoRoute(
@@ -251,21 +234,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Trip Itinerary screen route (outside the shell)
-      GoRoute(
-        path: '/trip/:id/itinerary',
-        pageBuilder: (context, state) {
-          final tripId = state.pathParameters['id']!;
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: TripItineraryPage(tripId: tripId),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-          );
-        },
-      ),
 
       // Plan New Trip screen route (outside the shell)
       GoRoute(

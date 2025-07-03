@@ -118,14 +118,14 @@ class _TravelPartnerInviteModalState extends State<_TravelPartnerInviteModal> {
               children: [
                 Expanded(
                   child: _TabButton(
-                    text: 'Friends',
+                    text: AppLocalizations.of(context)!.friends,
                     isSelected: _selectedTabIndex == 0,
                     onTap: () => setState(() => _selectedTabIndex = 0),
                   ),
                 ),
                 Expanded(
                   child: _TabButton(
-                    text: 'Invite by Email',
+                    text: AppLocalizations.of(context)!.inviteByEmail,
                     isSelected: _selectedTabIndex == 1,
                     onTap: () => setState(() => _selectedTabIndex = 1),
                   ),
@@ -212,14 +212,14 @@ class _FriendsListTab extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No friends found',
+              AppLocalizations.of(context)!.noFriendsFound,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
               ),
             ),
             const SizedBox(height: 8),
             Text(
-              'Add friends to invite them to your trips',
+              AppLocalizations.of(context)!.addFriendsToInvite,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
               ),
@@ -249,7 +249,7 @@ class _FriendsListTab extends StatelessWidget {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Invitation sent to $friendName'),
+        content: Text(AppLocalizations.of(context)!.invitationSentTo(friendName)),
         backgroundColor: Colors.green,
       ),
     );
@@ -287,8 +287,8 @@ class _EmailInviteTabState extends State<_EmailInviteTab> {
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                labelText: 'Email address',
-                hintText: 'Enter friend\'s email',
+                labelText: AppLocalizations.of(context)!.emailAddress,
+                hintText: AppLocalizations.of(context)!.enterFriendEmail,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -296,12 +296,12 @@ class _EmailInviteTabState extends State<_EmailInviteTab> {
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter an email address';
+                  return AppLocalizations.of(context)!.pleaseEnterEmailAddress;
                 }
                 if (!RegExp(
                   r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                 ).hasMatch(value)) {
-                  return 'Please enter a valid email address';
+                  return AppLocalizations.of(context)!.pleaseEnterValidEmailAddress;
                 }
                 return null;
               },
@@ -319,9 +319,9 @@ class _EmailInviteTabState extends State<_EmailInviteTab> {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Send Invitation',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              child: Text(
+                AppLocalizations.of(context)!.sendInvitation,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -336,7 +336,7 @@ class _EmailInviteTabState extends State<_EmailInviteTab> {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Invitation sent to $email'),
+          content: Text(AppLocalizations.of(context)!.invitationSentTo(email)),
           backgroundColor: Colors.green,
         ),
       );
@@ -397,7 +397,7 @@ class _FriendListItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(20),
           ),
         ),
-        child: const Text('Invite'),
+        child: Text(AppLocalizations.of(context)!.invite),
       ),
     );
   }

@@ -18,6 +18,7 @@ class Trip {
     this.isArchived = false,
     this.isLoadingCoverImage = false,
     this.isLoadingDescription = false,
+    this.isLoadingItinerary = false,
     this.participants = const [],
     this.places,
     this.itinerary,
@@ -36,6 +37,7 @@ class Trip {
   final bool isArchived;
   final bool isLoadingCoverImage;
   final bool isLoadingDescription;
+  final bool isLoadingItinerary;
   final List<String> participants;
 
   /// Dados carregados separadamente das subcoleções:
@@ -59,6 +61,7 @@ class Trip {
       isArchived: data['isArchived'] as bool? ?? false,
       isLoadingCoverImage: data['isLoadingCoverImage'] as bool? ?? false,
       isLoadingDescription: data['isLoadingDescription'] as bool? ?? false,
+      isLoadingItinerary: data['isLoadingItinerary'] as bool? ?? false,
       participants: (data['participants'] as List?)?.cast<String>() ?? const [],
       places: null,
       // serão carregados separadamente
@@ -80,6 +83,7 @@ class Trip {
       'isArchived': isArchived,
       'isLoadingCoverImage': isLoadingCoverImage,
       'isLoadingDescription': isLoadingDescription,
+      'isLoadingItinerary': isLoadingItinerary,
       'participants': participants,
       // NÃO incluir `places` ou `itinerary` aqui!
     };
@@ -99,6 +103,7 @@ class Trip {
     bool? isArchived,
     bool? isLoadingCoverImage,
     bool? isLoadingDescription,
+    bool? isLoadingItinerary,
     List<String>? participants,
     List<Place>? places,
     List<ItineraryDay>? itinerary,
@@ -117,6 +122,7 @@ class Trip {
       isArchived: isArchived ?? this.isArchived,
       isLoadingCoverImage: isLoadingCoverImage ?? this.isLoadingCoverImage,
       isLoadingDescription: isLoadingDescription ?? this.isLoadingDescription,
+      isLoadingItinerary: isLoadingItinerary ?? this.isLoadingItinerary,
       participants: participants ?? this.participants,
       places: places ?? this.places,
       itinerary: itinerary ?? this.itinerary,
