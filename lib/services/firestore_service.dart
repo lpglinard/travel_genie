@@ -52,8 +52,12 @@ class FirestoreService {
       'name': user.displayName,
       'email': user.email,
     };
+    // Always update locale field when provided, even if null (for Portuguese)
     if (locale != null) {
       data['locale'] = locale.languageCode;
+    } else {
+      // Explicitly set locale to null for Portuguese (default language)
+      data['locale'] = null;
     }
     if (darkMode != null) {
       data['darkMode'] = darkMode;
@@ -173,24 +177,12 @@ class FirestoreService {
   ///
   /// Returns a stream of trips where the user is either the owner or a participant
   Stream<List<Trip>> streamUserTrips(String userId, String? userEmail) {
-    // If no user email is provided, just query by userId
-    if (userEmail == null) {
-      return _trips
-          .where('userId', isEqualTo: userId)
-          .orderBy('startDate', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) =>
-                snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList(),
-          );
-    }
-
     // Query trips where the user is either the owner or a participant
     return _trips
         .where(
           Filter.or(
             Filter('userId', isEqualTo: userId),
-            Filter('participants', arrayContains: userEmail),
+            Filter('participants', arrayContains: userId),
           ),
         )
         .orderBy('startDate', descending: true)
@@ -219,19 +211,18 @@ class FirestoreService {
       'createdAt': FieldValue.serverTimestamp(),
       'updatedAt': FieldValue.serverTimestamp(),
       'isArchived': false,
-      'participants': userEmail != null ? [userEmail] : [],
+      'participants': [userId],
     });
 
-    final itineraryRef = tripRef.collection('itinerary_days');
-    int order = 0;
+    final itineraryRef = tripRef.collection('itineraryDays');
+    int dayNumber = 1;
     for (
       DateTime date = startDate;
       !date.isAfter(endDate);
       date = date.add(const Duration(days: 1))
     ) {
       await itineraryRef.add({
-        'date': Timestamp.fromDate(date),
-        'order': order++,
+        'dayNumber': dayNumber++,
       });
     }
 
@@ -254,13 +245,13 @@ class FirestoreService {
     final placesRef = _firestore
         .collection('trips')
         .doc(tripId)
-        .collection('itinerary_days')
+        .collection('itineraryDays')
         .doc(dayId)
         .collection('places');
 
     await _firestore.runTransaction((transaction) async {
       // Read current places within the transaction
-      final snapshot = await placesRef.orderBy('order').get();
+      final snapshot = await placesRef.orderBy('orderInDay').get();
       final docs = snapshot.docs;
 
       final placeRef = placesRef.doc(place.placeId);
@@ -269,17 +260,17 @@ class FirestoreService {
       final insertIndex = position ?? docs.length;
 
       // Set the new place with the correct order
-      final newData = {...place.toMap(), 'order': insertIndex};
+      final newData = {...place.toMap(), 'orderInDay': insertIndex};
       transaction.set(placeRef, newData);
 
       // Update the order of existing places that need to be shifted
       for (int i = 0; i < docs.length; i++) {
         final doc = docs[i];
-        final currentOrder = doc.data()['order'] as int? ?? i;
+        final currentOrder = doc.data()['orderInDay'] as int? ?? i;
 
         // Only update documents that need to be shifted
         if (currentOrder >= insertIndex) {
-          transaction.update(doc.reference, {'order': currentOrder + 1});
+          transaction.update(doc.reference, {'orderInDay': currentOrder + 1});
         }
       }
 
@@ -300,13 +291,13 @@ class FirestoreService {
     final placesRef = _firestore
         .collection('trips')
         .doc(tripId)
-        .collection('itinerary_days')
+        .collection('itineraryDays')
         .doc(dayId)
         .collection('places');
 
     await _firestore.runTransaction((transaction) async {
       // Read current places within the transaction
-      final snapshot = await placesRef.orderBy('order').get();
+      final snapshot = await placesRef.orderBy('orderInDay').get();
       final docs = snapshot.docs;
 
       if (oldIndex < 0 ||
@@ -321,7 +312,7 @@ class FirestoreService {
 
       // Update all documents with new order
       for (int i = 0; i < docs.length; i++) {
-        transaction.update(docs[i].reference, {'order': i});
+        transaction.update(docs[i].reference, {'orderInDay': i});
       }
     });
   }
@@ -340,7 +331,7 @@ class FirestoreService {
     final placesRef = _firestore
         .collection('trips')
         .doc(tripId)
-        .collection('itinerary_days')
+        .collection('itineraryDays')
         .doc(dayId)
         .collection('places');
 
@@ -352,7 +343,7 @@ class FirestoreService {
       if (!doc.exists) return;
 
       // Get all places before making changes
-      final snapshot = await placesRef.orderBy('order').get();
+      final snapshot = await placesRef.orderBy('orderInDay').get();
 
       // Delete the place
       transaction.delete(placeRef);
@@ -361,7 +352,7 @@ class FirestoreService {
       int newOrder = 0;
       for (final doc in snapshot.docs) {
         if (doc.id != place.placeId) {
-          transaction.update(doc.reference, {'order': newOrder++});
+          transaction.update(doc.reference, {'orderInDay': newOrder++});
         }
       }
     });
@@ -371,8 +362,8 @@ class FirestoreService {
   Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
     return _trips
         .doc(tripId)
-        .collection('itinerary_days')
-        .orderBy('order')
+        .collection('itineraryDays')
+        .orderBy('dayNumber')
         .snapshots()
         .map(
           (snapshot) => snapshot.docs
@@ -388,10 +379,10 @@ class FirestoreService {
   }) {
     return _trips
         .doc(tripId)
-        .collection('itinerary_days')
+        .collection('itineraryDays')
         .doc(dayId)
         .collection('places')
-        .orderBy('order')
+        .orderBy('orderInDay')
         .snapshots()
         .map(
           (snapshot) =>

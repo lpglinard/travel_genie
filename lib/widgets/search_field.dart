@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../providers/user_providers.dart';
 
 /// A reusable search field widget that adapts to the current theme.
-class SearchField extends ConsumerWidget {
+class SearchField extends StatelessWidget {
   /// Creates a search field widget.
   ///
   /// The [controller] is used to control the text being edited.
@@ -13,14 +10,14 @@ class SearchField extends ConsumerWidget {
   /// The [onChanged] callback is called when the user changes the text.
   /// The [onClear] callback is called when the user clears the field.
   const SearchField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.hintText,
     this.onSubmitted,
     this.onChanged,
     this.onClear,
     this.suffixIcon,
-  }) : super(key: key);
+  });
 
   /// The controller for the text field.
   final TextEditingController controller;
@@ -41,7 +38,7 @@ class SearchField extends ConsumerWidget {
   final Widget? suffixIcon;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
@@ -52,13 +49,7 @@ class SearchField extends ConsumerWidget {
             IconButton(
               icon: const Icon(Icons.clear),
               onPressed: () {
-                ref
-                    .read(analyticsServiceProvider)
-                    .logSearchInteraction(
-                      action: 'clear',
-                      query: controller.text,
-                      screenName: 'search_field',
-                    );
+                // Removed granular search interaction tracking as per analytics strategy refactor
                 controller.clear();
                 if (onClear != null) {
                   onClear!();
@@ -75,32 +66,8 @@ class SearchField extends ConsumerWidget {
         ).colorScheme.inverseSurface.withOpacity(0.2),
         contentPadding: const EdgeInsets.symmetric(vertical: 0),
       ),
-      onSubmitted: onSubmitted != null
-          ? (value) {
-              ref
-                  .read(analyticsServiceProvider)
-                  .logSearchInteraction(
-                    action: 'submit',
-                    query: value,
-                    screenName: 'search_field',
-                  );
-              onSubmitted!(value);
-            }
-          : null,
-      onChanged: onChanged != null
-          ? (value) {
-              if (value.isNotEmpty) {
-                ref
-                    .read(analyticsServiceProvider)
-                    .logSearchInteraction(
-                      action: 'start',
-                      query: value,
-                      screenName: 'search_field',
-                    );
-              }
-              onChanged!(value);
-            }
-          : null,
+      onSubmitted: onSubmitted,
+      onChanged: onChanged,
     );
   }
 }

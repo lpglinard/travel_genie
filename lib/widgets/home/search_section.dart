@@ -32,7 +32,7 @@ class _SearchSectionState extends ConsumerState<SearchSection> {
 
   void _submitSearch(String value) {
     if (value.isNotEmpty) {
-      ref.read(analyticsServiceProvider).logSearchPlace(query: value);
+      ref.read(analyticsServiceProvider).logSearchPlace(searchTerm: value);
       ref.read(autocompleteProvider.notifier).search('');
       // Use go_router to navigate to the explore page with the query parameter
       context.go('/explore?query=$value');
@@ -77,13 +77,7 @@ class _SearchSectionState extends ConsumerState<SearchSection> {
                         style: Theme.of(context).textTheme.bodyLarge,
                       ),
                       onTap: () {
-                        ref
-                            .read(analyticsServiceProvider)
-                            .logButtonTap(
-                              buttonName: 'search_suggestion',
-                              screenName: 'home',
-                              context: 'autocomplete',
-                            );
+                        // Search tracking will be handled by _submitSearch method
                         searchController.text = s;
                         _submitSearch(s);
                       },

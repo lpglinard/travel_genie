@@ -48,13 +48,10 @@ class _DestinationItem extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        // Track destination search using Firebase standard event
         ref
             .read(analyticsServiceProvider)
-            .logButtonTap(
-              buttonName: 'popular_destination',
-              screenName: 'home',
-              context: destination.name,
-            );
+            .logSearchPlace(searchTerm: destination.name);
         // Clear autocomplete suggestions
         ref.read(autocompleteProvider.notifier).search('');
         // Navigate to explore page with destination name as query

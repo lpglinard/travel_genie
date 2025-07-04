@@ -92,6 +92,5 @@ final userDeletionServiceProvider = Provider<UserDeletionService>((ref) {
 });
 
 final userManagementServiceProvider = Provider<UserManagementService>((ref) {
-  final userDeletionService = ref.watch(userDeletionServiceProvider);
-  return UserManagementService(userDeletionService: userDeletionService);
+  return UserManagementService();
 });

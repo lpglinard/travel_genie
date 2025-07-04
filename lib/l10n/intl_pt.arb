@@ -317,9 +317,15 @@
     }
   },
   "ok": "OK",
+  "magicAiTripOptimizer": "Otimizador Mágico de Viagens IA",
+  "chooseOptimizationStrategy": "Escolha sua estratégia de otimização",
+  "startMagicOptimization": "Iniciar Otimização Mágica",
   "timeEfficient": "Eficiente em Tempo",
+  "timeEfficientDescription": "Minimize o tempo de viagem entre locais e otimize rotas para máxima eficiência",
   "costEffective": "Custo-Benefício",
+  "costEffectiveDescription": "Encontre opções econômicas e otimize para experiências com melhor valor",
   "experienceMaximizer": "Maximizador de Experiência",
+  "experienceMaximizerDescription": "Priorize experiências únicas e atrações imperdíveis para memórias inesquecíveis",
 
   "guest": "Visitante",
   "loginToAccessFullFeatures": "Faça login para acessar recursos completos",
@@ -391,5 +397,134 @@
   "challengeSavePlaceTitle": "Salvar um Local",
   "challengeSavePlaceDescription": "Salve lugares interessantes nos seus favoritos",
   "challengeGenerateItineraryTitle": "Gerar Roteiro com IA",
-  "challengeGenerateItineraryDescription": "Deixe a IA criar um roteiro personalizado para você"
+  "challengeGenerateItineraryDescription": "Deixe a IA criar um roteiro personalizado para você",
+
+  "tripDetails": "Detalhes da Viagem",
+  "tripOverview": "Visão Geral",
+  "tripItineraryTab": "Roteiro",
+  "tripExplore": "Explorar",
+  "tripSummary": "Resumo da Viagem",
+  "tripParticipants": "Participantes",
+  "organizer": "Organizador",
+  "participant": "Participante",
+  "addParticipant": "Adicionar Participante",
+  "shareTrip": "Compartilhar Viagem",
+  "tripNotFound": "Viagem não encontrada",
+  "errorLoadingTrip": "Erro ao carregar detalhes da viagem",
+  "errorLoadingParticipants": "Erro ao carregar participantes",
+  "tripSummaryPlaceholder": "Descubra a magia de Paris com esta aventura cuidadosamente curada pela Cidade Luz. De marcos icônicos a joias escondidas, este roteiro combina atrações imperdíveis com experiências locais autênticas. Explore museus mundialmente famosos, passeie por boulevards encantadores e delicie-se com a requintada culinária francesa enquanto cria memórias inesquecíveis em uma das cidades mais românticas do mundo.",
+
+  "planNewTrip": "Planejar uma Nova Viagem",
+  "aiPersonalizationTitle": "A IA do Odsy cria roteiros com base no seu perfil. Quanto mais completo ele estiver, melhor será sua experiência.",
+  "profileCompleteness": "Seu perfil está {percentage}% completo",
+  "@profileCompleteness": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "improveMyProfile": "Melhorar meu perfil",
+  "destinationPlaceholder": "p.ex., Paris, Havaí, Japão",
+  "destinationLabel": "Destino",
+  "destinationRequired": "Por favor, insira um destino",
+  "selectDates": "Selecionar datas",
+  "startPlanning": "Comece a planejar",
+  "inviteTravelPartner": "Convide um parceiro de viagem",
+  "howManyDays": "Quantos dias terá sua viagem?",
+  "numberOfDays": "Número de dias",
+  "daysRequired": "Por favor, insira um número válido de dias",
+  "confirm": "Confirmar",
+  "invalidDestination": "Por favor, insira um destino válido",
+
+  "mondayAbbr": "SEG",
+  "tuesdayAbbr": "TER",
+  "wednesdayAbbr": "QUA",
+  "thursdayAbbr": "QUI",
+  "fridayAbbr": "SEX",
+  "saturdayAbbr": "SÁB",
+  "sundayAbbr": "DOM",
+
+  "january": "Janeiro",
+  "february": "Fevereiro",
+  "march": "Março",
+  "april": "Abril",
+  "may": "Maio",
+  "june": "Junho",
+  "july": "Julho",
+  "august": "Agosto",
+  "september": "Setembro",
+  "october": "Outubro",
+  "november": "Novembro",
+  "december": "Dezembro",
+
+  "ofPreposition": "de",
+  "noItineraryYet": "Nenhum roteiro ainda",
+  "noItineraryDescription": "Seu roteiro aparecerá aqui quando você começar a planejar sua viagem.",
+  "placesCount": "{count, plural, =1{1 lugar} other{{count} lugares}}",
+  "@placesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noPlacesForDay": "Nenhum lugar planejado para este dia",
+
+  "creatingMagicalItinerary": "Criando seu roteiro mágico...",
+  "aiWorkingMagic": "Nossa IA está trabalhando sua magia para criar a viagem perfeita para você",
+  "pleaseSelectTravelDates": "Por favor, selecione suas datas de viagem",
+  "friends": "Amigos",
+  "inviteByEmail": "Convidar por Email",
+  "noFriendsFound": "Nenhum amigo encontrado",
+  "addFriendsToInvite": "Adicione amigos para convidá-los para suas viagens",
+  "invitationSentTo": "Convite enviado para {name}",
+  "@invitationSentTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "emailAddress": "Endereço de email",
+  "enterFriendEmail": "Digite o email do amigo",
+  "pleaseEnterEmailAddress": "Por favor, digite um endereço de email",
+  "pleaseEnterValidEmailAddress": "Por favor, digite um endereço de email válido",
+  "sendInvitation": "Enviar Convite",
+  "invite": "Convidar",
+  "pleaseSelectTravelDatesToContinue": "Por favor, selecione as datas de viagem para continuar",
+  "errorCreatingTrip": "Erro ao criar viagem: {error}",
+  "@errorCreatingTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noValidDestinationFound": "Nenhum destino válido encontrado para \"{destination}\". Tente um local diferente.",
+  "@noValidDestinationFound": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreContentComingSoon": "Conteúdo de exploração em breve",
+
+  "addNote": "Adicionar Nota",
+  "editNote": "Editar Nota",
+  "dayNotes": "Notas do Dia",
+  "notePlaceholder": "Adicione suas notas para este dia...",
+  "saveNote": "Salvar Nota",
+  "deleteNote": "Excluir Nota",
+  "hasNotes": "Tem notas",
+  "addPlace": "Adicionar Local",
+  "searchPlaces": "Buscar locais",
+  "searchPlacesHint": "Busque locais para adicionar a este dia",
+  "searchError": "Busca falhou. Tente novamente.",
+  "noPlacesFound": "Nenhum local encontrado",
+  "addToDay": "Adicionar ao Dia",
+  "placeAdded": "Local adicionado ao dia",
+  "notesSaved": "Notas salvas",
+  "notesDeleted": "Notas excluídas"
 }

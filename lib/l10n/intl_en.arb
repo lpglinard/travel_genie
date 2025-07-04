@@ -317,9 +317,15 @@
     }
   },
   "ok": "OK",
+  "magicAiTripOptimizer": "Magic AI Trip Optimizer",
+  "chooseOptimizationStrategy": "Choose your optimization strategy",
+  "startMagicOptimization": "Start Magic Optimization",
   "timeEfficient": "Time Efficient",
+  "timeEfficientDescription": "Minimize travel time between places and optimize routes for maximum efficiency",
   "costEffective": "Cost Effective",
+  "costEffectiveDescription": "Find budget-friendly options and optimize for the best value experiences",
   "experienceMaximizer": "Experience Maximizer",
+  "experienceMaximizerDescription": "Prioritize unique experiences and must-see attractions for unforgettable memories",
 
   "guest": "Guest",
   "loginToAccessFullFeatures": "Login to access full features",
@@ -391,5 +397,134 @@
   "challengeSavePlaceTitle": "Save a Place",
   "challengeSavePlaceDescription": "Save interesting places to your favorites",
   "challengeGenerateItineraryTitle": "Generate AI Itinerary",
-  "challengeGenerateItineraryDescription": "Let AI create a personalized itinerary for you"
+  "challengeGenerateItineraryDescription": "Let AI create a personalized itinerary for you",
+
+  "tripDetails": "Trip Details",
+  "tripOverview": "Overview",
+  "tripItineraryTab": "Itinerary",
+  "tripExplore": "Explore",
+  "tripSummary": "Trip Summary",
+  "tripParticipants": "Participants",
+  "organizer": "Organizer",
+  "participant": "Participant",
+  "addParticipant": "Add Participant",
+  "shareTrip": "Share Trip",
+  "tripNotFound": "Trip not found",
+  "errorLoadingTrip": "Error loading trip details",
+  "errorLoadingParticipants": "Error loading participants",
+  "tripSummaryPlaceholder": "Discover the magic of Paris with this carefully curated adventure through the City of Light. From iconic landmarks to hidden gems, this itinerary combines must-see attractions with authentic local experiences. Explore world-renowned museums, stroll along charming boulevards, and indulge in exquisite French cuisine while creating unforgettable memories in one of the world's most romantic cities.",
+
+  "planNewTrip": "Plan a New Trip",
+  "aiPersonalizationTitle": "Odsy's AI creates itineraries based on your profile. The more complete it is, the better your experience will be.",
+  "profileCompleteness": "Your profile is {percentage}% complete",
+  "@profileCompleteness": {
+    "placeholders": {
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "improveMyProfile": "Improve my profile",
+  "destinationPlaceholder": "e.g., Paris, Hawaii, Japan",
+  "destinationLabel": "Destination",
+  "destinationRequired": "Please enter a destination",
+  "selectDates": "Select dates",
+  "startPlanning": "Start planning",
+  "inviteTravelPartner": "Invite a travel partner",
+  "howManyDays": "How many days will your trip be?",
+  "numberOfDays": "Number of days",
+  "daysRequired": "Please enter a valid number of days",
+  "confirm": "Confirm",
+  "invalidDestination": "Please enter a valid destination",
+
+  "mondayAbbr": "MON",
+  "tuesdayAbbr": "TUE",
+  "wednesdayAbbr": "WED",
+  "thursdayAbbr": "THU",
+  "fridayAbbr": "FRI",
+  "saturdayAbbr": "SAT",
+  "sundayAbbr": "SUN",
+
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December",
+
+  "ofPreposition": "of",
+  "noItineraryYet": "No itinerary yet",
+  "noItineraryDescription": "Your itinerary will appear here once you start planning your trip.",
+  "placesCount": "{count, plural, =1{1 place} other{{count} places}}",
+  "@placesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noPlacesForDay": "No places planned for this day",
+
+  "creatingMagicalItinerary": "Creating your magical itinerary...",
+  "aiWorkingMagic": "Our AI is working its magic to create the perfect trip for you",
+  "pleaseSelectTravelDates": "Please select your travel dates",
+  "friends": "Friends",
+  "inviteByEmail": "Invite by Email",
+  "noFriendsFound": "No friends found",
+  "addFriendsToInvite": "Add friends to invite them to your trips",
+  "invitationSentTo": "Invitation sent to {name}",
+  "@invitationSentTo": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "emailAddress": "Email address",
+  "enterFriendEmail": "Enter friend's email",
+  "pleaseEnterEmailAddress": "Please enter an email address",
+  "pleaseEnterValidEmailAddress": "Please enter a valid email address",
+  "sendInvitation": "Send Invitation",
+  "invite": "Invite",
+  "pleaseSelectTravelDatesToContinue": "Please select travel dates to continue",
+  "errorCreatingTrip": "Error creating trip: {error}",
+  "@errorCreatingTrip": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "noValidDestinationFound": "No valid destination found for \"{destination}\". Please try a different location.",
+  "@noValidDestinationFound": {
+    "placeholders": {
+      "destination": {
+        "type": "String"
+      }
+    }
+  },
+  "exploreContentComingSoon": "Explore content coming soon",
+
+  "addNote": "Add Note",
+  "editNote": "Edit Note",
+  "dayNotes": "Day Notes",
+  "notePlaceholder": "Add your notes for this day...",
+  "saveNote": "Save Note",
+  "deleteNote": "Delete Note",
+  "hasNotes": "Has notes",
+  "addPlace": "Add Place",
+  "searchPlaces": "Search places",
+  "searchPlacesHint": "Search for places to add to this day",
+  "searchError": "Search failed. Please try again.",
+  "noPlacesFound": "No places found",
+  "addToDay": "Add to Day",
+  "placeAdded": "Place added to day",
+  "notesSaved": "Notes saved",
+  "notesDeleted": "Notes deleted"
 }

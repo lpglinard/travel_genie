@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../core/extensions/challenge_localization_extension.dart';
 import '../../l10n/app_localizations.dart';
 import '../../models/challenge.dart';
-import '../../core/extensions/challenge_localization_extension.dart';
 
 class ChallengeItem extends StatelessWidget {
   const ChallengeItem({
