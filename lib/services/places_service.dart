@@ -11,7 +11,7 @@ class PlacesService {
   Future<List<String>> autocomplete(
     String input, {
     String? regionCode,
-    String? locationBias,
+    Map<String, dynamic>? locationBias,
   }) async {
     if (input.isEmpty) return [];
     final uri = Uri.parse(

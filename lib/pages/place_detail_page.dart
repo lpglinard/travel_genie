@@ -29,7 +29,6 @@ class PlaceDetailPage extends ConsumerStatefulWidget {
 
 class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   bool _isSaved = false;
-  bool _isAddedToItinerary = false;
   int _selectedNavIndex = 0;
   bool _isLoading = false;
   String? _currentUserId;
@@ -215,11 +214,6 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
     }
   }
 
-  void _toggleAddToItinerary() {
-    setState(() {
-      _isAddedToItinerary = !_isAddedToItinerary;
-    });
-  }
 
   void _onNavItemTapped(int index) {
     if (index != _selectedNavIndex) {
@@ -339,10 +333,8 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
           // Action buttons
           ActionButtons(
             isSaved: _isSaved,
-            isAddedToItinerary: _isAddedToItinerary,
             isLoading: _isLoading,
             onSavePressed: _toggleSaved,
-            onAddToItineraryPressed: _toggleAddToItinerary,
           ),
         ],
       ),

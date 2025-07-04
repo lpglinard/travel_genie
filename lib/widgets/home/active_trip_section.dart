@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/trip.dart';
-import '../../providers/itinerary_providers.dart';
 
 class ActiveTripSection extends ConsumerWidget {
   const ActiveTripSection({super.key, required this.trips});

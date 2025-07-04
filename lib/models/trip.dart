@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'itinerary_day.dart';
+import 'location.dart';
 import 'place.dart';
 
 class Trip {
@@ -15,6 +16,9 @@ class Trip {
     required this.createdAt,
     required this.updatedAt,
     this.placeId,
+    this.destinationAddress,
+    this.location,
+    this.locationGeopoint,
     this.isArchived = false,
     this.isLoadingCoverImage = false,
     this.isLoadingDescription = false,
@@ -34,6 +38,9 @@ class Trip {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? placeId;
+  final String? destinationAddress;
+  final Location? location;
+  final GeoPoint? locationGeopoint;
   final bool isArchived;
   final bool isLoadingCoverImage;
   final bool isLoadingDescription;
@@ -58,6 +65,11 @@ class Trip {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       placeId: data['placeId'] as String?,
+      destinationAddress: data['destinationAddress'] as String?,
+      location: data['location'] != null 
+          ? Location.fromJson(data['location'] as Map<String, dynamic>)
+          : null,
+      locationGeopoint: data['location_geopoint'] as GeoPoint?,
       isArchived: data['isArchived'] as bool? ?? false,
       isLoadingCoverImage: data['isLoadingCoverImage'] as bool? ?? false,
       isLoadingDescription: data['isLoadingDescription'] as bool? ?? false,
@@ -80,6 +92,9 @@ class Trip {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'placeId': placeId,
+      'destinationAddress': destinationAddress,
+      'location': location?.toMap(),
+      'location_geopoint': locationGeopoint,
       'isArchived': isArchived,
       'isLoadingCoverImage': isLoadingCoverImage,
       'isLoadingDescription': isLoadingDescription,
@@ -100,6 +115,9 @@ class Trip {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? placeId,
+    String? destinationAddress,
+    Location? location,
+    GeoPoint? locationGeopoint,
     bool? isArchived,
     bool? isLoadingCoverImage,
     bool? isLoadingDescription,
@@ -119,6 +137,9 @@ class Trip {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       placeId: placeId ?? this.placeId,
+      destinationAddress: destinationAddress ?? this.destinationAddress,
+      location: location ?? this.location,
+      locationGeopoint: locationGeopoint ?? this.locationGeopoint,
       isArchived: isArchived ?? this.isArchived,
       isLoadingCoverImage: isLoadingCoverImage ?? this.isLoadingCoverImage,
       isLoadingDescription: isLoadingDescription ?? this.isLoadingDescription,

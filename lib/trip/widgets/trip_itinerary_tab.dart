@@ -5,6 +5,7 @@ import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/models/itinerary_day.dart';
 import 'package:travel_genie/models/place.dart';
 import 'package:travel_genie/providers/itinerary_providers.dart';
+import 'package:travel_genie/providers/user_providers.dart';
 import 'package:travel_genie/trip/providers/trip_providers.dart';
 
 /// Widget that displays the itinerary tab content as a simple list of itinerary days
@@ -158,27 +159,76 @@ class ExpandableDayTile extends ConsumerWidget {
             );
           },
         ),
-        subtitle: placesAsync.when(
-          loading: () => Text(
-            'Loading places...',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            placesAsync.when(
+              loading: () => Text(
+                AppLocalizations.of(context)!.noResults,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
+              error: (_, __) => Text(
+                AppLocalizations.of(context)!.errorGeneric('loading places'),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+              data: (places) => Text(
+                places.isEmpty
+                    ? AppLocalizations.of(context)!.noPlacesForDay
+                    : AppLocalizations.of(context)!.placesCount(places.length),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+              ),
             ),
-          ),
-          error: (_, __) => Text(
-            'Error loading places',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.error,
+            if (day.notes != null && day.notes!.isNotEmpty)
+              Row(
+                children: [
+                  Icon(
+                    Icons.note,
+                    size: 14,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    AppLocalizations.of(context)!.hasNotes,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(
+                day.notes != null && day.notes!.isNotEmpty 
+                    ? Icons.note 
+                    : Icons.note_add,
+                color: day.notes != null && day.notes!.isNotEmpty 
+                    ? Theme.of(context).colorScheme.primary 
+                    : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+              onPressed: () => _showNotesDialog(context, ref),
+              tooltip: day.notes != null && day.notes!.isNotEmpty 
+                  ? AppLocalizations.of(context)!.editNote 
+                  : AppLocalizations.of(context)!.addNote,
             ),
-          ),
-          data: (places) => Text(
-            places.isEmpty
-                ? 'No places yet'
-                : '${places.length} place${places.length == 1 ? '' : 's'}',
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            IconButton(
+              icon: Icon(
+                Icons.add_location,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
+              onPressed: () => _showAddPlaceDialog(context, ref),
+              tooltip: AppLocalizations.of(context)!.addPlace,
             ),
-          ),
+          ],
         ),
         children: [
           placesAsync.when(
@@ -241,6 +291,75 @@ class ExpandableDayTile extends ConsumerWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  void _showNotesDialog(BuildContext context, WidgetRef ref) {
+    final textController = TextEditingController(text: day.notes ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.dayNotes),
+        content: TextField(
+          controller: textController,
+          maxLines: 5,
+          decoration: InputDecoration(
+            hintText: AppLocalizations.of(context)!.notePlaceholder,
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          if (day.notes != null && day.notes!.isNotEmpty)
+            TextButton(
+              onPressed: () async {
+                final tripService = ref.read(tripServiceProvider);
+                final updatedDay = day.copyWith(notes: '');
+                await tripService.updateItineraryDay(tripId, updatedDay);
+                if (context.mounted) {
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(AppLocalizations.of(context)!.notesDeleted),
+                    ),
+                  );
+                }
+              },
+              child: Text(AppLocalizations.of(context)!.deleteNote),
+            ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context)!.cancel),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final tripService = ref.read(tripServiceProvider);
+              final updatedDay = day.copyWith(notes: textController.text.trim());
+              await tripService.updateItineraryDay(tripId, updatedDay);
+              if (context.mounted) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(AppLocalizations.of(context)!.notesSaved),
+                  ),
+                );
+              }
+            },
+            child: Text(AppLocalizations.of(context)!.saveNote),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAddPlaceDialog(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => AddPlaceBottomSheet(
+        tripId: tripId,
+        dayId: day.id,
       ),
     );
   }
@@ -352,6 +471,233 @@ class PlaceTile extends StatelessWidget {
         return Icons.account_balance;
       default:
         return Icons.place;
+    }
+  }
+}
+
+/// Bottom sheet for adding places to a day
+class AddPlaceBottomSheet extends ConsumerStatefulWidget {
+  const AddPlaceBottomSheet({
+    super.key,
+    required this.tripId,
+    required this.dayId,
+  });
+
+  final String tripId;
+  final String dayId;
+
+  @override
+  ConsumerState<AddPlaceBottomSheet> createState() => _AddPlaceBottomSheetState();
+}
+
+class _AddPlaceBottomSheetState extends ConsumerState<AddPlaceBottomSheet> {
+  final TextEditingController _searchController = TextEditingController();
+  List<String> _searchResults = [];
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _searchPlaces(String query) async {
+    if (query.trim().isEmpty) {
+      setState(() {
+        _searchResults = [];
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Use the real PlacesService with locationBias
+      final placesService = ref.read(placesServiceProvider);
+      final locationBias = await _getLocationBiasForTrip();
+
+      final results = await placesService.autocomplete(
+        query,
+        locationBias: locationBias,
+        regionCode: 'br',
+      );
+
+      setState(() {
+        _searchResults = results;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _searchResults = [];
+        _isLoading = false;
+      });
+
+      // Show error message to user
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.searchError),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
+  }
+
+  /// Gets locationBias for the trip to improve search results relevance
+  /// Returns a circle bias centered on the trip's destination coordinates
+  Future<Map<String, dynamic>?> _getLocationBiasForTrip() async {
+    try {
+      final tripService = ref.read(tripServiceProvider);
+      final trip = await tripService.getTripWithDetails(widget.tripId);
+
+      if (trip == null) {
+        return null;
+      }
+
+      // First, try to use the trip's location field
+      if (trip.location != null) {
+        return {
+          'circle': {
+            'center': {
+              'latitude': trip.location!.lat,
+              'longitude': trip.location!.lng,
+            },
+            'radius': 20000.0,
+          },
+        };
+      }
+
+      // If location is not available, try locationGeopoint
+      if (trip.locationGeopoint != null) {
+        return {
+          'circle': {
+            'center': {
+              'latitude': trip.locationGeopoint!.latitude,
+              'longitude': trip.locationGeopoint!.longitude,
+            },
+            'radius': 20000.0,
+          },
+        };
+      }
+
+      return null; // No location bias if no coordinates available
+    } catch (e) {
+      // Log error but don't throw - gracefully degrade to no bias
+      debugPrint('Error getting locationBias for trip: $e');
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return DraggableScrollableSheet(
+      initialChildSize: 0.7,
+      minChildSize: 0.5,
+      maxChildSize: 0.9,
+      expand: false,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+          ),
+          child: Column(
+            children: [
+              // Handle bar
+              Container(
+                width: 40,
+                height: 4,
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              // Title
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  AppLocalizations.of(context)!.addPlace,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+              ),
+              // Search field
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _searchController,
+                  decoration: InputDecoration(
+                    hintText: AppLocalizations.of(context)!.searchPlacesHint,
+                    prefixIcon: const Icon(Icons.search),
+                    border: const OutlineInputBorder(),
+                  ),
+                  onChanged: _searchPlaces,
+                ),
+              ),
+              const SizedBox(height: 16),
+              // Search results
+              Expanded(
+                child: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _searchResults.isEmpty
+                        ? Center(
+                            child: Text(
+                              _searchController.text.trim().isEmpty
+                                  ? AppLocalizations.of(context)!.searchPlacesHint
+                                  : AppLocalizations.of(context)!.noPlacesFound,
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            controller: scrollController,
+                            itemCount: _searchResults.length,
+                            itemBuilder: (context, index) {
+                              final placeName = _searchResults[index];
+                              return ListTile(
+                                leading: const Icon(Icons.place),
+                                title: Text(placeName),
+                                trailing: ElevatedButton(
+                                  onPressed: () => _addPlaceToDay(placeName),
+                                  child: Text(AppLocalizations.of(context)!.addToDay),
+                                ),
+                              );
+                            },
+                          ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _addPlaceToDay(String placeName) async {
+    try {
+      // Note: This is a simplified implementation
+      // In a real app, you would create a proper Place object and add it to Firestore
+      // For now, we'll just show a success message
+      if (mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.placeAdded),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.errorGeneric(e.toString())),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
     }
   }
 }

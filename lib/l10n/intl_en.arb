@@ -509,5 +509,22 @@
       }
     }
   },
-  "exploreContentComingSoon": "Explore content coming soon"
+  "exploreContentComingSoon": "Explore content coming soon",
+
+  "addNote": "Add Note",
+  "editNote": "Edit Note",
+  "dayNotes": "Day Notes",
+  "notePlaceholder": "Add your notes for this day...",
+  "saveNote": "Save Note",
+  "deleteNote": "Delete Note",
+  "hasNotes": "Has notes",
+  "addPlace": "Add Place",
+  "searchPlaces": "Search places",
+  "searchPlacesHint": "Search for places to add to this day",
+  "searchError": "Search failed. Please try again.",
+  "noPlacesFound": "No places found",
+  "addToDay": "Add to Day",
+  "placeAdded": "Place added to day",
+  "notesSaved": "Notes saved",
+  "notesDeleted": "Notes deleted"
 }

@@ -24,6 +24,15 @@ abstract class TripRepository {
 
   Future<List<Place>> getItineraryDayPlaces(String tripId, String dayId);
 
+  Future<void> updateItineraryDay(String tripId, ItineraryDay day);
+
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId);
+
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  });
+
   Future<void> addParticipant(String tripId, TripParticipant participant);
 
   Future<void> removeParticipant(String tripId, String userId);
@@ -135,6 +144,59 @@ class FirestoreTripRepository implements TripRepository {
       return snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList();
     } catch (e) {
       throw TripServiceException('Failed to fetch itinerary day places: $e');
+    }
+  }
+
+  @override
+  Future<void> updateItineraryDay(String tripId, ItineraryDay day) async {
+    try {
+      await _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('itineraryDays')
+          .doc(day.id)
+          .update(day.toFirestore());
+    } catch (e) {
+      throw TripServiceException('Failed to update itinerary day: $e');
+    }
+  }
+
+  @override
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
+    try {
+      return _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('itineraryDays')
+          .orderBy('dayNumber')
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => ItineraryDay.fromFirestore(doc))
+              .toList());
+    } catch (e) {
+      throw TripServiceException('Failed to stream itinerary days: $e');
+    }
+  }
+
+  @override
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  }) {
+    try {
+      return _firestore
+          .collection('trips')
+          .doc(tripId)
+          .collection('itineraryDays')
+          .doc(dayId)
+          .collection('places')
+          .orderBy('orderInDay')
+          .snapshots()
+          .map((snapshot) => snapshot.docs
+              .map((doc) => Place.fromJson(doc.data()))
+              .toList());
+    } catch (e) {
+      throw TripServiceException('Failed to stream places for day: $e');
     }
   }
 
@@ -272,6 +334,21 @@ class TripService {
 
   Future<void> removeParticipant(String tripId, String userId) async {
     await _repository.removeParticipant(tripId, userId);
+  }
+
+  Future<void> updateItineraryDay(String tripId, ItineraryDay day) async {
+    await _repository.updateItineraryDay(tripId, day);
+  }
+
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
+    return _repository.streamItineraryDays(tripId);
+  }
+
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  }) {
+    return _repository.streamPlacesForDay(tripId: tripId, dayId: dayId);
   }
 
   String formatDateRange(DateTime startDate, DateTime endDate) {

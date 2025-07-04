@@ -509,5 +509,22 @@
       }
     }
   },
-  "exploreContentComingSoon": "Conteúdo de exploração em breve"
+  "exploreContentComingSoon": "Conteúdo de exploração em breve",
+
+  "addNote": "Adicionar Nota",
+  "editNote": "Editar Nota",
+  "dayNotes": "Notas do Dia",
+  "notePlaceholder": "Adicione suas notas para este dia...",
+  "saveNote": "Salvar Nota",
+  "deleteNote": "Excluir Nota",
+  "hasNotes": "Tem notas",
+  "addPlace": "Adicionar Local",
+  "searchPlaces": "Buscar locais",
+  "searchPlacesHint": "Busque locais para adicionar a este dia",
+  "searchError": "Busca falhou. Tente novamente.",
+  "noPlacesFound": "Nenhum local encontrado",
+  "addToDay": "Adicionar ao Dia",
+  "placeAdded": "Local adicionado ao dia",
+  "notesSaved": "Notas salvas",
+  "notesDeleted": "Notas excluídas"
 }

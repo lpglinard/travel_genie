@@ -106,13 +106,14 @@ class AnalyticsService {
     );
   }
 
-  /// Track itinerary editing - custom event (no Firebase standard equivalent)
+  /// Track itinerary editing using Firebase standard select_content event
   Future<void> logEditItinerary({String? tripId, String? action}) {
-    return _analytics.logEvent(
-      name: 'edit_itinerary',
+    return _analytics.logSelectContent(
+      contentType: 'trip',
+      itemId: tripId ?? 'unknown',
       parameters: {
         if (tripId != null) 'trip_id': tripId,
-        if (action != null) 'action': action,
+        if (action != null) 'edit_action': action,
       },
     );
   }
@@ -231,14 +232,15 @@ class AnalyticsService {
     );
   }
 
-  /// Track AI recommendation interactions
+  /// Track AI recommendation interactions using Firebase standard select_content event
   Future<void> logAIRecommendation({
     String? recommendationType,
     String? placeId,
     bool? accepted,
   }) {
-    return _analytics.logEvent(
-      name: 'ai_recommendation',
+    return _analytics.logSelectContent(
+      contentType: 'ai_recommendation',
+      itemId: placeId ?? 'unknown',
       parameters: {
         if (recommendationType != null)
           'recommendation_type': recommendationType,
