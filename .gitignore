@@ -48,3 +48,4 @@ app.*.map.json
 /android/app/release
 
 proven-aviary-434423-s1-596a1d9f6dcc.jsonflutter_linux_*.tar.xz
+/fb.tkn

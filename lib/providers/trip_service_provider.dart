@@ -21,9 +21,32 @@ final tripServiceProvider = Provider<TripService>((ref) {
 /// Provider that exposes a stream of user trips
 final userTripsProvider = StreamProvider<List<Trip>>((ref) {
   final tripService = ref.watch(tripServiceProvider);
-  return tripService.getUserTrips();
+
+  // Watch auth state changes to ensure data is cleared when user logs out
+  return ref.watch(authStateChangesProvider).when(
+    data: (user) {
+      if (user == null) {
+        return Stream.value(<Trip>[]);
+      }
+      return tripService.getUserTrips();
+    },
+    loading: () => Stream.value(<Trip>[]),
+    error: (_, __) => Stream.value(<Trip>[]),
+  );
 });
+
 final savedPlacesProvider = StreamProvider<List<Place>>((ref) {
   final tripService = ref.watch(tripServiceProvider);
-  return tripService.streamSavedPlacesForCurrentUser();
+
+  // Watch auth state changes to ensure data is cleared when user logs out
+  return ref.watch(authStateChangesProvider).when(
+    data: (user) {
+      if (user == null) {
+        return Stream.value(<Place>[]);
+      }
+      return tripService.streamSavedPlacesForCurrentUser();
+    },
+    loading: () => Stream.value(<Place>[]),
+    error: (_, __) => Stream.value(<Place>[]),
+  );
 });

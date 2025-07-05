@@ -135,6 +135,7 @@ class ChallengeProgressService {
   }
 
   /// Mark a challenge as completed for a user
+  /// This method uses set with merge to ensure it works whether the document exists or not
   Future<void> markChallengeCompleted(String userId, String challengeId) async {
     try {
       await _firestore
@@ -142,11 +143,13 @@ class ChallengeProgressService {
           .doc(userId)
           .collection('challengeProgress')
           .doc(challengeId)
-          .update({
+          .set({
+            'progress': 0, // Initialize progress if document doesn't exist
             'completed': true,
             'completedAt': FieldValue.serverTimestamp(),
             'updatedAt': FieldValue.serverTimestamp(),
-          });
+            'createdAt': FieldValue.serverTimestamp(), // Only set if document doesn't exist
+          }, SetOptions(merge: true));
 
       debugPrint(
         'ChallengeProgressService: Marked challenge $challengeId as completed for user $userId',

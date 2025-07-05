@@ -6,6 +6,7 @@ import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/user_providers.dart';
 
 import '../../models/trip.dart';
+import '../../widgets/login_required_dialog.dart';
 import '../providers/trip_providers.dart';
 import '../services/city_autocomplete_service.dart';
 import '../widgets/date_range_picker_field.dart';
@@ -79,7 +80,9 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       // Get current user - Use Firebase Auth directly for immediate and reliable access
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser == null) {
-        throw Exception('User not authenticated');
+        // Show login dialog instead of error message
+        await LoginRequiredDialog.show(context);
+        return;
       }
 
       // Get the selected suggestion with rich data

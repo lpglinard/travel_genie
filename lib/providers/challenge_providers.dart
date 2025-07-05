@@ -46,43 +46,67 @@ final completedChallengesProvider = StreamProvider.family<List<String>, String>(
 final userChallengesWithProgressProvider = StreamProvider<List<Challenge>>((
   ref,
 ) {
-  final user = FirebaseAuth.instance.currentUser;
-
-  // For non-logged users, return only the create_account challenge
-  if (user == null) {
-    final challengeService = ref.watch(challengeServiceProvider);
-    final createAccountChallenge = challengeService.getCreateAccountChallenge();
-    return Stream.value([createAccountChallenge]);
-  }
-
-  // For logged users, combine challenges with their progress
   final challengeService = ref.watch(challengeServiceProvider);
-  final progressService = ref.watch(challengeProgressServiceProvider);
 
-  return challengeService.getActiveChallenges();
+  // Watch auth state changes to ensure data is cleared when user logs out
+  return ref.watch(authStateChangesProvider).when(
+    data: (user) {
+      // For non-logged users, return only the create_account challenge
+      if (user == null) {
+        final createAccountChallenge = challengeService.getCreateAccountChallenge();
+        return Stream.value([createAccountChallenge]);
+      }
+
+      // For logged users, combine challenges with their progress
+      final progressService = ref.watch(challengeProgressServiceProvider);
+      return challengeService.getActiveChallenges();
+    },
+    loading: () {
+      final createAccountChallenge = challengeService.getCreateAccountChallenge();
+      return Stream.value([createAccountChallenge]);
+    },
+    error: (_, __) {
+      final createAccountChallenge = challengeService.getCreateAccountChallenge();
+      return Stream.value([createAccountChallenge]);
+    },
+  );
 });
 
 /// Provider for a specific challenge with user progress
 final challengeWithProgressProvider = StreamProvider.family<Challenge?, String>(
   (ref, challengeId) {
-    final user = FirebaseAuth.instance.currentUser;
-
-    // For non-logged users, only return create_account challenge
-    if (user == null) {
-      if (challengeId == "create_account") {
-        final challengeService = ref.watch(challengeServiceProvider);
-        return Stream.value(challengeService.getCreateAccountChallenge());
-      }
-      return Stream.value(null);
-    }
-
-    // For logged users, get challenge and combine with progress
     final challengeService = ref.watch(challengeServiceProvider);
-    final progressService = ref.watch(challengeProgressServiceProvider);
 
-    return challengeService.getActiveChallenges().map((challenges) {
-      return challenges.where((c) => c.id == challengeId).firstOrNull;
-    });
+    // Watch auth state changes to ensure data is cleared when user logs out
+    return ref.watch(authStateChangesProvider).when(
+      data: (user) {
+        // For non-logged users, only return create_account challenge
+        if (user == null) {
+          if (challengeId == "create_account") {
+            return Stream.value(challengeService.getCreateAccountChallenge());
+          }
+          return Stream.value(null);
+        }
+
+        // For logged users, get challenge and combine with progress
+        final progressService = ref.watch(challengeProgressServiceProvider);
+        return challengeService.getActiveChallenges().map((challenges) {
+          return challenges.where((c) => c.id == challengeId).firstOrNull;
+        });
+      },
+      loading: () {
+        if (challengeId == "create_account") {
+          return Stream.value(challengeService.getCreateAccountChallenge());
+        }
+        return Stream.value(null);
+      },
+      error: (_, __) {
+        if (challengeId == "create_account") {
+          return Stream.value(challengeService.getCreateAccountChallenge());
+        }
+        return Stream.value(null);
+      },
+    );
   },
 );
 

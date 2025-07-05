@@ -58,15 +58,13 @@ class MyHomePage extends ConsumerWidget {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            const HeroImage(imagePath: heroImage),
-            const SizedBox(height: 16),
             const GreetingSection(),
             const SizedBox(height: 16),
             // CTA Button for creating trip with AI
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => context.go('/create-trip'),
+                onPressed: () => context.go('/new-trip'),
                 icon: const Icon(Icons.auto_awesome),
                 label: Text(AppLocalizations.of(context).homeCtaButton),
                 style: ElevatedButton.styleFrom(

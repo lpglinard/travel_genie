@@ -337,8 +337,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                       // Log error but don't prevent navigation
                       debugPrint('Error tracking create_account challenge: $e');
                     }
+
                     context.go('/');
                   }),
+
                   firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((BuildContext context, firebase_ui.UserCreated state) async {
                     // Track sign-up analytics
                     try {
@@ -384,6 +386,7 @@ final routerProvider = Provider<GoRouter>((ref) {
                   firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((context, state) {
                     context.go('/');
                   }),
+
                 ],
               ),
             ),

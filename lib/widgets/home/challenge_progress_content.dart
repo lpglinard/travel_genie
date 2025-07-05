@@ -27,7 +27,7 @@ class ChallengeProgressContent extends ConsumerWidget {
         };
       case 'create_trip':
         return () {
-          context.go('/create-trip');
+          context.go('/new-trip');
         };
       case 'save_place':
         return () {
@@ -37,7 +37,7 @@ class ChallengeProgressContent extends ConsumerWidget {
       case 'generate_itinerary':
         return () {
           // Navigate to create trip page where users can generate itineraries
-          context.go('/create-trip');
+          context.go('/new-trip');
         };
       default:
         return null;
