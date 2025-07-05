@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/models/itinerary_day.dart';
@@ -361,6 +362,10 @@ class PlaceTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        // Navigate to place detail page
+        context.push('/place/${place.placeId}', extra: place);
+      },
       leading: CircleAvatar(
         backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
         child: Icon(

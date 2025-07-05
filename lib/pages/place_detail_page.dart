@@ -267,16 +267,11 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      // Always try to pop first to maintain navigation history
+                      // Check if we can pop, otherwise navigate to home
                       if (context.canPop()) {
                         context.pop();
                       } else {
-                        // If can't pop, go to explore with the query if available
-                        final uri = GoRouterState.of(context).uri;
-                        final query = uri.queryParameters['query'] ?? '';
-                        context.go(
-                          '/explore${query.isNotEmpty ? "?query=$query" : ""}',
-                        );
+                        context.go('/');
                       }
                     },
                   ),

@@ -11,7 +11,6 @@ import '../services/firestore_service.dart';
 import '../widgets/home/active_trip_section.dart';
 import '../widgets/home/gamification_progress_section.dart';
 import '../widgets/home/greeting_section.dart';
-import '../widgets/home/hero_image.dart';
 import '../widgets/home/home_app_bar.dart';
 import '../widgets/home/popular_destinations_section.dart';
 import '../widgets/home/recommended_destinations_section.dart';

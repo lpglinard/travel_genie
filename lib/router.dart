@@ -120,21 +120,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           // or pass it through state.extra
           return CustomTransitionPage(
             key: state.pageKey,
-            child: PopScope(
-              canPop: false,
-              onPopInvoked: (didPop) {
-                // Navigate back to the previous screen
-                if (context.canPop()) {
-                  context.pop();
-                } else {
-                  // If can't pop, go to home
-                  context.go('/');
-                }
-              },
-              child: PlaceDetailPage(
-                place: placeObj!,
-                heroTagIndex: heroTagIndex,
-              ),
+            child: PlaceDetailPage(
+              place: placeObj!,
+              heroTagIndex: heroTagIndex,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
