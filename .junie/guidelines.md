@@ -79,7 +79,7 @@ See `test/preferences_service_test.dart` for:
 ## Code Architecture
 
 ### Project Structure
-The project follows a feature-based architecture:
+The project follows a feature-based architecture with strict adherence to the "one widget/model per file" rule:
 ```
 lib/
 ├── app.dart                 # Main app configuration
@@ -97,11 +97,37 @@ lib/
 ├── features/                # Feature-specific code
 │   ├── authentication/      # Authentication
 │   ├── challenge/           # Challenges/badges
+│   │   ├── models/          # Challenge-specific models
+│   │   ├── providers/       # Challenge state management
+│   │   └── services/        # Challenge business logic
 │   ├── place/               # Places/locations
 │   ├── search/              # Search
 │   ├── social/              # Social features
 │   ├── trip/                # Trip management
 │   └── user/                # User management
+│       ├── models/          # User data models (one per file)
+│       │   ├── traveler_profile.dart
+│       │   ├── traveler_profile_enums.dart  # Export file
+│       │   ├── travel_company.dart
+│       │   ├── travel_budget.dart
+│       │   ├── accommodation_type.dart
+│       │   ├── travel_interest.dart
+│       │   ├── gastronomic_preference.dart
+│       │   └── itinerary_style.dart
+│       ├── pages/           # User-related pages
+│       ├── providers/       # User state management
+│       ├── services/        # User business logic
+│       └── widgets/         # User-specific widgets
+│           └── profile/     # Profile-related widgets (one per file)
+│               ├── introduction_card.dart
+│               ├── section_card.dart
+│               ├── travel_company_section.dart
+│               ├── budget_section.dart
+│               ├── accommodation_section.dart
+│               ├── interests_section.dart
+│               ├── gastronomic_section.dart
+│               ├── itinerary_style_section.dart
+│               └── action_buttons.dart
 └── l10n/                    # Localization files
 ```
 

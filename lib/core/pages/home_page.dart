@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../l10n/app_localizations.dart';
 import '../models/destination.dart';
@@ -45,7 +47,6 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    const heroImage = 'images/odsy_main.png';
     final recommendedDestinationsAsync = ref.watch(
       recommendedDestinationsProvider,
     );

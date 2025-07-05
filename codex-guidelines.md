@@ -86,7 +86,7 @@ A working test example is available in `test/preferences_service_test.dart` demo
 ## Code Style and Architecture Guidelines
 
 ### Project Structure
-The project follows a feature-based architecture:
+The project follows a feature-based architecture with strict adherence to the "one widget/model per file" rule:
 ```
 lib/
 ├── app.dart                 # Main app configuration
@@ -133,11 +133,29 @@ lib/
 │   │   ├── services/       # Trip business logic
 │   │   └── widgets/        # Trip-specific widgets
 │   └── user/               # User management
-│       ├── models/         # User data and profile models
+│       ├── models/         # User data and profile models (one per file)
+│       │   ├── traveler_profile.dart
+│       │   ├── traveler_profile_enums.dart  # Export file
+│       │   ├── travel_company.dart
+│       │   ├── travel_budget.dart
+│       │   ├── accommodation_type.dart
+│       │   ├── travel_interest.dart
+│       │   ├── gastronomic_preference.dart
+│       │   └── itinerary_style.dart
 │       ├── pages/          # User profile pages
 │       ├── providers/      # User state management
 │       ├── services/       # User business logic
 │       └── widgets/        # User-specific widgets
+│           └── profile/    # Profile-related widgets (one per file)
+│               ├── introduction_card.dart
+│               ├── section_card.dart
+│               ├── travel_company_section.dart
+│               ├── budget_section.dart
+│               ├── accommodation_section.dart
+│               ├── interests_section.dart
+│               ├── gastronomic_section.dart
+│               ├── itinerary_style_section.dart
+│               └── action_buttons.dart
 └── l10n/                   # Localization files
 ```
 
