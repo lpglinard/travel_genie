@@ -4,6 +4,43 @@ A new Flutter project.
 
 This project now includes state management using [Riverpod](https://riverpod.dev).
 
+## Project Structure
+
+The project follows a feature-based architecture for better organization and maintainability:
+
+```
+lib/
+├── app.dart                 # Main app configuration
+├── main.dart               # Entry point
+├── config.dart             # Configuration settings
+├── core/                   # Core functionality and shared models
+│   └── models/             # Shared data models (Location, Photo, etc.)
+├── features/               # Feature-specific code organized by domain
+│   ├── authentication/     # Authentication feature
+│   ├── challenge/          # Challenges and badges feature
+│   ├── place/              # Places and location feature
+│   ├── search/             # Search functionality
+│   ├── social/             # Social features
+│   ├── trip/               # Trip planning and management
+│   └── user/               # User management
+├── l10n/                   # Localization files
+├── models/                 # Legacy data models (being migrated to features)
+├── pages/                  # Legacy UI screens (being migrated to features)
+├── providers/              # Riverpod state management
+├── services/               # Legacy business logic services (being migrated)
+├── utils/                  # Utility functions
+└── widgets/                # Legacy reusable UI components (being migrated)
+```
+
+### Architecture Guidelines
+
+- **Feature-based organization**: Each feature has its own models, pages, services, and widgets
+- **Single Responsibility**: Each file contains at most one widget or model class
+- **SOLID Principles**: All code must adhere to SOLID principles
+- **Internationalization**: All user-facing text must use localization keys
+
+For detailed development guidelines, see `.junie/guidelines.md` and `codex-guidelines.md`.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
