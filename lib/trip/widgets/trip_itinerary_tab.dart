@@ -114,23 +114,7 @@ class ExpandableDayTile extends ConsumerWidget {
     return Card(
       elevation: 2,
       child: ExpansionTile(
-        leading: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: Text(
-              '${day.dayNumber}',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onPrimary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
+        key: Key(day.id),
         title: tripAsync.when(
           loading: () => Text(
             'Day ${day.dayNumber}',
