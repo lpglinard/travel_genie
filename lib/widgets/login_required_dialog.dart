@@ -35,7 +35,7 @@ class LoginRequiredDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
             // Navigate to sign in page
-            context.go('/profile');
+            context.push('/profile');
           },
           child: Text(
             l10n.signIn,
@@ -49,7 +49,7 @@ class LoginRequiredDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
             // Navigate to sign up/create account page
-            context.go('/profile');
+            context.push('/profile');
           },
           child: Text(l10n.createAccount),
         ),

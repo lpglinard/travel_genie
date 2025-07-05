@@ -425,6 +425,7 @@
     }
   },
   "improveMyProfile": "Improve my profile",
+  "changeMyProfile": "Change my profile",
   "destinationPlaceholder": "e.g., Paris, Hawaii, Japan",
   "destinationLabel": "Destination",
   "destinationRequired": "Please enter a destination",

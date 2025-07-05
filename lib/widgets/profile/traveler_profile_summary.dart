@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../../models/traveler_profile.dart';
+import '../../services/profile_completeness_service.dart';
 import '../../user_providers.dart';
 
 class TravelerProfileSummary extends ConsumerWidget {
@@ -25,37 +26,22 @@ class TravelerProfileSummary extends ConsumerWidget {
         }
 
         final profile = snapshot.data;
-        final completionPercentage = _calculateCompletionPercentage(profile);
+        final completenessInfo = ProfileCompletenessService.calculateCompleteness(profile);
 
-        return _buildSummaryCard(context, profile, completionPercentage);
+        return _buildSummaryCard(context, profile, completenessInfo);
       },
     );
   }
 
-  double _calculateCompletionPercentage(TravelerProfile? profile) {
-    if (profile == null) return 0.0;
-
-    int completedFields = 0;
-    int totalFields = 6; // Total number of profile sections
-
-    if (profile.travelCompany.isNotEmpty) completedFields++;
-    if (profile.budget != null) completedFields++;
-    if (profile.accommodationTypes.isNotEmpty) completedFields++;
-    if (profile.interests.isNotEmpty) completedFields++;
-    if (profile.gastronomicPreferences.isNotEmpty) completedFields++;
-    if (profile.itineraryStyle != null) completedFields++;
-
-    return completedFields / totalFields;
-  }
 
   Widget _buildSummaryCard(
     BuildContext context,
     TravelerProfile? profile,
-    double completionPercentage,
+    ProfileCompletenessInfo completenessInfo,
   ) {
     final l10n = AppLocalizations.of(context)!;
 
-    if (profile == null || completionPercentage == 0.0) {
+    if (profile == null || completenessInfo.percentage == 0.0) {
       return _buildEmptyProfileCard(context, l10n);
     }
 
@@ -94,10 +80,10 @@ class TravelerProfileSummary extends ConsumerWidget {
               children: [
                 Expanded(
                   child: LinearProgressIndicator(
-                    value: completionPercentage,
+                    value: completenessInfo.percentage,
                     backgroundColor: Colors.grey[300],
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      completionPercentage == 1.0
+                      completenessInfo.percentage == 1.0
                           ? Colors.green
                           : Theme.of(context).primaryColor,
                     ),
@@ -105,7 +91,7 @@ class TravelerProfileSummary extends ConsumerWidget {
                 ),
                 const SizedBox(width: 12),
                 Text(
-                  '${(completionPercentage * 100).round()}%',
+                  '${completenessInfo.percentageAsInt}%',
                   style: Theme.of(
                     context,
                   ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w500),

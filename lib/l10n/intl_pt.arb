@@ -425,6 +425,7 @@
     }
   },
   "improveMyProfile": "Melhorar meu perfil",
+  "changeMyProfile": "Alterar meu perfil",
   "destinationPlaceholder": "p.ex., Paris, Havaí, Japão",
   "destinationLabel": "Destino",
   "destinationRequired": "Por favor, insira um destino",

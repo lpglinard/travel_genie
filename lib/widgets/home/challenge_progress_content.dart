@@ -23,7 +23,7 @@ class ChallengeProgressContent extends ConsumerWidget {
         };
       case 'complete_profile':
         return () {
-          context.go('/profile');
+          context.push('/profile');
         };
       case 'create_trip':
         return () {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
+import 'package:travel_genie/services/profile_completeness_service.dart';
 
 import '../providers/profile_completeness_provider.dart';
 
@@ -138,18 +139,18 @@ class _ErrorProfileCompleteness extends StatelessWidget {
 class _ProfileCompletenessContent extends StatelessWidget {
   const _ProfileCompletenessContent({required this.completeness});
 
-  final ProfileCompleteness completeness;
+  final ProfileCompletenessInfo completeness;
 
   @override
   Widget build(BuildContext context) {
-    final progressColor = _getProgressColor(completeness.percentage);
+    final progressColor = _getProgressColor(completeness.percentageAsInt);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Progress Bar
         LinearProgressIndicator(
-          value: completeness.percentage / 100,
+          value: completeness.percentage,
           backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           valueColor: AlwaysStoppedAnimation<Color>(progressColor),
         ),
@@ -159,7 +160,7 @@ class _ProfileCompletenessContent extends StatelessWidget {
         Text(
           AppLocalizations.of(
             context,
-          )!.profileCompleteness(completeness.percentage),
+          )!.profileCompleteness(completeness.percentageAsInt),
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
           ),
@@ -167,11 +168,15 @@ class _ProfileCompletenessContent extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        // Improve Profile Button
+        // Improve/Change Profile Button
         OutlinedButton.icon(
           onPressed: () => context.push('/traveler-profile'),
           icon: const Icon(Icons.person, size: 18),
-          label: Text(AppLocalizations.of(context)!.improveMyProfile),
+          label: Text(
+            completeness.isComplete
+                ? AppLocalizations.of(context)!.changeMyProfile
+                : AppLocalizations.of(context)!.improveMyProfile,
+          ),
           style: OutlinedButton.styleFrom(
             foregroundColor: const Color(0xFF5B6EFF),
             side: const BorderSide(color: Color(0xFF5B6EFF)),
@@ -194,51 +199,5 @@ class _ProfileCompletenessContent extends StatelessWidget {
     } else {
       return Colors.red.shade400;
     }
-  }
-}
-
-/// Data model for profile completeness
-/// Follows Single Responsibility Principle - only represents profile completeness data
-class ProfileCompleteness {
-  const ProfileCompleteness({
-    required this.percentage,
-    required this.missingFields,
-  });
-
-  final int percentage;
-  final List<String> missingFields;
-
-  factory ProfileCompleteness.fromUserData(Map<String, dynamic>? userData) {
-    if (userData == null) {
-      return const ProfileCompleteness(
-        percentage: 20,
-        missingFields: ['name', 'preferences', 'interests', 'travel_style'],
-      );
-    }
-
-    final fields = [
-      'name',
-      'email',
-      'preferences',
-      'interests',
-      'travel_style',
-      'budget_preference',
-      'accommodation_preference',
-    ];
-
-    final completedFields = fields.where((field) {
-      final value = userData[field];
-      return value != null && value.toString().isNotEmpty;
-    }).toList();
-
-    final percentage = ((completedFields.length / fields.length) * 100).round();
-    final missingFields = fields
-        .where((field) => !completedFields.contains(field))
-        .toList();
-
-    return ProfileCompleteness(
-      percentage: percentage,
-      missingFields: missingFields,
-    );
   }
 }

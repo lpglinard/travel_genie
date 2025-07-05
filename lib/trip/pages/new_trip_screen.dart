@@ -6,6 +6,7 @@ import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/user_providers.dart';
 
 import '../../models/trip.dart';
+import '../../providers/challenge_providers.dart';
 import '../../widgets/login_required_dialog.dart';
 import '../providers/trip_providers.dart';
 import '../services/city_autocomplete_service.dart';
@@ -140,6 +141,16 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
 
       // Create trip in Firestore
       final tripId = await tripService.createTrip(trip);
+
+      // Track challenge progress for creating a trip
+      try {
+        final challengeActions = ref.read(challengeActionsProvider);
+        await challengeActions.markCompleted(currentUser.uid, 'create_trip');
+        debugPrint('[DEBUG_LOG] Create trip challenge marked as completed for user ${currentUser.uid}');
+      } catch (e) {
+        // Log error but don't prevent the trip creation success flow
+        debugPrint('Error tracking create_trip challenge: $e');
+      }
 
       // Clear the stored suggestion after successful creation
       ref.read(selectedDestinationSuggestionProvider.notifier).state = null;
