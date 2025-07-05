@@ -85,23 +85,116 @@ A working test example is available in `test/preferences_service_test.dart` demo
 
 ## Code Style and Architecture Guidelines
 
+
 ### Project Structure
 The project follows a feature-based architecture:
 ```
 lib/
 ├── app.dart                 # Main app configuration
 ├── main.dart               # Entry point
-├── config.dart             # Configuration settings
-├── core/                   # Core functionality
-├── features/               # Feature-specific code
-├── l10n/                   # Localization files
-├── models/                 # Data models
-├── pages/                  # UI screens/pages
-├── providers/              # Riverpod state management
-├── services/               # Business logic services
-├── utils/                  # Utility functions
-└── widgets/                # Reusable UI components
+├── router.dart             # App routing configuration
+├── core/                   # Core functionality and shared components
+│   ├── config/             # Configuration settings
+│   ├── extensions/         # Dart extensions
+│   ├── models/             # Shared data models (Location, Photo, etc.)
+│   ├── pages/              # Core UI screens (home page, etc.)
+│   ├── services/           # Core business logic services
+│   ├── theme/              # App theming
+│   ├── utils/              # Utility functions
+│   └── widgets/            # Shared reusable UI components
+├── features/               # Feature-specific code organized by domain
+│   ├── authentication/     # Authentication feature
+│   │   ├── models/         # Authentication-specific models
+│   │   ├── pages/          # Authentication UI screens
+│   │   └── widgets/        # Authentication-specific widgets
+│   ├── challenge/          # Challenges and badges feature
+│   │   ├── models/         # Challenge and badge models
+│   │   ├── providers/      # Challenge state management
+│   │   └── services/       # Challenge business logic
+│   ├── place/              # Places and location feature
+│   │   ├── models/         # Place-related models
+│   │   ├── pages/          # Place detail pages
+│   │   ├── services/       # Place services (search, recommendations)
+│   │   └── widgets/        # Place-specific widgets
+│   ├── search/             # Search functionality
+│   │   ├── models/         # Search-related models
+│   │   ├── pages/          # Search results pages
+│   │   ├── providers/      # Search state management
+│   │   ├── services/       # Search business logic
+│   │   └── widgets/        # Search-specific widgets
+│   ├── social/             # Social features
+│   │   ├── models/         # Social-related models
+│   │   ├── pages/          # Social pages (groups, etc.)
+│   │   ├── services/       # Social business logic
+│   │   └── widgets/        # Social-specific widgets
+│   ├── trip/               # Trip planning and management
+│   │   ├── models/         # Trip, itinerary, and related models
+│   │   ├── pages/          # Trip management pages
+│   │   ├── providers/      # Trip state management
+│   │   ├── services/       # Trip business logic
+│   │   └── widgets/        # Trip-specific widgets
+│   └── user/               # User management
+│       ├── models/         # User data and profile models
+│       ├── pages/          # User profile pages
+│       ├── providers/      # User state management
+│       ├── services/       # User business logic
+│       └── widgets/        # User-specific widgets
+└── l10n/                   # Localization files
 ```
+
+### Abstract and Implementation Separation
+
+Para manter o código limpo, testável e alinhado aos princípios SOLID (especialmente SRP e DIP), **não se deve declarar classes abstratas no mesmo arquivo Dart de suas implementações**.
+
+#### Exemplo recomendado:
+
+```
+lib/
+└── services/
+    ├── trip_repository.dart            # classe abstrata TripRepository
+    ├── firestore_trip_repository.dart  # implementação concreta
+```
+
+**trip_repository.dart**
+```dart
+abstract class TripRepository {
+  Future<String> createTrip(Trip trip);
+  Future<Trip?> getTripById(String tripId);
+  Stream<Trip?> streamTripById(String tripId);
+}
+```
+
+**firestore_trip_repository.dart**
+```dart
+class FirestoreTripRepository implements TripRepository {
+  final FirebaseFirestore _firestore;
+
+  FirestoreTripRepository(this._firestore);
+
+  @override
+  Future<String> createTrip(Trip trip) async {
+    final ref = await _firestore.collection('trips').add(trip.toFirestore());
+    return ref.id;
+  }
+
+  @override
+  Future<Trip?> getTripById(String tripId) async {
+    final doc = await _firestore.collection('trips').doc(tripId).get();
+    return doc.exists ? Trip.fromFirestore(doc) : null;
+  }
+
+  @override
+  Stream<Trip?> streamTripById(String tripId) {
+    return _firestore
+        .collection('trips')
+        .doc(tripId)
+        .snapshots()
+        .map((doc) => doc.exists ? Trip.fromFirestore(doc) : null);
+  }
+}
+```
+
+Essa separação favorece manutenibilidade, legibilidade e facilita a criação de testes unitários com mocks.
 
 ### SOLID Principles (MANDATORY)
 

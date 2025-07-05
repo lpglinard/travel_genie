@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:travel_genie/models/itinerary_day.dart';
-import 'package:travel_genie/models/place.dart';
-import 'package:travel_genie/models/trip.dart';
-import 'package:travel_genie/services/analytics_service.dart';
-
-import '../models/trip_participant.dart';
+import 'package:travel_genie/core/services/analytics_service.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/trip/models/itinerary_day.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/trip/models/trip_participant.dart';
 
 /// Abstract interface for trip data operations
 abstract class TripRepository {

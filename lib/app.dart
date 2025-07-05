@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/theme.dart';
 import 'l10n/app_localizations.dart';
-import 'providers/user_providers.dart';
+import 'features/user/providers/user_providers.dart';
 import 'router.dart';
 
 class MyApp extends ConsumerWidget {

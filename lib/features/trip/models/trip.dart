@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'itinerary_day.dart';
-import '../../core/models/location.dart';
-import '../../place/models/place.dart';
+import 'package:travel_genie/core/models/location.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/trip/models/itinerary_day.dart';
 
 class Trip {
   const Trip({

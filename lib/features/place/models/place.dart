@@ -1,3 +1,4 @@
+import '../../../core/models/location.dart';
 import '../../core/models/location.dart';
 import '../../core/models/photo.dart';
 import 'place_categories.dart';

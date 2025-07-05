@@ -12,24 +12,54 @@ The project follows a feature-based architecture for better organization and mai
 lib/
 ├── app.dart                 # Main app configuration
 ├── main.dart               # Entry point
-├── config.dart             # Configuration settings
-├── core/                   # Core functionality and shared models
-│   └── models/             # Shared data models (Location, Photo, etc.)
+├── router.dart             # App routing configuration
+├── core/                   # Core functionality and shared components
+│   ├── config/             # Configuration settings
+│   ├── extensions/         # Dart extensions
+│   ├── models/             # Shared data models (Location, Photo, etc.)
+│   ├── pages/              # Core UI screens (home page, etc.)
+│   ├── services/           # Core business logic services
+│   ├── theme/              # App theming
+│   ├── utils/              # Utility functions
+│   └── widgets/            # Shared reusable UI components
 ├── features/               # Feature-specific code organized by domain
 │   ├── authentication/     # Authentication feature
+│   │   ├── models/         # Authentication-specific models
+│   │   ├── pages/          # Authentication UI screens
+│   │   └── widgets/        # Authentication-specific widgets
 │   ├── challenge/          # Challenges and badges feature
+│   │   ├── models/         # Challenge and badge models
+│   │   ├── providers/      # Challenge state management
+│   │   └── services/       # Challenge business logic
 │   ├── place/              # Places and location feature
+│   │   ├── models/         # Place-related models
+│   │   ├── pages/          # Place detail pages
+│   │   ├── services/       # Place services (search, recommendations)
+│   │   └── widgets/        # Place-specific widgets
 │   ├── search/             # Search functionality
+│   │   ├── models/         # Search-related models
+│   │   ├── pages/          # Search results pages
+│   │   ├── providers/      # Search state management
+│   │   ├── services/       # Search business logic
+│   │   └── widgets/        # Search-specific widgets
 │   ├── social/             # Social features
+│   │   ├── models/         # Social-related models
+│   │   ├── pages/          # Social pages (groups, etc.)
+│   │   ├── services/       # Social business logic
+│   │   └── widgets/        # Social-specific widgets
 │   ├── trip/               # Trip planning and management
+│   │   ├── models/         # Trip, itinerary, and related models
+│   │   ├── pages/          # Trip management pages
+│   │   ├── providers/      # Trip state management
+│   │   ├── services/       # Trip business logic
+│   │   └── widgets/        # Trip-specific widgets
 │   └── user/               # User management
-├── l10n/                   # Localization files
-├── models/                 # Legacy data models (being migrated to features)
-├── pages/                  # Legacy UI screens (being migrated to features)
-├── providers/              # Riverpod state management
-├── services/               # Legacy business logic services (being migrated)
-├── utils/                  # Utility functions
-└── widgets/                # Legacy reusable UI components (being migrated)
+│       ├── models/         # User data and profile models
+│       ├── pages/          # User profile pages
+│       ├── providers/      # User state management
+│       ├── services/       # User business logic
+│       └── widgets/        # User-specific widgets
+└── l10n/                   # Localization files
 ```
 
 ### Architecture Guidelines

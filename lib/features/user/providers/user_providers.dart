@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'config.dart';
-import 'models/user_data.dart';
-import 'services/analytics_service.dart';
-import 'services/challenge_progress_service.dart';
-import 'services/challenge_service.dart';
-import 'services/firestore_service.dart';
-import 'services/places_service.dart';
-import 'services/preferences_service.dart';
-import 'services/profile_service.dart';
-import 'services/recommendation_service.dart';
-import 'services/traveler_profile_service.dart';
-import 'services/user_deletion_service.dart';
-import 'services/user_management_service.dart';
+import '../../../core/config/config.dart';
+import '../models/user_data.dart';
+import '../../../core/services/analytics_service.dart';
+import '../../challenge/services/challenge_progress_service.dart';
+import '../../challenge/services/challenge_service.dart';
+import '../../../core/services/firestore_service.dart';
+import '../../place/services/places_service.dart';
+import '../../../core/services/preferences_service.dart';
+import '../services/profile_service.dart';
+import '../../place/services/recommendation_service.dart';
+import '../services/traveler_profile_service.dart';
+import '../services/user_deletion_service.dart';
+import '../services/user_management_service.dart';
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);

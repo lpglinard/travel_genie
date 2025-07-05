@@ -8,20 +8,20 @@ import 'package:go_router/go_router.dart';
 
 import 'core/config/config.dart';
 import 'l10n/app_localizations.dart';
-import 'models/challenge.dart';
-import 'models/place.dart';
-import 'pages/groups_page.dart';
-import 'pages/home_page.dart';
-import 'pages/my_trips_page.dart';
-import 'pages/place_detail_page.dart';
-import 'pages/profile_screen.dart' as app_profile;
-import 'pages/search_results_page.dart';
-import 'pages/traveler_profile_page.dart';
-import 'providers/challenge_providers.dart';
-import 'services/analytics_service.dart';
-import 'trip/pages/new_trip_screen.dart';
-import 'trip/pages/trip_details_page.dart';
-import 'user_providers.dart';
+import 'features/challenge/models/challenge.dart';
+import 'features/place/models/place.dart';
+import 'features/social/pages/groups_page.dart';
+import 'core/pages/home_page.dart';
+import 'features/trip/pages/my_trips_page.dart';
+import 'features/place/pages/place_detail_page.dart';
+import 'features/user/pages/profile_screen.dart' as app_profile;
+import 'features/search/pages/search_results_page.dart';
+import 'features/user/pages/traveler_profile_page.dart';
+import 'features/challenge/providers/challenge_providers.dart';
+import 'core/services/analytics_service.dart';
+import 'features/trip/pages/new_trip_screen.dart';
+import 'features/trip/pages/trip_details_page.dart';
+import 'features/user/providers/user_providers.dart';
 
 // Navigation destinations
 enum AppRoute { home, explore, trips, groups }
