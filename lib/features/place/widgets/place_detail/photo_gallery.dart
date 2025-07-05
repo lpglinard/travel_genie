@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../../core/config/config.dart';
-import '../../l10n/app_localizations.dart';
+import '../../../../core/config/config.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 
 class PhotoGallery extends StatefulWidget {

@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../l10n/app_localizations.dart';
+import '../../../l10n/app_localizations.dart';
 import '../models/place.dart';
-import '../providers/challenge_providers.dart';
-import '../providers/user_providers.dart';
-import '../widgets/login_required_dialog.dart';
+import '../../challenge/providers/challenge_providers.dart';
+import '../../user/providers/user_providers.dart';
+import '../../../core/widgets/login_required_dialog.dart';
 import '../widgets/place_detail/action_buttons.dart';
 import '../widgets/place_detail/additional_info_section.dart';
 import '../widgets/place_detail/description_section.dart';

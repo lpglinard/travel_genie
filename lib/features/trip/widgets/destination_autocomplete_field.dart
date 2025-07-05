@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../models/autocomplete_models.dart';
+import '../models/place_suggestion.dart';
 import '../services/city_autocomplete_service.dart';
 
 /// Widget that provides destination autocomplete functionality using Flutter's Autocomplete widget

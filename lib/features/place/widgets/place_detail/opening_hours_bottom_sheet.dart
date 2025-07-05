@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class OpeningHoursBottomSheet extends StatelessWidget {
   const OpeningHoursBottomSheet({super.key, required this.openingHours});

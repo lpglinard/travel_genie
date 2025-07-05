@@ -5,7 +5,7 @@ import 'package:travel_genie/features/trip/models/trip.dart';
 import 'package:travel_genie/features/user/providers/user_providers.dart';
 import 'package:travel_genie/core/services/analytics_service.dart';
 
-import 'package:travel_genie/features/trip/models/autocomplete_models.dart';
+import 'package:travel_genie/features/trip/models/place_suggestion.dart';
 import 'package:travel_genie/features/trip/models/trip_participant.dart';
 import 'package:travel_genie/features/trip/services/trip_service.dart';
 

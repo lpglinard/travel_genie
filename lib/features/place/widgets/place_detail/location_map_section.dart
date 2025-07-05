@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../l10n/app_localizations.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../models/place.dart';
 
 class LocationMapSection extends StatelessWidget {

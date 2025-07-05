@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:travel_genie/core/config/config.dart';
 
-import '../models/autocomplete_models.dart';
+import '../models/autocomplete_response.dart';
+import '../models/place_suggestion.dart';
 
 /// Abstract interface for city autocomplete functionality
 /// Follows Interface Segregation Principle - focused interface for city search
