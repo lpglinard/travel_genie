@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_genie/models/place.dart';
-import 'package:travel_genie/models/place_categories.dart';
-import 'package:travel_genie/models/location.dart';
-import 'package:travel_genie/pages/place_detail_page.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/place/models/place_categories.dart';
+import 'package:travel_genie/core/models/location.dart';
+import 'package:travel_genie/features/place/pages/place_detail_page.dart';
 
 void main() {
   group('Place Detail Back Navigation Tests', () {

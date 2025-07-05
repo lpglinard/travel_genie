@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
 
-import '../../../models/trip.dart';
-import '../../providers/user_providers.dart';
+import '../../../user/providers/user_providers.dart';
 import 'trip_cover_image.dart';
 import 'trip_details.dart';
 

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_genie/models/place.dart';
-import 'package:travel_genie/models/place_categories.dart';
-import 'package:travel_genie/models/location.dart';
-import 'package:travel_genie/trip/widgets/trip_itinerary_tab.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/place/models/place_categories.dart';
+import 'package:travel_genie/core/models/location.dart';
+import 'package:travel_genie/features/trip/widgets/trip_itinerary_tab.dart';
 
 void main() {
   group('PlaceTile Navigation Tests', () {

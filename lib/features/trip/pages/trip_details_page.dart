@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
-import 'package:travel_genie/models/trip.dart';
-import 'package:travel_genie/user_providers.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 import '../providers/trip_providers.dart';
 import '../widgets/trip_cover_image.dart';
