@@ -85,6 +85,32 @@ class MockTripRepository implements TripRepository {
   Future<void> removeParticipant(String tripId, String userId) async {
     _participants[tripId]?.removeWhere((p) => p.userId == userId);
   }
+
+  @override
+  Future<void> updateItineraryDay(String tripId, ItineraryDay day) async {
+    _itinerary[tripId] ??= [];
+    final dayIndex = _itinerary[tripId]!.indexWhere((d) => d.id == day.id);
+    if (dayIndex >= 0) {
+      _itinerary[tripId]![dayIndex] = day;
+    } else {
+      _itinerary[tripId]!.add(day);
+    }
+  }
+
+  @override
+  Stream<List<ItineraryDay>> streamItineraryDays(String tripId) {
+    return Stream.value(_itinerary[tripId] ?? []);
+  }
+
+  @override
+  Stream<List<Place>> streamPlacesForDay({
+    required String tripId,
+    required String dayId,
+  }) {
+    // Since ItineraryDay now only has dayNumber, return empty stream
+    // Places functionality is simplified
+    return Stream.value([]);
+  }
 }
 
 // Mock implementation for AnalyticsService

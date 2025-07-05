@@ -496,6 +496,11 @@ class ScaffoldWithNavBar extends ConsumerWidget {
     FirebaseAnalytics.instance.logScreenView(screenName: screenName);
 
     // Navigate to the destination
-    context.go(destination);
+    // Use push for profile to maintain navigation stack and show back button
+    if (index == 3) {
+      context.push(destination);
+    } else {
+      context.go(destination);
+    }
   }
 }
