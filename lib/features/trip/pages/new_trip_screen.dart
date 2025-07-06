@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/providers/infrastructure_providers.dart';
 import 'package:travel_genie/core/widgets/login_required_dialog.dart';
+import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
 import 'package:travel_genie/features/trip/models/trip.dart';
 import 'package:travel_genie/features/trip/widgets/date_range_picker_field.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart'
-    as user_providers;
 import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../providers/trip_providers.dart';
@@ -35,7 +35,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
     // Log trip creation flow started
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
-          .read(user_providers.analyticsServiceProvider)
+          .read(analyticsServiceProvider)
           .analytics
           .logEvent(
             name: 'begin_trip_creation',
@@ -152,9 +152,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
 
       // Track challenge progress for creating a trip
       try {
-        final challengeActions = ref.read(
-          user_providers.challengeActionsProvider,
-        );
+        final challengeActions = ref.read(challengeActionsProvider);
         await challengeActions.markCompleted(currentUser.uid, 'create_trip');
         debugPrint(
           '[DEBUG_LOG] Create trip challenge marked as completed for user ${currentUser.uid}',

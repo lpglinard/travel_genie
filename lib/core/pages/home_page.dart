@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_genie/core/services/firestore_service.dart';
+import 'package:travel_genie/core/providers/home_providers.dart';
 import 'package:travel_genie/core/widgets/home/active_trip_section.dart';
 import 'package:travel_genie/core/widgets/home/gamification_progress_section.dart';
 import 'package:travel_genie/core/widgets/home/greeting_section.dart';
@@ -10,34 +9,7 @@ import 'package:travel_genie/core/widgets/home/home_app_bar.dart';
 import 'package:travel_genie/core/widgets/home/popular_destinations_section.dart';
 import 'package:travel_genie/core/widgets/home/recommended_destinations_section.dart';
 import 'package:travel_genie/core/widgets/home/search_section.dart';
-import 'package:travel_genie/features/trip/models/destination.dart';
-import 'package:travel_genie/features/trip/models/trip.dart';
-import 'package:travel_genie/features/trip/providers/trip_providers.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
-
-final firestoreServiceProvider = Provider<FirestoreService>((ref) {
-  return FirestoreService(FirebaseFirestore.instance);
-});
-
-final recommendedDestinationsProvider = StreamProvider<List<Destination>>((
-  ref,
-) {
-  final firestoreService = ref.watch(firestoreServiceProvider);
-  return firestoreService.streamRecommendedDestinations();
-});
-
-final activeTripsProvider = Provider<List<Trip>>((ref) {
-  final tripsAsync = ref.watch(userTripsProvider);
-  return tripsAsync.maybeWhen(
-    data: (trips) {
-      final now = DateTime.now();
-      return trips
-          .where((trip) => !trip.isArchived && trip.endDate.isAfter(now))
-          .toList();
-    },
-    orElse: () => [],
-  );
-});
 
 class MyHomePage extends ConsumerWidget {
   const MyHomePage({super.key});
@@ -89,7 +61,7 @@ class MyHomePage extends ConsumerWidget {
                   RecommendedDestinationsSection(destinations: destinations),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stackTrace) => Text(
-                AppLocalizations.of(context)!.errorGeneric(error.toString()),
+                AppLocalizations.of(context).errorGeneric(error.toString()),
               ),
             ),
 
@@ -99,7 +71,7 @@ class MyHomePage extends ConsumerWidget {
               data: (destinations) =>
                   PopularDestinationsSection(destinations: destinations),
               loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
             ),
           ],
         ),

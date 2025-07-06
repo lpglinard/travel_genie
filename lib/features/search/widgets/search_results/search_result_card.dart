@@ -5,9 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_genie/core/config/config.dart';
 import 'package:travel_genie/core/extensions/string_extension.dart';
+import 'package:travel_genie/core/providers/infrastructure_providers.dart';
 import 'package:travel_genie/core/widgets/login_required_dialog.dart';
+import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
 import 'package:travel_genie/features/place/models/place.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
 import 'photo_attribution.dart';

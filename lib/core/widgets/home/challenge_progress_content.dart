@@ -2,9 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/providers/repository_providers.dart';
 import 'package:travel_genie/features/challenge/models/challenge.dart';
 import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../login_required_dialog.dart';
@@ -48,7 +48,7 @@ class ChallengeProgressContent extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (user == null) {
-      final challengeService = ref.watch(challengeServiceProvider);
+      final challengeService = ref.watch(challengeRepositoryProvider);
       final challenge = challengeService.getCreateAccountChallenge();
       return ChallengeItem(
         challenge: challenge,

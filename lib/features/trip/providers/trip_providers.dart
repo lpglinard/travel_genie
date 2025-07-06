@@ -1,22 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/core/providers/infrastructure_providers.dart';
+import 'package:travel_genie/core/providers/repository_providers.dart';
 import 'package:travel_genie/features/trip/models/place_suggestion.dart';
 import 'package:travel_genie/features/trip/models/trip.dart';
 import 'package:travel_genie/features/trip/models/trip_participant.dart';
 import 'package:travel_genie/features/trip/services/trip_service.dart';
 import 'package:travel_genie/features/user/providers/user_providers.dart';
 
-/// Provider for FirebaseFirestore instance
-final firestoreProvider = Provider<FirebaseFirestore>((ref) {
-  return FirebaseFirestore.instance;
-});
-
-/// Provider for TripRepository
-final tripRepositoryProvider = Provider<TripRepository>((ref) {
-  final firestore = ref.watch(firestoreProvider);
-  return FirestoreTripRepository(firestore);
-});
 
 /// Provider for TripService
 final tripServiceProvider = Provider<TripService>((ref) {

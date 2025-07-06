@@ -1,19 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/config/config.dart';
-import '../../../core/services/analytics_service.dart';
-import '../../../core/services/firestore_service.dart';
-import '../../../core/services/preferences_service.dart';
-import '../../challenge/services/challenge_actions_repository.dart';
-import '../../challenge/services/challenge_actions_service.dart';
-import '../../challenge/services/challenge_progress_repository.dart';
-import '../../challenge/services/challenge_progress_service.dart';
-import '../../challenge/services/challenge_repository.dart';
-import '../../challenge/services/challenge_service.dart';
+import '../../../core/providers/infrastructure_providers.dart';
+import '../../../core/providers/repository_providers.dart';
 import '../../place/services/google_places_service.dart';
 import '../../place/services/places_service.dart';
 import '../../place/services/recommendation_service.dart';
@@ -24,29 +15,12 @@ import '../services/traveler_profile_service.dart';
 import '../services/user_deletion_service.dart';
 import '../services/user_management_service.dart';
 
-final firestoreServiceProvider = Provider<FirestoreService>((ref) {
-  return FirestoreService(FirebaseFirestore.instance);
-});
-
-final sharedPrefsProvider = FutureProvider<SharedPreferences>((ref) async {
-  return SharedPreferences.getInstance();
-});
-
-final preferencesServiceProvider = FutureProvider<PreferencesService>((
-  ref,
-) async {
-  final prefs = await ref.watch(sharedPrefsProvider.future);
-  return PreferencesService(prefs);
-});
-
-final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
-  return AnalyticsService();
-});
-
+/// Authentication state changes provider
 final authStateChangesProvider = StreamProvider<User?>(
   (ref) => FirebaseAuth.instance.authStateChanges(),
 );
 
+/// User data provider
 final userDataProvider = StreamProvider<UserData?>((ref) {
   final service = ref.watch(firestoreServiceProvider);
   return FirebaseAuth.instance.authStateChanges().asyncExpand(
@@ -55,38 +29,27 @@ final userDataProvider = StreamProvider<UserData?>((ref) {
   );
 });
 
+/// Locale provider
 final localeProvider = StateProvider<Locale?>((ref) => const Locale('en'));
 
+/// Theme mode provider
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
+/// Places service provider
 final placesServiceProvider = Provider<PlacesService>((ref) {
   return GooglePlacesService(googlePlacesApiKey);
 });
 
+/// Recommendation service provider
 final recommendationServiceProvider = Provider<RecommendationService>((ref) {
   return RecommendationServiceImpl();
 });
 
-final challengeServiceProvider = Provider<ChallengeRepository>((ref) {
-  return FirestoreChallengeRepository(FirebaseFirestore.instance);
-});
-
-final challengeProgressServiceProvider = Provider<ChallengeProgressRepository>((
-  ref,
-) {
-  return FirestoreChallengeProgressRepository(FirebaseFirestore.instance);
-});
-
-final challengeActionsProvider = Provider<ChallengeActionsRepository>((ref) {
-  final progressRepository = ref.watch(challengeProgressServiceProvider);
-  final analyticsService = ref.watch(analyticsServiceProvider);
-  return FirestoreChallengeActionsRepository(progressRepository, analyticsService);
-});
-
+/// Profile service provider
 final profileServiceProvider = Provider<ProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
-  final challengeService = ref.watch(challengeServiceProvider);
-  final challengeProgressService = ref.watch(challengeProgressServiceProvider);
+  final challengeService = ref.watch(challengeRepositoryProvider);
+  final challengeProgressService = ref.watch(challengeProgressRepositoryProvider);
   return ProfileService(
     firestoreService,
     challengeService,
@@ -94,15 +57,18 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
   );
 });
 
+/// Traveler profile service provider
 final travelerProfileServiceProvider = Provider<TravelerProfileService>((ref) {
   final firestoreService = ref.watch(firestoreServiceProvider);
   return TravelerProfileService(firestoreService);
 });
 
+/// User deletion service provider
 final userDeletionServiceProvider = Provider<UserDeletionService>((ref) {
   return UserDeletionService();
 });
 
+/// User management service provider
 final userManagementServiceProvider = Provider<UserManagementService>((ref) {
   return UserManagementService();
 });

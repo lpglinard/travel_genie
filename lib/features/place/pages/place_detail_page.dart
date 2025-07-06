@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/providers/infrastructure_providers.dart';
+import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/widgets/login_required_dialog.dart';
 import '../../../l10n/app_localizations.dart';
-import '../../user/providers/user_providers.dart' as user_providers;
 import '../models/place.dart';
 import '../widgets/place_detail/action_buttons.dart';
 import '../widgets/place_detail/additional_info_section.dart';
@@ -46,9 +47,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       });
 
       try {
-        final firestoreService = ref.read(
-          user_providers.firestoreServiceProvider,
-        );
+        final firestoreService = ref.read(firestoreServiceProvider);
         final isSaved = await firestoreService.isPlaceSaved(
           user.uid,
           widget.place.placeId,
@@ -81,9 +80,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   void _sharePlaceInfo() {
     // Track place sharing analytics
     try {
-      final analyticsService = ref.read(
-        user_providers.analyticsServiceProvider,
-      );
+      final analyticsService = ref.read(analyticsServiceProvider);
       analyticsService.logCustomEvent(
         eventName: 'share',
         parameters: {
@@ -124,9 +121,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       });
 
       try {
-        final firestoreService = ref.read(
-          user_providers.firestoreServiceProvider,
-        );
+        final firestoreService = ref.read(firestoreServiceProvider);
 
         if (_isSaved) {
           // Remove from saved places
@@ -137,9 +132,7 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
 
           // Track challenge progress for saving a place
           try {
-            final challengeActions = ref.read(
-              user_providers.challengeActionsProvider,
-            );
+            final challengeActions = ref.read(challengeActionsProvider);
             await challengeActions.markCompleted(user.uid, 'save_place');
             debugPrint(
               '[DEBUG_LOG] Save place challenge marked as completed for user ${user.uid}',

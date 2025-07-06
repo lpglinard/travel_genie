@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
 import 'package:travel_genie/features/user/models/traveler_profile.dart';
 import 'package:travel_genie/features/user/models/traveler_profile_enums.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart' as user_providers;
+import 'package:travel_genie/features/user/providers/user_providers.dart'
+    as user_providers;
 import 'package:travel_genie/features/user/widgets/profile/accommodation_section.dart';
 import 'package:travel_genie/features/user/widgets/profile/action_buttons.dart';
 import 'package:travel_genie/features/user/widgets/profile/budget_section.dart';
@@ -104,7 +106,7 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
       try {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null && updatedProfile.isComplete) {
-          final challengeActions = ref.read(user_providers.challengeActionsProvider);
+          final challengeActions = ref.read(challengeActionsProvider);
           await challengeActions.markCompleted(user.uid, 'complete_profile');
           debugPrint(
             '[DEBUG_LOG] Complete profile challenge marked as completed for user ${user.uid}',

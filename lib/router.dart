@@ -5,8 +5,10 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/providers/infrastructure_providers.dart';
 import 'package:travel_genie/core/services/analytics_service.dart';
 import 'package:travel_genie/features/challenge/models/predefined_challenges.dart';
+import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
 import 'package:travel_genie/features/place/models/place.dart';
 import 'package:travel_genie/features/place/pages/place_detail_page.dart';
 import 'package:travel_genie/features/search/pages/search_results_page.dart';
@@ -19,7 +21,6 @@ import 'features/trip/pages/new_trip_screen.dart';
 import 'features/trip/pages/trip_details_page.dart';
 import 'features/user/pages/profile_screen.dart' as app_profile;
 import 'features/user/pages/traveler_profile_page.dart';
-import 'features/user/providers/user_providers.dart';
 import 'l10n/app_localizations.dart';
 
 // Navigation destinations

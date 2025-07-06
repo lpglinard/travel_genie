@@ -1,27 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart' as user_providers;
 import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../services/groups_service.dart';
+import '../providers/social_providers.dart';
 import '../widgets/groups/feedback_card.dart';
 import '../widgets/groups/feedback_summary.dart';
-
-// Provider for groups service
-final groupsServiceProvider = Provider<GroupsService>((ref) {
-  final firestoreService = ref.watch(user_providers.firestoreServiceProvider);
-  return GroupsService(firestoreService);
-});
-
-final groupsFeedbackProvider = StreamProvider<Map<String, dynamic>?>((ref) {
-  final groupsService = ref.watch(groupsServiceProvider);
-  return groupsService.streamGroupsFeedbackSummary();
-});
-
-final userFeedbackProvider = StreamProvider<Map<String, dynamic>?>((ref) {
-  final groupsService = ref.watch(groupsServiceProvider);
-  return groupsService.streamUserFeedback();
-});
 
 class GroupsPage extends ConsumerWidget {
   const GroupsPage({super.key});

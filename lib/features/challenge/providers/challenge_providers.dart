@@ -1,23 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/providers/infrastructure_providers.dart';
+import '../../../core/providers/repository_providers.dart';
 import '../../user/providers/user_providers.dart';
 import '../models/challenge.dart';
+import '../services/challenge_actions_repository.dart';
+import '../services/challenge_actions_service.dart';
 import '../services/challenge_progress_repository.dart';
 import '../services/challenge_progress_service.dart';
 import '../services/challenge_repository.dart';
 import '../services/challenge_service.dart';
 
-/// Provider for ChallengeRepository
-final challengeRepositoryProvider = Provider<ChallengeRepository>((ref) {
-  return FirestoreChallengeRepository(FirebaseFirestore.instance);
-});
-
-/// Provider for ChallengeProgressRepository
-final challengeProgressRepositoryProvider = Provider<ChallengeProgressRepository>((
-  ref,
-) {
-  return FirestoreChallengeProgressRepository(FirebaseFirestore.instance);
+/// Challenge actions provider
+final challengeActionsProvider = Provider<ChallengeActionsRepository>((ref) {
+  final progressRepository = ref.watch(challengeProgressRepositoryProvider);
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return FirestoreChallengeActionsRepository(
+    progressRepository,
+    analyticsService,
+  );
 });
 
 /// Provider for active challenges from the global collection
@@ -103,17 +105,20 @@ final challengeWithProgressProvider = StreamProvider.family<Challenge?, String>(
           },
           loading: () {
             if (challengeId == "create_account") {
-              return Stream.value(challengeRepository.getCreateAccountChallenge());
+              return Stream.value(
+                challengeRepository.getCreateAccountChallenge(),
+              );
             }
             return Stream.value(null);
           },
           error: (_, _) {
             if (challengeId == "create_account") {
-              return Stream.value(challengeRepository.getCreateAccountChallenge());
+              return Stream.value(
+                challengeRepository.getCreateAccountChallenge(),
+              );
             }
             return Stream.value(null);
           },
         );
   },
 );
-
