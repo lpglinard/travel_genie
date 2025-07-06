@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/features/user/models/user_data.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class ProfileInfoTile extends StatelessWidget {
   const ProfileInfoTile({super.key, required this.user, this.userData});

@@ -132,6 +132,18 @@ lib/
 │   │   ├── providers/      # Trip state management
 │   │   ├── services/       # Trip business logic
 │   │   └── widgets/        # Trip-specific widgets
+│   │       ├── profile_completeness/  # Profile completeness widgets (one per file)
+│   │       │   ├── profile_completeness_widget.dart
+│   │       │   ├── loading_profile_completeness.dart
+│   │       │   ├── error_profile_completeness.dart
+│   │       │   └── profile_completeness_content.dart
+│   │       └── travel_partner/        # Travel partner widgets (one per file)
+│   │           ├── travel_partner_invite_widget.dart
+│   │           ├── travel_partner_invite_modal.dart
+│   │           ├── tab_button.dart
+│   │           ├── friends_list_tab.dart
+│   │           ├── friend_list_item.dart
+│   │           └── email_invite_tab.dart
 │   └── user/               # User management
 │       ├── models/         # User data and profile models (one per file)
 │       │   ├── traveler_profile.dart

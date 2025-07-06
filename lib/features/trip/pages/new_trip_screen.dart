@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:travel_genie/core/widgets/login_required_dialog.dart';
 import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/trip/widgets/date_range_picker_field.dart';
 import 'package:travel_genie/features/user/providers/user_providers.dart'
     as user_providers;
 import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../providers/trip_providers.dart';
 import '../services/city_autocomplete_service.dart';
-import '../widgets/date_range_picker_field.dart';
 import '../widgets/destination_autocomplete_field.dart';
 import '../widgets/profile_completeness/profile_completeness_widget.dart';
 import '../widgets/travel_partner/travel_partner_invite_widget.dart';

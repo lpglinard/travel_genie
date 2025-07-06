@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/features/trip/widgets/profile_completeness/loading_profile_completeness.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
 import '../../providers/profile_completeness_provider.dart';
 import 'error_profile_completeness.dart';
-import 'loadingprofile_completeness.dart';
 import 'profile_completeness_content.dart';
 
 /// Widget that displays AI personalization information and profile completeness

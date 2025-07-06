@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
-import 'tab_button.dart';
-import 'friends_list_tab.dart';
 import 'email_invite_tab.dart';
+import 'friends_list_tab.dart';
+import 'tab_button.dart';
 
 /// Modal for travel partner invitation
 /// Follows Single Responsibility Principle - only handles the invite modal UI
