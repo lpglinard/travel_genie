@@ -4,7 +4,9 @@ import 'package:travel_genie/features/trip/models/itinerary_day.dart';
 import 'package:travel_genie/features/trip/providers/itinerary_providers.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
 
-/// Widget that displays the itinerary tab content as a simple list of itinerary days
+import 'expandable_day_tile.dart';
+
+/// Widget that displays the itinerary tab content with expandable day tiles
 /// Follows Single Responsibility Principle - only handles itinerary tab display
 class TripItineraryTab extends ConsumerWidget {
   const TripItineraryTab({super.key, required this.tripId});
@@ -78,16 +80,7 @@ class TripItineraryTab extends ConsumerWidget {
             final day = sortedDays[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
-              child: Card(
-                child: ListTile(
-                  leading: CircleAvatar(child: Text('${day.dayNumber}')),
-                  title: Text('Day ${day.dayNumber}'),
-                  subtitle: day.notes?.isNotEmpty == true
-                      ? Text(day.notes!)
-                      : const Text('No notes'),
-                  trailing: const Icon(Icons.chevron_right),
-                ),
-              ),
+              child: ExpandableDayTile(day: day, tripId: tripId),
             );
           },
         );
