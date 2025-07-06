@@ -57,12 +57,9 @@ class FirestoreService {
       'name': user.displayName,
       'email': user.email,
     };
-    // Always update locale field when provided, even if null (for Portuguese)
+    // Save the locale language code when provided
     if (locale != null) {
       data['locale'] = locale.languageCode;
-    } else {
-      // Explicitly set locale to null for Portuguese (default language)
-      data['locale'] = null;
     }
     if (darkMode != null) {
       data['darkMode'] = darkMode;

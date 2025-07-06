@@ -220,10 +220,14 @@ class DraggablePlace extends StatelessWidget {
 - Use `AppLocalizations.of(context)!` for all user-visible strings
 
 **Required:**
-- Use `Text(AppLocalizations.of(context)!.welcomeMessage)`
+```dart
+Text(AppLocalizations.of(context)!.welcomeMessage)
+```
 
 **Prohibited:**
-- Never use hardcoded strings like `Text('Welcome to Travel Genie')`
+```dart
+Text('Welcome to Travel Genie')  // Never do this
+```
 
 ## Import Guidelines
 

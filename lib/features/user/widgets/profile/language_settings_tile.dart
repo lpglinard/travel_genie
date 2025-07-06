@@ -21,17 +21,19 @@ class LanguageSettingsTile extends ConsumerWidget {
       trailing: Text(locale == const Locale('en') ? 'EN' : 'PT'),
       onTap: () async {
         if (locale == const Locale('en')) {
-          ref.read(localeProvider.notifier).state = null;
+          // Change from English to Portuguese
+          ref.read(localeProvider.notifier).state = const Locale('pt');
           if (user != null) {
             await service.upsertUser(
               user,
-              locale: null,
+              locale: const Locale('pt'),
               darkMode: themeMode == ThemeMode.dark,
             );
           }
           final prefs = await ref.read(preferencesServiceProvider.future);
-          await prefs.setLocale(null);
+          await prefs.setLocale(const Locale('pt'));
         } else {
+          // Change from Portuguese (or null) to English
           ref.read(localeProvider.notifier).state = const Locale('en');
           if (user != null) {
             await service.upsertUser(

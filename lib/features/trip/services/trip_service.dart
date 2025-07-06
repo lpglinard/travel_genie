@@ -235,10 +235,16 @@ class FirestoreTripRepository implements TripRepository {
   @override
   Stream<List<Trip>> streamUserTrips(String userId) {
     try {
+      // Use Firestore OR query to find trips where user is either creator or participant
       return _firestore
           .collection('trips')
-          .where('organizerId', isEqualTo: userId)
-          .orderBy('createdAt', descending: true)
+          .where(
+            Filter.or(
+              Filter('userId', isEqualTo: userId),
+              Filter('participants', arrayContains: userId),
+            ),
+          )
+          .orderBy('startDate', descending: true)
           .snapshots()
           .map(
             (snapshot) =>
