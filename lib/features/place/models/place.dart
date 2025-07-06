@@ -45,7 +45,8 @@ class Place {
   factory Place.fromJson(Map<String, dynamic> json) {
     String displayName = '';
     String displayNameLanguageCode = '';
-    final displayNameField = json['displayName'] ?? json['display_name'] ?? json['name'];
+    final displayNameField =
+        json['displayName'] ?? json['display_name'] ?? json['name'];
     if (displayNameField is Map<String, dynamic>) {
       displayName = displayNameField['text'] as String? ?? '';
       displayNameLanguageCode =
@@ -142,7 +143,8 @@ class Place {
         },
       'category': category.id,
       'orderInDay': orderInDay,
-      if (estimatedDurationMinutes != null) 'estimatedDurationMinutes': estimatedDurationMinutes,
+      if (estimatedDurationMinutes != null)
+        'estimatedDurationMinutes': estimatedDurationMinutes,
     };
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_genie/widgets/my_trips/trip_placeholder_image.dart';
+import 'package:travel_genie/features/trip/widgets/my_trips/trip_placeholder_image.dart';
 
 import '../../models/trip.dart';
 

@@ -30,7 +30,7 @@ class OpeningHoursBottomSheet extends StatelessWidget {
                   ),
                 ),
               )
-              .toList(),
+              ,
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,

@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 
 /// Refactored Analytics Service following Firebase Analytics Strategy
-/// 
+///
 /// This service implements Firebase standard events and follows the recommendations
 /// from firebase_analytics_strategy.md for better integration with Firebase's
 /// analytics dashboard and Google Ads.
@@ -83,13 +83,15 @@ class AnalyticsService {
     return _analytics.logViewItem(
       currency: currency,
       value: value ?? 0.0,
-      items: items ?? [
-        AnalyticsEventItem(
-          itemId: tripId ?? 'unknown',
-          itemName: destination ?? 'Unknown Destination',
-          itemCategory: 'trip',
-        )
-      ],
+      items:
+          items ??
+          [
+            AnalyticsEventItem(
+              itemId: tripId ?? 'unknown',
+              itemName: destination ?? 'Unknown Destination',
+              itemCategory: 'trip',
+            ),
+          ],
     );
   }
 
@@ -151,7 +153,7 @@ class AnalyticsService {
           itemId: placeId ?? 'unknown',
           itemName: placeName ?? 'Unknown Place',
           itemCategory: category ?? 'place',
-        )
+        ),
       ],
     );
   }
@@ -179,7 +181,7 @@ class AnalyticsService {
             if (tripId != null) 'trip_id': tripId,
             if (dayId != null) 'day_id': dayId,
           },
-        )
+        ),
       ],
     );
   }
@@ -201,10 +203,8 @@ class AnalyticsService {
           itemId: placeId ?? 'unknown',
           itemName: placeName ?? 'Unknown Place',
           itemCategory: category ?? 'place',
-          parameters: {
-            if (tripId != null) 'trip_id': tripId,
-          },
-        )
+          parameters: {if (tripId != null) 'trip_id': tripId},
+        ),
       ],
     );
   }
@@ -348,14 +348,8 @@ class AnalyticsService {
   }
 
   /// Track level progression using Firebase standard event
-  Future<void> logLevelUp({
-    required int level,
-    String? character,
-  }) {
-    return _analytics.logLevelUp(
-      level: level,
-      character: character,
-    );
+  Future<void> logLevelUp({required int level, String? character}) {
+    return _analytics.logLevelUp(level: level, character: character);
   }
 
   // ============================================================================

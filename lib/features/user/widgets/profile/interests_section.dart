@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/features/user/models/traveler_profile_enums.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
+
 import 'section_card.dart';
 
 class InterestsSection extends StatelessWidget {

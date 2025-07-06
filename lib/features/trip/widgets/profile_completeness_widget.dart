@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/features/user/services/profile_completeness_service.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
-import 'package:travel_genie/services/profile_completeness_service.dart';
 
 import '../providers/profile_completeness_provider.dart';
 

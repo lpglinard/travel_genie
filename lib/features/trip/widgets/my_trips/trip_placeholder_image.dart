@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../models/trip.dart';
-import '../../../widgets/my_trips/placeholder_content.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/trip/widgets/my_trips/placeholder_content.dart';
 
 /// Widget that displays a placeholder image for trips without a cover image
 class TripPlaceholderImage extends StatelessWidget {

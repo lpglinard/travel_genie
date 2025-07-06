@@ -2,21 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/services/firestore_service.dart';
+import 'package:travel_genie/core/widgets/home/active_trip_section.dart';
+import 'package:travel_genie/core/widgets/home/gamification_progress_section.dart';
+import 'package:travel_genie/core/widgets/home/greeting_section.dart';
+import 'package:travel_genie/core/widgets/home/home_app_bar.dart';
+import 'package:travel_genie/core/widgets/home/popular_destinations_section.dart';
+import 'package:travel_genie/core/widgets/home/recommended_destinations_section.dart';
+import 'package:travel_genie/core/widgets/home/search_section.dart';
+import 'package:travel_genie/features/trip/models/destination.dart';
 import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/trip/providers/trip_providers.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
-
-import '../l10n/app_localizations.dart';
-import '../models/destination.dart';
-import '../models/trip.dart';
-import '../providers/trip_service_provider.dart';
-import '../services/firestore_service.dart';
-import '../widgets/home/active_trip_section.dart';
-import '../widgets/home/gamification_progress_section.dart';
-import '../widgets/home/greeting_section.dart';
-import '../widgets/home/home_app_bar.dart';
-import '../widgets/home/popular_destinations_section.dart';
-import '../widgets/home/recommended_destinations_section.dart';
-import '../widgets/home/search_section.dart';
 
 final firestoreServiceProvider = Provider<FirestoreService>((ref) {
   return FirestoreService(FirebaseFirestore.instance);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
-import 'package:travel_genie/models/trip.dart';
 
 import '../models/trip_participant.dart';
 import 'participant_list_item.dart';
@@ -78,7 +78,9 @@ class _TripSummarySection extends StatelessWidget {
                       : AppLocalizations.of(context)!.tripSummaryPlaceholder,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     height: 1.5,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.8),
                   ),
                 ),
         ),

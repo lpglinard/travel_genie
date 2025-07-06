@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'firestore_service.dart';
+import 'package:travel_genie/core/services/firestore_service.dart';
 
 class GroupsService {
   GroupsService(this._firestoreService);

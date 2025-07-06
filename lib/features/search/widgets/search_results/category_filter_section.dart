@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../l10n/app_localizations.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class CategoryFilterSection extends StatelessWidget {
   const CategoryFilterSection({

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart' as user_providers;
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../l10n/app_localizations.dart';
 import '../services/groups_service.dart';
-import '../user_providers.dart' as user_providers;
 import '../widgets/groups/feedback_card.dart';
 import '../widgets/groups/feedback_summary.dart';
 

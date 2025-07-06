@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:travel_genie/widgets/groups/feedback_stat_card.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../../l10n/app_localizations.dart';
+import 'feedback_stat_card.dart';
 
 class FeedbackSummary extends StatelessWidget {
   const FeedbackSummary({

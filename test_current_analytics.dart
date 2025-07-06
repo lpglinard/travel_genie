@@ -1,8 +1,7 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:travel_genie/services/analytics_service.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
-
+import 'package:flutter_test/flutter_test.dart';
+import 'package:travel_genie/core/services/analytics_service.dart';
 
 // Mock implementation for testing
 class MockAnalyticsService implements AnalyticsService {
@@ -76,10 +75,7 @@ class MockAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> logDeleteItinerary({String? tripId}) async {
-    loggedEvents.add({
-      'event': 'logDeleteItinerary',
-      'tripId': tripId,
-    });
+    loggedEvents.add({'event': 'logDeleteItinerary', 'tripId': tripId});
   }
 
   @override
@@ -217,10 +213,7 @@ class MockAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> logThemeChange(String theme) async {
-    loggedEvents.add({
-      'event': 'logThemeChange',
-      'theme': theme,
-    });
+    loggedEvents.add({'event': 'logThemeChange', 'theme': theme});
   }
 
   @override
@@ -264,7 +257,10 @@ class MockAnalyticsService implements AnalyticsService {
   }
 
   @override
-  Future<void> setUserProperty({required String name, required String value}) async {
+  Future<void> setUserProperty({
+    required String name,
+    required String value,
+  }) async {
     loggedEvents.add({
       'event': 'setUserProperty',
       'name': name,
@@ -274,18 +270,12 @@ class MockAnalyticsService implements AnalyticsService {
 
   @override
   Future<void> setUserId(String? userId) async {
-    loggedEvents.add({
-      'event': 'setUserId',
-      'userId': userId,
-    });
+    loggedEvents.add({'event': 'setUserId', 'userId': userId});
   }
 
   @override
   Trace newTrace(String traceName) {
-    loggedEvents.add({
-      'event': 'newTrace',
-      'traceName': traceName,
-    });
+    loggedEvents.add({'event': 'newTrace', 'traceName': traceName});
     // Return null and let noSuchMethod handle it
     return null as Trace;
   }
@@ -308,7 +298,6 @@ void main() {
       expect(analyticsService, isA<AnalyticsService>());
     });
 
-
     test('should have all authentication methods', () async {
       // Test that methods exist and can be called without throwing
       expect(() => analyticsService.logLogin(), returnsNormally);
@@ -317,27 +306,95 @@ void main() {
     });
 
     test('should have all trip and itinerary methods', () async {
-      expect(() => analyticsService.logCreateItinerary(tripId: 'test', destination: 'Paris'), returnsNormally);
-      expect(() => analyticsService.logViewItinerary(tripId: 'test', destination: 'Paris'), returnsNormally);
-      expect(() => analyticsService.logEditItinerary(tripId: 'test', action: 'add_place'), returnsNormally);
-      expect(() => analyticsService.logDeleteItinerary(tripId: 'test'), returnsNormally);
-      expect(() => analyticsService.logShareItinerary(tripId: 'test', method: 'email'), returnsNormally);
+      expect(
+        () => analyticsService.logCreateItinerary(
+          tripId: 'test',
+          destination: 'Paris',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logViewItinerary(
+          tripId: 'test',
+          destination: 'Paris',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logEditItinerary(
+          tripId: 'test',
+          action: 'add_place',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logDeleteItinerary(tripId: 'test'),
+        returnsNormally,
+      );
+      expect(
+        () =>
+            analyticsService.logShareItinerary(tripId: 'test', method: 'email'),
+        returnsNormally,
+      );
     });
 
     test('should have all place and location methods', () async {
-      expect(() => analyticsService.logSearchPlace(searchTerm: 'restaurants', location: 'Paris'), returnsNormally);
-      expect(() => analyticsService.logViewPlace(placeId: 'place123', placeName: 'Eiffel Tower', category: 'attraction'), returnsNormally);
-      expect(() => analyticsService.logAddPlaceToItinerary(placeId: 'place123', placeName: 'Eiffel Tower', tripId: 'trip123'), returnsNormally);
-      expect(() => analyticsService.logRemovePlaceFromItinerary(placeId: 'place123', placeName: 'Eiffel Tower', tripId: 'trip123'), returnsNormally);
+      expect(
+        () => analyticsService.logSearchPlace(
+          searchTerm: 'restaurants',
+          location: 'Paris',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logViewPlace(
+          placeId: 'place123',
+          placeName: 'Eiffel Tower',
+          category: 'attraction',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logAddPlaceToItinerary(
+          placeId: 'place123',
+          placeName: 'Eiffel Tower',
+          tripId: 'trip123',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logRemovePlaceFromItinerary(
+          placeId: 'place123',
+          placeName: 'Eiffel Tower',
+          tripId: 'trip123',
+        ),
+        returnsNormally,
+      );
     });
 
     test('should have AI and optimization methods', () async {
-      expect(() => analyticsService.logOptimizeItinerary(tripId: 'trip123', optimizerType: 'route'), returnsNormally);
-      expect(() => analyticsService.logAIRecommendation(recommendationType: 'place', placeId: 'place123', accepted: true), returnsNormally);
+      expect(
+        () => analyticsService.logOptimizeItinerary(
+          tripId: 'trip123',
+          optimizerType: 'route',
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.logAIRecommendation(
+          recommendationType: 'place',
+          placeId: 'place123',
+          accepted: true,
+        ),
+        returnsNormally,
+      );
     });
 
     test('should have user engagement methods', () async {
-      expect(() => analyticsService.logScreenView(screenName: 'home'), returnsNormally);
+      expect(
+        () => analyticsService.logScreenView(screenName: 'home'),
+        returnsNormally,
+      );
     });
 
     test('should have app settings methods', () async {
@@ -346,19 +403,41 @@ void main() {
     });
 
     test('should have error methods', () async {
-      expect(() => analyticsService.logError(errorType: 'network', errorMessage: 'Connection failed'), returnsNormally);
+      expect(
+        () => analyticsService.logError(
+          errorType: 'network',
+          errorMessage: 'Connection failed',
+        ),
+        returnsNormally,
+      );
     });
 
-
     test('should have achievement methods', () async {
-      expect(() => analyticsService.logUnlockAchievement(achievementId: 'first_trip', achievementName: 'First Trip Created'), returnsNormally);
+      expect(
+        () => analyticsService.logUnlockAchievement(
+          achievementId: 'first_trip',
+          achievementName: 'First Trip Created',
+        ),
+        returnsNormally,
+      );
     });
 
     test('should have custom event and user property methods', () async {
-      expect(() => analyticsService.logCustomEvent(eventName: 'test_event', parameters: {'key': 'value'}), returnsNormally);
-      expect(() => analyticsService.setUserProperty(name: 'user_type', value: 'premium'), returnsNormally);
+      expect(
+        () => analyticsService.logCustomEvent(
+          eventName: 'test_event',
+          parameters: {'key': 'value'},
+        ),
+        returnsNormally,
+      );
+      expect(
+        () => analyticsService.setUserProperty(
+          name: 'user_type',
+          value: 'premium',
+        ),
+        returnsNormally,
+      );
       expect(() => analyticsService.setUserId('user123'), returnsNormally);
     });
-
   });
 }

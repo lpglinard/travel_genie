@@ -3,8 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/theme/theme.dart';
-import 'l10n/app_localizations.dart';
 import 'features/user/providers/user_providers.dart';
+import 'l10n/app_localizations.dart';
 import 'router.dart';
 
 class MyApp extends ConsumerWidget {

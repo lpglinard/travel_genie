@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../../l10n/app_localizations.dart';
 import 'challenge_progress_content.dart';
 
 class GamificationProgressSection extends ConsumerWidget {
@@ -28,4 +28,3 @@ class GamificationProgressSection extends ConsumerWidget {
     );
   }
 }
-

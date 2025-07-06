@@ -1,17 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-/// Service for managing user challenge progress
+import 'challenge_progress_repository.dart';
+
+/// Firestore implementation for managing user challenge progress
 ///
 /// This service handles the `/users/{userId}/challengeProgress/{challengeId}`
 /// collection in Firestore following the new architecture where user progress
 /// is tracked separately from the global challenges.
-class ChallengeProgressService {
-  ChallengeProgressService(this._firestore);
+class FirestoreChallengeProgressRepository implements ChallengeProgressRepository {
+  FirestoreChallengeProgressRepository(this._firestore);
 
   final FirebaseFirestore _firestore;
 
   /// Get user's progress for all challenges
+  @override
   Stream<Map<String, int>> getUserChallengeProgress(String userId) {
     return _firestore
         .collection('users')
@@ -29,6 +32,7 @@ class ChallengeProgressService {
   }
 
   /// Get user's progress for a specific challenge
+  @override
   Future<int> getChallengeProgress(String userId, String challengeId) async {
     try {
       final doc = await _firestore
@@ -51,6 +55,7 @@ class ChallengeProgressService {
   }
 
   /// Update user's progress for a specific challenge
+  @override
   Future<void> updateChallengeProgress(
     String userId,
     String challengeId,
@@ -79,6 +84,7 @@ class ChallengeProgressService {
   }
 
   /// Increment user's progress for a specific challenge
+  @override
   Future<void> incrementChallengeProgress(
     String userId,
     String challengeId, {
@@ -101,6 +107,7 @@ class ChallengeProgressService {
 
   /// Initialize user's challenge progress for all active challenges
   /// This should be called when a user first registers or when new challenges are added
+  @override
   Future<void> initializeUserChallengeProgress(
     String userId,
     List<String> challengeIds,
@@ -136,6 +143,7 @@ class ChallengeProgressService {
 
   /// Mark a challenge as completed for a user
   /// This method uses set with merge to ensure it works whether the document exists or not
+  @override
   Future<void> markChallengeCompleted(String userId, String challengeId) async {
     try {
       await _firestore
@@ -148,7 +156,8 @@ class ChallengeProgressService {
             'completed': true,
             'completedAt': FieldValue.serverTimestamp(),
             'updatedAt': FieldValue.serverTimestamp(),
-            'createdAt': FieldValue.serverTimestamp(), // Only set if document doesn't exist
+            'createdAt':
+                FieldValue.serverTimestamp(), // Only set if document doesn't exist
           }, SetOptions(merge: true));
 
       debugPrint(
@@ -163,6 +172,7 @@ class ChallengeProgressService {
   }
 
   /// Get completed challenges for a user
+  @override
   Stream<List<String>> getCompletedChallenges(String userId) {
     return _firestore
         .collection('users')
@@ -174,6 +184,7 @@ class ChallengeProgressService {
   }
 
   /// Reset user's progress for a specific challenge
+  @override
   Future<void> resetChallengeProgress(String userId, String challengeId) async {
     try {
       await _firestore
@@ -200,6 +211,7 @@ class ChallengeProgressService {
   }
 
   /// Delete all challenge progress for a user (used when deleting user account)
+  @override
   Future<void> deleteUserChallengeProgress(String userId) async {
     try {
       final batch = _firestore.batch();

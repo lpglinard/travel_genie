@@ -75,7 +75,7 @@ class PlaceInfoSection extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(
                       context,
-                    ).colorScheme.surfaceVariant,
+                    ).colorScheme.surfaceContainerHighest,
                     labelStyle: TextStyle(
                       color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),

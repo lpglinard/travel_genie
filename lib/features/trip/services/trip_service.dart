@@ -35,6 +35,9 @@ abstract class TripRepository {
   Future<void> addParticipant(String tripId, TripParticipant participant);
 
   Future<void> removeParticipant(String tripId, String userId);
+
+  /// Stream trips for a specific user
+  Stream<List<Trip>> streamUserTrips(String userId);
 }
 
 /// Concrete implementation of TripRepository using Firestore
@@ -69,11 +72,7 @@ class FirestoreTripRepository implements TripRepository {
   @override
   Stream<Trip?> streamTripById(String tripId) {
     try {
-      return _firestore
-          .collection('trips')
-          .doc(tripId)
-          .snapshots()
-          .map((doc) {
+      return _firestore.collection('trips').doc(tripId).snapshots().map((doc) {
         if (!doc.exists) return null;
         return Trip.fromFirestore(doc);
       });
@@ -169,9 +168,11 @@ class FirestoreTripRepository implements TripRepository {
           .collection('itineraryDays')
           .orderBy('dayNumber')
           .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => ItineraryDay.fromFirestore(doc))
-              .toList());
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => ItineraryDay.fromFirestore(doc))
+                .toList(),
+          );
     } catch (e) {
       throw TripServiceException('Failed to stream itinerary days: $e');
     }
@@ -191,9 +192,10 @@ class FirestoreTripRepository implements TripRepository {
           .collection('places')
           .orderBy('orderInDay')
           .snapshots()
-          .map((snapshot) => snapshot.docs
-              .map((doc) => Place.fromJson(doc.data()))
-              .toList());
+          .map(
+            (snapshot) =>
+                snapshot.docs.map((doc) => Place.fromJson(doc.data())).toList(),
+          );
     } catch (e) {
       throw TripServiceException('Failed to stream places for day: $e');
     }
@@ -227,6 +229,23 @@ class FirestoreTripRepository implements TripRepository {
           .delete();
     } catch (e) {
       throw TripServiceException('Failed to remove participant: $e');
+    }
+  }
+
+  @override
+  Stream<List<Trip>> streamUserTrips(String userId) {
+    try {
+      return _firestore
+          .collection('trips')
+          .where('organizerId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) =>
+                snapshot.docs.map((doc) => Trip.fromFirestore(doc)).toList(),
+          );
+    } catch (e) {
+      throw TripServiceException('Failed to stream user trips: $e');
     }
   }
 }
@@ -284,7 +303,8 @@ class TripService {
               'destination': trip.title,
               'start_date': trip.startDate.toIso8601String(),
               'end_date': trip.endDate.toIso8601String(),
-              'duration_days': trip.endDate.difference(trip.startDate).inDays + 1,
+              'duration_days':
+                  trip.endDate.difference(trip.startDate).inDays + 1,
             },
           ),
         ],
@@ -348,6 +368,11 @@ class TripService {
     required String dayId,
   }) {
     return _repository.streamPlacesForDay(tripId: tripId, dayId: dayId);
+  }
+
+  /// Stream trips for a specific user
+  Stream<List<Trip>> streamUserTrips(String userId) {
+    return _repository.streamUserTrips(userId);
   }
 
   String formatDateRange(DateTime startDate, DateTime endDate) {

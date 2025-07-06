@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-
-import '../models/badge.dart' as badge_model;
-import '../models/challenge.dart';
-import '../models/travel_cover.dart';
-import 'challenge_progress_service.dart';
-import 'challenge_service.dart';
-import 'firestore_service.dart';
+import 'package:travel_genie/core/services/firestore_service.dart';
+import 'package:travel_genie/features/challenge/models/badge.dart' as badge_model;
+import 'package:travel_genie/features/challenge/models/challenge.dart';
+import 'package:travel_genie/features/challenge/services/challenge_progress_repository.dart';
+import 'package:travel_genie/features/challenge/services/challenge_repository.dart';
+import 'package:travel_genie/features/trip/models/cover_style.dart';
+import 'package:travel_genie/features/trip/models/travel_cover.dart';
+import 'package:travel_genie/features/trip/models/travel_cover_collection.dart';
 
 class ProfileService {
   ProfileService(
@@ -15,8 +16,8 @@ class ProfileService {
   );
 
   final FirestoreService _firestoreService;
-  final ChallengeService _challengeService;
-  final ChallengeProgressService _challengeProgressService;
+  final ChallengeRepository _challengeService;
+  final ChallengeProgressRepository _challengeProgressService;
 
   /// Get user badges
   Stream<List<badge_model.Badge>> getUserBadges(String userId) {

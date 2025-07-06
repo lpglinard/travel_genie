@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:travel_genie/features/trip/models/trip.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart';
-import 'package:travel_genie/core/services/analytics_service.dart';
-
 import 'package:travel_genie/features/trip/models/place_suggestion.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
 import 'package:travel_genie/features/trip/models/trip_participant.dart';
 import 'package:travel_genie/features/trip/services/trip_service.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 /// Provider for FirebaseFirestore instance
 final firestoreProvider = Provider<FirebaseFirestore>((ref) {
@@ -28,10 +26,7 @@ final tripServiceProvider = Provider<TripService>((ref) {
 });
 
 /// Provider for trip details by ID with real-time updates
-final tripDetailsProvider = StreamProvider.family<Trip?, String>((
-  ref,
-  tripId,
-) {
+final tripDetailsProvider = StreamProvider.family<Trip?, String>((ref, tripId) {
   final tripService = ref.watch(tripServiceProvider);
   return tripService.streamTripDetails(tripId);
 });
@@ -193,3 +188,21 @@ final selectedDestinationSuggestionProvider = StateProvider<PlaceSuggestion?>(
 final tripCreationStateProvider = StateProvider<TripCreationState>(
   (ref) => const TripCreationState(),
 );
+
+/// Provider for user's trips with real-time updates
+/// Returns a stream of trips for the current authenticated user
+final userTripsProvider = StreamProvider<List<Trip>>((ref) {
+  final tripService = ref.watch(tripServiceProvider);
+  final userDataAsync = ref.watch(userDataProvider);
+
+  return userDataAsync.when(
+    data: (userData) {
+      if (userData?.uid != null) {
+        return tripService.streamUserTrips(userData!.uid);
+      }
+      return const Stream.empty();
+    },
+    loading: () => const Stream.empty(),
+    error: (_, __) => const Stream.empty(),
+  );
+});

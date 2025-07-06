@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../../l10n/app_localizations.dart';
 import '../../providers/search_results_provider.dart';
 import 'search_result_card.dart';
 

@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-
-import '../../core/extensions/challenge_localization_extension.dart';
-import '../../l10n/app_localizations.dart';
-import '../../models/challenge.dart';
+import 'package:travel_genie/core/extensions/challenge_localization_extension.dart';
+import 'package:travel_genie/features/challenge/models/challenge.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class ChallengeItem extends StatelessWidget {
-  const ChallengeItem({
-    super.key,
-    required this.challenge,
-    this.onTap,
-  });
+  const ChallengeItem({super.key, required this.challenge, this.onTap});
 
   final Challenge challenge;
   final VoidCallback? onTap;

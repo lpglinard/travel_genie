@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/features/place/models/drag_drop_models.dart';
+import 'package:travel_genie/features/place/models/place.dart';
 
-import '../models/drag_drop_models.dart';
-import '../models/place.dart';
-import '../providers/trip_service_provider.dart';
+import '../providers/trip_providers.dart';
 
 /// Service that handles the business logic for drag-and-drop operations in the trip itinerary.
 ///

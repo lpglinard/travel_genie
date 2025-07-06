@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../../providers/user_providers.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 class DarkModeToggleTile extends ConsumerWidget {
   const DarkModeToggleTile({super.key});

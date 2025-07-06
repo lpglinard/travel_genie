@@ -1,20 +1,24 @@
-import 'analytics_service.dart';
-import 'challenge_progress_service.dart';
+import 'package:flutter/foundation.dart';
+import 'package:travel_genie/core/services/analytics_service.dart';
 
-/// Service providing actions for managing challenge progress.
-class ChallengeActionsService {
-  ChallengeActionsService(this._progressService, this._analyticsService);
+import 'challenge_actions_repository.dart';
+import 'challenge_progress_repository.dart';
 
-  final ChallengeProgressService _progressService;
+/// Firestore implementation providing actions for managing challenge progress.
+class FirestoreChallengeActionsRepository implements ChallengeActionsRepository {
+  FirestoreChallengeActionsRepository(this._progressRepository, this._analyticsService);
+
+  final ChallengeProgressRepository _progressRepository;
   final AnalyticsService _analyticsService;
 
   /// Update progress for a challenge.
+  @override
   Future<void> updateProgress(
     String userId,
     String challengeId,
     int newProgress,
   ) async {
-    await _progressService.updateChallengeProgress(
+    await _progressRepository.updateChallengeProgress(
       userId,
       challengeId,
       newProgress,
@@ -22,12 +26,13 @@ class ChallengeActionsService {
   }
 
   /// Increment progress for a challenge.
+  @override
   Future<void> incrementProgress(
     String userId,
     String challengeId, {
     int increment = 1,
   }) async {
-    await _progressService.incrementChallengeProgress(
+    await _progressRepository.incrementChallengeProgress(
       userId,
       challengeId,
       increment: increment,
@@ -35,31 +40,32 @@ class ChallengeActionsService {
   }
 
   /// Mark a challenge as completed.
+  @override
   Future<void> markCompleted(String userId, String challengeId) async {
-    await _progressService.markChallengeCompleted(userId, challengeId);
+    await _progressRepository.markChallengeCompleted(userId, challengeId);
 
     // Log the achievement unlock to analytics
     try {
-      await _analyticsService.logUnlockAchievement(
-        achievementId: challengeId,
-      );
+      await _analyticsService.logUnlockAchievement(achievementId: challengeId);
     } catch (e) {
       // Log error but don't prevent the challenge completion flow
-      print('Error logging challenge completion to analytics: $e');
+      debugPrint('Error logging challenge completion to analytics: $e');
     }
   }
 
   /// Reset progress for a challenge.
+  @override
   Future<void> resetProgress(String userId, String challengeId) async {
-    await _progressService.resetChallengeProgress(userId, challengeId);
+    await _progressRepository.resetChallengeProgress(userId, challengeId);
   }
 
   /// Initialize progress for a new user.
+  @override
   Future<void> initializeUserProgress(
     String userId,
     List<String> challengeIds,
   ) async {
-    await _progressService.initializeUserChallengeProgress(
+    await _progressRepository.initializeUserChallengeProgress(
       userId,
       challengeIds,
     );

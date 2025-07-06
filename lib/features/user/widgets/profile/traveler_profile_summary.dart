@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../../models/traveler_profile.dart';
-import '../../services/profile_completeness_service.dart';
-import '../../user_providers.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
+import 'package:travel_genie/features/user/models/traveler_profile.dart';
+import 'package:travel_genie/features/user/models/travel_company.dart';
+import 'package:travel_genie/features/user/models/travel_budget.dart';
+import 'package:travel_genie/features/user/models/travel_interest.dart';
+import 'package:travel_genie/features/user/models/itinerary_style.dart';
+import 'package:travel_genie/features/user/services/profile_completeness_service.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 class TravelerProfileSummary extends ConsumerWidget {
   const TravelerProfileSummary({super.key});
@@ -26,13 +30,13 @@ class TravelerProfileSummary extends ConsumerWidget {
         }
 
         final profile = snapshot.data;
-        final completenessInfo = ProfileCompletenessService.calculateCompleteness(profile);
+        final completenessInfo =
+            ProfileCompletenessService.calculateCompleteness(profile);
 
         return _buildSummaryCard(context, profile, completenessInfo);
       },
     );
   }
-
 
   Widget _buildSummaryCard(
     BuildContext context,

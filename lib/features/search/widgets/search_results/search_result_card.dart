@@ -3,14 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/config/config.dart';
+import 'package:travel_genie/core/extensions/string_extension.dart';
+import 'package:travel_genie/core/widgets/login_required_dialog.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../../core/config/config.dart';
-import '../../core/extensions/string_extension.dart';
-import '../../l10n/app_localizations.dart';
-import '../../models/place.dart';
-import '../../providers/challenge_providers.dart';
-import '../../providers/user_providers.dart';
-import '../login_required_dialog.dart';
 import 'photo_attribution.dart';
 
 class SearchResultCard extends ConsumerStatefulWidget {
@@ -111,7 +110,9 @@ class _SearchResultCardState extends ConsumerState<SearchResultCard> {
           try {
             final challengeActions = ref.read(challengeActionsProvider);
             await challengeActions.markCompleted(user.uid, 'save_place');
-            debugPrint('[DEBUG_LOG] Save place challenge marked as completed for user ${user.uid}');
+            debugPrint(
+              '[DEBUG_LOG] Save place challenge marked as completed for user ${user.uid}',
+            );
           } catch (e) {
             // Log error but don't prevent the place save success flow
             debugPrint('Error tracking save_place challenge: $e');

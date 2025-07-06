@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:travel_genie/models/trip.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
 
 class TripCoverImage extends StatelessWidget {
   const TripCoverImage({super.key, required this.trip});
@@ -22,30 +22,30 @@ class TripCoverImage extends StatelessWidget {
                   child: const Center(child: CircularProgressIndicator()),
                 )
               : trip.coverImageUrl.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: trip.coverImageUrl,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: Theme.of(context).colorScheme.surfaceVariant,
-                        child: Icon(
-                          Icons.image_not_supported,
-                          size: 64,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      color: Theme.of(context).colorScheme.surfaceVariant,
-                      child: Icon(
-                        Icons.trip_origin,
-                        size: 64,
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+              ? CachedNetworkImage(
+                  imageUrl: trip.coverImageUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    child: Icon(
+                      Icons.image_not_supported,
+                      size: 64,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
+                  ),
+                )
+              : Container(
+                  color: Theme.of(context).colorScheme.surfaceVariant,
+                  child: Icon(
+                    Icons.trip_origin,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
 
           // Gradient Overlay for text readability
           Container(

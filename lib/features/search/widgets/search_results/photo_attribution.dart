@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../l10n/app_localizations.dart';
-import '../../models/photo.dart';
+import 'package:travel_genie/core/models/photo.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class PhotoAttribution extends StatelessWidget {
   const PhotoAttribution({super.key, required this.photo});

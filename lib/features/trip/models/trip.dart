@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:travel_genie/core/models/location.dart';
 import 'package:travel_genie/features/place/models/place.dart';
 import 'package:travel_genie/features/trip/models/itinerary_day.dart';
@@ -66,7 +65,7 @@ class Trip {
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       placeId: data['placeId'] as String?,
       destinationAddress: data['destinationAddress'] as String?,
-      location: data['location'] != null 
+      location: data['location'] != null
           ? Location.fromJson(data['location'] as Map<String, dynamic>)
           : null,
       locationGeopoint: data['location_geopoint'] as GeoPoint?,

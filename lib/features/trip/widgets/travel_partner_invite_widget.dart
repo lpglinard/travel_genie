@@ -249,7 +249,9 @@ class _FriendsListTab extends StatelessWidget {
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(AppLocalizations.of(context)!.invitationSentTo(friendName)),
+        content: Text(
+          AppLocalizations.of(context)!.invitationSentTo(friendName),
+        ),
         backgroundColor: Colors.green,
       ),
     );
@@ -301,7 +303,9 @@ class _EmailInviteTabState extends State<_EmailInviteTab> {
                 if (!RegExp(
                   r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
                 ).hasMatch(value)) {
-                  return AppLocalizations.of(context)!.pleaseEnterValidEmailAddress;
+                  return AppLocalizations.of(
+                    context,
+                  )!.pleaseEnterValidEmailAddress;
                 }
                 return null;
               },
@@ -321,7 +325,10 @@ class _EmailInviteTabState extends State<_EmailInviteTab> {
               ),
               child: Text(
                 AppLocalizations.of(context)!.sendInvitation,
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ],

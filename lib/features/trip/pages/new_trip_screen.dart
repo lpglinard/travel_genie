@@ -2,12 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/widgets/login_required_dialog.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart' as user_providers;
 import 'package:travel_genie/l10n/app_localizations.dart';
-import 'package:travel_genie/user_providers.dart';
 
-import '../../models/trip.dart';
-import '../../providers/challenge_providers.dart';
-import '../../widgets/login_required_dialog.dart';
 import '../providers/trip_providers.dart';
 import '../services/city_autocomplete_service.dart';
 import '../widgets/date_range_picker_field.dart';
@@ -34,13 +33,16 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
     super.initState();
     // Log trip creation flow started
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(analyticsServiceProvider).analytics.logEvent(
-        name: 'begin_trip_creation',
-        parameters: {
-          'screen_name': 'new_trip_screen',
-          'content_type': 'trip_creation_flow',
-        },
-      );
+      ref
+          .read(user_providers.analyticsServiceProvider)
+          .analytics
+          .logEvent(
+            name: 'begin_trip_creation',
+            parameters: {
+              'screen_name': 'new_trip_screen',
+              'content_type': 'trip_creation_flow',
+            },
+          );
     });
   }
 
@@ -65,7 +67,9 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.pleaseSelectTravelDatesToContinue),
+            content: Text(
+              AppLocalizations.of(context)!.pleaseSelectTravelDatesToContinue,
+            ),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -87,9 +91,7 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       }
 
       // Get the selected suggestion with rich data
-      var selectedSuggestion = ref.read(
-        selectedDestinationSuggestionProvider,
-      );
+      var selectedSuggestion = ref.read(selectedDestinationSuggestionProvider);
 
       // If no suggestion was selected, fetch suggestions and use the first result
       if (selectedSuggestion == null) {
@@ -99,13 +101,18 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
         if (suggestions.isNotEmpty) {
           selectedSuggestion = suggestions.first;
           // Store the fetched suggestion for consistency
-          ref.read(selectedDestinationSuggestionProvider.notifier).state = selectedSuggestion;
+          ref.read(selectedDestinationSuggestionProvider.notifier).state =
+              selectedSuggestion;
         } else {
           // If no suggestions found, show error
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(AppLocalizations.of(context)!.noValidDestinationFound(destination)),
+                content: Text(
+                  AppLocalizations.of(
+                    context,
+                  )!.noValidDestinationFound(destination),
+                ),
                 backgroundColor: Theme.of(context).colorScheme.error,
               ),
             );
@@ -144,9 +151,11 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
 
       // Track challenge progress for creating a trip
       try {
-        final challengeActions = ref.read(challengeActionsProvider);
+        final challengeActions = ref.read(user_providers.challengeActionsProvider);
         await challengeActions.markCompleted(currentUser.uid, 'create_trip');
-        debugPrint('[DEBUG_LOG] Create trip challenge marked as completed for user ${currentUser.uid}');
+        debugPrint(
+          '[DEBUG_LOG] Create trip challenge marked as completed for user ${currentUser.uid}',
+        );
       } catch (e) {
         // Log error but don't prevent the trip creation success flow
         debugPrint('Error tracking create_trip challenge: $e');
@@ -164,7 +173,9 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorCreatingTrip(e.toString())),
+            content: Text(
+              AppLocalizations.of(context)!.errorCreatingTrip(e.toString()),
+            ),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
@@ -177,7 +188,6 @@ class _NewTripScreenState extends ConsumerState<NewTripScreen> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

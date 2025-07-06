@@ -1,42 +1,43 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/challenge.dart';
-import '../services/challenge_actions_service.dart';
-import '../services/challenge_progress_service.dart';
-import '../services/challenge_service.dart';
 import '../../user/providers/user_providers.dart';
+import '../models/challenge.dart';
+import '../services/challenge_progress_repository.dart';
+import '../services/challenge_progress_service.dart';
+import '../services/challenge_repository.dart';
+import '../services/challenge_service.dart';
 
-/// Provider for ChallengeService
-final challengeServiceProvider = Provider<ChallengeService>((ref) {
-  return ChallengeService(FirebaseFirestore.instance);
+/// Provider for ChallengeRepository
+final challengeRepositoryProvider = Provider<ChallengeRepository>((ref) {
+  return FirestoreChallengeRepository(FirebaseFirestore.instance);
 });
 
-/// Provider for ChallengeProgressService
-final challengeProgressServiceProvider = Provider<ChallengeProgressService>((
+/// Provider for ChallengeProgressRepository
+final challengeProgressRepositoryProvider = Provider<ChallengeProgressRepository>((
   ref,
 ) {
-  return ChallengeProgressService(FirebaseFirestore.instance);
+  return FirestoreChallengeProgressRepository(FirebaseFirestore.instance);
 });
 
 /// Provider for active challenges from the global collection
 final activeChallengesProvider = StreamProvider<List<Challenge>>((ref) {
-  final challengeService = ref.watch(challengeServiceProvider);
-  return challengeService.getActiveChallenges();
+  final challengeRepository = ref.watch(challengeRepositoryProvider);
+  return challengeRepository.getActiveChallenges();
 });
 
 /// Provider for user challenge progress
 final userChallengeProgressProvider =
     StreamProvider.family<Map<String, int>, String>((ref, userId) {
-      final progressService = ref.watch(challengeProgressServiceProvider);
-      return progressService.getUserChallengeProgress(userId);
+      final progressRepository = ref.watch(challengeProgressRepositoryProvider);
+      return progressRepository.getUserChallengeProgress(userId);
     });
 
 /// Provider for completed challenges for a user
 final completedChallengesProvider = StreamProvider.family<List<String>, String>(
   (ref, userId) {
-    final progressService = ref.watch(challengeProgressServiceProvider);
-    return progressService.getCompletedChallenges(userId);
+    final progressRepository = ref.watch(challengeProgressRepositoryProvider);
+    return progressRepository.getCompletedChallenges(userId);
   },
 );
 
@@ -45,73 +46,74 @@ final completedChallengesProvider = StreamProvider.family<List<String>, String>(
 final userChallengesWithProgressProvider = StreamProvider<List<Challenge>>((
   ref,
 ) {
-  final challengeService = ref.watch(challengeServiceProvider);
+  final challengeRepository = ref.watch(challengeRepositoryProvider);
 
   // Watch auth state changes to ensure data is cleared when user logs out
-  return ref.watch(authStateChangesProvider).when(
-    data: (user) {
-      // For non-logged users, return only the create_account challenge
-      if (user == null) {
-        final createAccountChallenge = challengeService.getCreateAccountChallenge();
-        return Stream.value([createAccountChallenge]);
-      }
+  return ref
+      .watch(authStateChangesProvider)
+      .when(
+        data: (user) {
+          // For non-logged users, return only the create_account challenge
+          if (user == null) {
+            final createAccountChallenge = challengeRepository
+                .getCreateAccountChallenge();
+            return Stream.value([createAccountChallenge]);
+          }
 
-      // For logged users, combine challenges with their progress
-      final progressService = ref.watch(challengeProgressServiceProvider);
-      return challengeService.getActiveChallenges();
-    },
-    loading: () {
-      final createAccountChallenge = challengeService.getCreateAccountChallenge();
-      return Stream.value([createAccountChallenge]);
-    },
-    error: (_, __) {
-      final createAccountChallenge = challengeService.getCreateAccountChallenge();
-      return Stream.value([createAccountChallenge]);
-    },
-  );
+          // For logged users, combine challenges with their progress
+          return challengeRepository.getActiveChallenges();
+        },
+        loading: () {
+          final createAccountChallenge = challengeRepository
+              .getCreateAccountChallenge();
+          return Stream.value([createAccountChallenge]);
+        },
+        error: (_, _) {
+          final createAccountChallenge = challengeRepository
+              .getCreateAccountChallenge();
+          return Stream.value([createAccountChallenge]);
+        },
+      );
 });
 
 /// Provider for a specific challenge with user progress
 final challengeWithProgressProvider = StreamProvider.family<Challenge?, String>(
   (ref, challengeId) {
-    final challengeService = ref.watch(challengeServiceProvider);
+    final challengeRepository = ref.watch(challengeRepositoryProvider);
 
     // Watch auth state changes to ensure data is cleared when user logs out
-    return ref.watch(authStateChangesProvider).when(
-      data: (user) {
-        // For non-logged users, only return create_account challenge
-        if (user == null) {
-          if (challengeId == "create_account") {
-            return Stream.value(challengeService.getCreateAccountChallenge());
-          }
-          return Stream.value(null);
-        }
+    return ref
+        .watch(authStateChangesProvider)
+        .when(
+          data: (user) {
+            // For non-logged users, only return create_account challenge
+            if (user == null) {
+              if (challengeId == "create_account") {
+                return Stream.value(
+                  challengeRepository.getCreateAccountChallenge(),
+                );
+              }
+              return Stream.value(null);
+            }
 
-        // For logged users, get challenge and combine with progress
-        final progressService = ref.watch(challengeProgressServiceProvider);
-        return challengeService.getActiveChallenges().map((challenges) {
-          return challenges.where((c) => c.id == challengeId).firstOrNull;
-        });
-      },
-      loading: () {
-        if (challengeId == "create_account") {
-          return Stream.value(challengeService.getCreateAccountChallenge());
-        }
-        return Stream.value(null);
-      },
-      error: (_, __) {
-        if (challengeId == "create_account") {
-          return Stream.value(challengeService.getCreateAccountChallenge());
-        }
-        return Stream.value(null);
-      },
-    );
+            // For logged users, get challenge and combine with progress
+            return challengeRepository.getActiveChallenges().map((challenges) {
+              return challenges.where((c) => c.id == challengeId).firstOrNull;
+            });
+          },
+          loading: () {
+            if (challengeId == "create_account") {
+              return Stream.value(challengeRepository.getCreateAccountChallenge());
+            }
+            return Stream.value(null);
+          },
+          error: (_, _) {
+            if (challengeId == "create_account") {
+              return Stream.value(challengeRepository.getCreateAccountChallenge());
+            }
+            return Stream.value(null);
+          },
+        );
   },
 );
 
-/// Provider for challenge actions (updating progress, marking complete, etc.)
-final challengeActionsProvider = Provider<ChallengeActionsService>((ref) {
-  final progressService = ref.watch(challengeProgressServiceProvider);
-  final analyticsService = ref.watch(analyticsServiceProvider);
-  return ChallengeActionsService(progressService, analyticsService);
-});

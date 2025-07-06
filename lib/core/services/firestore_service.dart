@@ -1,18 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:travel_genie/features/challenge/models/badge.dart'
+    as badge_model;
+import 'package:travel_genie/features/challenge/models/challenge.dart';
+import 'package:travel_genie/features/challenge/models/predefined_badges.dart'
+    as badge_model;
+import 'package:travel_genie/features/challenge/models/predefined_challenges.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/trip/models/destination.dart';
+import 'package:travel_genie/features/trip/models/itinerary_day.dart';
+import 'package:travel_genie/features/trip/models/travel_cover.dart';
+import 'package:travel_genie/features/trip/models/travel_cover_collection.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/features/user/models/traveler_profile.dart';
+import 'package:travel_genie/features/user/models/user_data.dart';
 
-import '../models/badge.dart' as badge_model;
-import '../models/challenge.dart';
-import '../models/destination.dart';
-import '../models/itinerary_day.dart';
 import '../models/location.dart';
 import '../models/photo.dart';
-import '../models/place.dart';
-import '../models/travel_cover.dart';
-import '../models/traveler_profile.dart';
-import '../models/trip.dart';
-import '../models/user_data.dart';
 
 class FirestoreService {
   FirestoreService(this._firestore);
@@ -221,9 +226,7 @@ class FirestoreService {
       !date.isAfter(endDate);
       date = date.add(const Duration(days: 1))
     ) {
-      await itineraryRef.add({
-        'dayNumber': dayNumber++,
-      });
+      await itineraryRef.add({'dayNumber': dayNumber++});
     }
 
     return tripRef.id;

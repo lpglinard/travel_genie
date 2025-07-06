@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../models/place.dart';
-import '../services/recommendation_service.dart';
-import './user_providers.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/place/services/recommendation_service.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 /// Represents the state of search results
 class SearchResultsState {

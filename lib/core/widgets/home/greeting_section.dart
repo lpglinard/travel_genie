@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../l10n/app_localizations.dart';
-import '../../providers/user_providers.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class GreetingSection extends ConsumerWidget {
   const GreetingSection({super.key});

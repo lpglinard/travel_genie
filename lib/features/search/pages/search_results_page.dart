@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../l10n/app_localizations.dart';
 import '../providers/search_results_provider.dart';
 import '../widgets/search_field.dart';
 import '../widgets/search_results/results_list.dart';
@@ -17,16 +17,6 @@ class SearchResultsPage extends ConsumerStatefulWidget {
 
 class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
   late TextEditingController _searchController;
-  String _selectedCategory = 'All';
-
-  List<String> _getCategories(BuildContext context) {
-    return [
-      AppLocalizations.of(context).categoryAll,
-      AppLocalizations.of(context).categoryAttractions,
-      AppLocalizations.of(context).categoryRestaurants,
-      AppLocalizations.of(context).categoryHotels,
-    ];
-  }
 
   @override
   void initState() {
@@ -60,29 +50,10 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
     super.dispose();
   }
 
-  void _filterByCategory(String category) {
-    setState(() {
-      _selectedCategory = category;
-    });
-    // In a real implementation, you would filter the results based on the category
-    // For now, we'll just update the UI to show the selected category
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Initialize selected category with localized value
-    if (_selectedCategory == 'All') {
-      _selectedCategory = AppLocalizations.of(context).categoryAll;
-    }
-  }
-
   // Navigation is now handled by go_router
 
   @override
   Widget build(BuildContext context) {
-    final resultsState = ref.watch(searchResultsProvider);
-
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -92,7 +63,7 @@ class _SearchResultsPageState extends ConsumerState<SearchResultsPage> {
               padding: const EdgeInsets.all(16.0),
               child: SearchField(
                 controller: _searchController,
-                hintText: AppLocalizations.of(context).searchPlaceholder,
+                hintText: AppLocalizations.of(context)!.searchPlaceholder,
                 onSubmitted: (value) {
                   if (value.isNotEmpty) {
                     ref.read(searchResultsProvider.notifier).search(value);

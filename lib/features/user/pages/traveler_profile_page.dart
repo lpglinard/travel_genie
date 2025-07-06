@@ -2,20 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:travel_genie/l10n/app_localizations.dart';
 import 'package:travel_genie/features/user/models/traveler_profile.dart';
 import 'package:travel_genie/features/user/models/traveler_profile_enums.dart';
-import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
-import 'package:travel_genie/features/user/providers/user_providers.dart';
-import 'package:travel_genie/features/user/widgets/profile/introduction_card.dart';
-import 'package:travel_genie/features/user/widgets/profile/travel_company_section.dart';
-import 'package:travel_genie/features/user/widgets/profile/budget_section.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart' as user_providers;
 import 'package:travel_genie/features/user/widgets/profile/accommodation_section.dart';
-import 'package:travel_genie/features/user/widgets/profile/interests_section.dart';
-import 'package:travel_genie/features/user/widgets/profile/gastronomic_section.dart';
-import 'package:travel_genie/features/user/widgets/profile/itinerary_style_section.dart';
 import 'package:travel_genie/features/user/widgets/profile/action_buttons.dart';
+import 'package:travel_genie/features/user/widgets/profile/budget_section.dart';
+import 'package:travel_genie/features/user/widgets/profile/gastronomic_section.dart';
+import 'package:travel_genie/features/user/widgets/profile/interests_section.dart';
+import 'package:travel_genie/features/user/widgets/profile/introduction_card.dart';
+import 'package:travel_genie/features/user/widgets/profile/itinerary_style_section.dart';
+import 'package:travel_genie/features/user/widgets/profile/travel_company_section.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class TravelerProfilePage extends ConsumerStatefulWidget {
   const TravelerProfilePage({super.key});
@@ -37,7 +35,7 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
 
   Future<void> _loadExistingProfile() async {
     try {
-      final service = ref.read(travelerProfileServiceProvider);
+      final service = ref.read(user_providers.travelerProfileServiceProvider);
       final existingProfile = await service.getProfile();
       if (existingProfile != null && mounted) {
         setState(() {
@@ -99,16 +97,18 @@ class _TravelerProfilePageState extends ConsumerState<TravelerProfilePage> {
       );
 
       // Get the service and save profile
-      final service = ref.read(travelerProfileServiceProvider);
+      final service = ref.read(user_providers.travelerProfileServiceProvider);
       await service.saveProfile(updatedProfile);
 
       // Track challenge progress for profile completion
       try {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null && updatedProfile.isComplete) {
-          final challengeActions = ref.read(challengeActionsProvider);
+          final challengeActions = ref.read(user_providers.challengeActionsProvider);
           await challengeActions.markCompleted(user.uid, 'complete_profile');
-          debugPrint('[DEBUG_LOG] Complete profile challenge marked as completed for user ${user.uid}');
+          debugPrint(
+            '[DEBUG_LOG] Complete profile challenge marked as completed for user ${user.uid}',
+          );
         }
       } catch (e) {
         // Log error but don't prevent the profile save success flow

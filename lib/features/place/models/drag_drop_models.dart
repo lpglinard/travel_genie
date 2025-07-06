@@ -1,3 +1,4 @@
+
 /// Models for drag and drop functionality in trip itinerary
 import 'place.dart';
 

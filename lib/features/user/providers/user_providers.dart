@@ -5,15 +5,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/config/config.dart';
-import '../models/user_data.dart';
 import '../../../core/services/analytics_service.dart';
-import '../../challenge/services/challenge_progress_service.dart';
-import '../../challenge/services/challenge_service.dart';
 import '../../../core/services/firestore_service.dart';
-import '../../place/services/places_service.dart';
 import '../../../core/services/preferences_service.dart';
-import '../services/profile_service.dart';
+import '../../challenge/services/challenge_actions_repository.dart';
+import '../../challenge/services/challenge_actions_service.dart';
+import '../../challenge/services/challenge_progress_repository.dart';
+import '../../challenge/services/challenge_progress_service.dart';
+import '../../challenge/services/challenge_repository.dart';
+import '../../challenge/services/challenge_service.dart';
+import '../../place/services/google_places_service.dart';
+import '../../place/services/places_service.dart';
 import '../../place/services/recommendation_service.dart';
+import '../../place/services/recommendation_service_impl.dart';
+import '../models/user_data.dart';
+import '../services/profile_service.dart';
 import '../services/traveler_profile_service.dart';
 import '../services/user_deletion_service.dart';
 import '../services/user_management_service.dart';
@@ -54,21 +60,27 @@ final localeProvider = StateProvider<Locale?>((ref) => const Locale('en'));
 final themeModeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.light);
 
 final placesServiceProvider = Provider<PlacesService>((ref) {
-  return PlacesService(googlePlacesApiKey);
+  return GooglePlacesService(googlePlacesApiKey);
 });
 
 final recommendationServiceProvider = Provider<RecommendationService>((ref) {
-  return RecommendationService();
+  return RecommendationServiceImpl();
 });
 
-final challengeServiceProvider = Provider<ChallengeService>((ref) {
-  return ChallengeService(FirebaseFirestore.instance);
+final challengeServiceProvider = Provider<ChallengeRepository>((ref) {
+  return FirestoreChallengeRepository(FirebaseFirestore.instance);
 });
 
-final challengeProgressServiceProvider = Provider<ChallengeProgressService>((
+final challengeProgressServiceProvider = Provider<ChallengeProgressRepository>((
   ref,
 ) {
-  return ChallengeProgressService(FirebaseFirestore.instance);
+  return FirestoreChallengeProgressRepository(FirebaseFirestore.instance);
+});
+
+final challengeActionsProvider = Provider<ChallengeActionsRepository>((ref) {
+  final progressRepository = ref.watch(challengeProgressServiceProvider);
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return FirestoreChallengeActionsRepository(progressRepository, analyticsService);
 });
 
 final profileServiceProvider = Provider<ProfileService>((ref) {

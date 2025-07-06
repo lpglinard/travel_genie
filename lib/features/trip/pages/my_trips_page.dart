@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_genie/models/trip.dart';
+import 'package:travel_genie/core/widgets/login_required_dialog.dart';
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
-import '../l10n/app_localizations.dart';
-import '../providers/trip_service_provider.dart';
-import '../widgets/login_required_dialog.dart';
+import '../providers/trip_providers.dart';
 import '../widgets/my_trips/empty_trip_state.dart';
 import '../widgets/my_trips/trip_list.dart';
 

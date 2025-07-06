@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:travel_genie/core/services/firestore_service.dart';
 
 import '../models/traveler_profile.dart';
-import 'firestore_service.dart';
 
 class TravelerProfileService {
   TravelerProfileService(this._firestoreService);

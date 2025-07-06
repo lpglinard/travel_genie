@@ -4,11 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../l10n/app_localizations.dart';
-import '../models/place.dart';
-import '../../challenge/providers/challenge_providers.dart';
-import '../../user/providers/user_providers.dart';
 import '../../../core/widgets/login_required_dialog.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../user/providers/user_providers.dart' as user_providers;
+import '../models/place.dart';
 import '../widgets/place_detail/action_buttons.dart';
 import '../widgets/place_detail/additional_info_section.dart';
 import '../widgets/place_detail/description_section.dart';
@@ -29,28 +28,12 @@ class PlaceDetailPage extends ConsumerStatefulWidget {
 
 class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   bool _isSaved = false;
-  int _selectedNavIndex = 0;
   bool _isLoading = false;
-  String? _currentUserId;
 
   @override
   void initState() {
     super.initState();
-    _getCurrentUser();
     _checkIfPlaceIsSaved();
-  }
-
-  void _getCurrentUser() {
-    try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        setState(() {
-          _currentUserId = user.uid;
-        });
-      }
-    } catch (e) {
-      // Firebase might not be initialized in tests
-    }
   }
 
   Future<void> _checkIfPlaceIsSaved() async {
@@ -63,7 +46,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       });
 
       try {
-        final firestoreService = ref.read(firestoreServiceProvider);
+        final firestoreService = ref.read(
+          user_providers.firestoreServiceProvider,
+        );
         final isSaved = await firestoreService.isPlaceSaved(
           user.uid,
           widget.place.placeId,
@@ -96,7 +81,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
   void _sharePlaceInfo() {
     // Track place sharing analytics
     try {
-      final analyticsService = ref.read(analyticsServiceProvider);
+      final analyticsService = ref.read(
+        user_providers.analyticsServiceProvider,
+      );
       analyticsService.logCustomEvent(
         eventName: 'share',
         parameters: {
@@ -137,7 +124,9 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       });
 
       try {
-        final firestoreService = ref.read(firestoreServiceProvider);
+        final firestoreService = ref.read(
+          user_providers.firestoreServiceProvider,
+        );
 
         if (_isSaved) {
           // Remove from saved places
@@ -148,9 +137,13 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
 
           // Track challenge progress for saving a place
           try {
-            final challengeActions = ref.read(challengeActionsProvider);
+            final challengeActions = ref.read(
+              user_providers.challengeActionsProvider,
+            );
             await challengeActions.markCompleted(user.uid, 'save_place');
-            debugPrint('[DEBUG_LOG] Save place challenge marked as completed for user ${user.uid}');
+            debugPrint(
+              '[DEBUG_LOG] Save place challenge marked as completed for user ${user.uid}',
+            );
           } catch (e) {
             // Log error but don't prevent the place save success flow
             debugPrint('Error tracking save_place challenge: $e');
@@ -163,46 +156,50 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
         });
 
         // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              _isSaved
-                  ? AppLocalizations.of(context).placeSavedToFavorites
-                  : AppLocalizations.of(context).placeRemovedFromFavorites,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onPrimaryContainer,
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _isSaved
+                    ? AppLocalizations.of(context).placeSavedToFavorites
+                    : AppLocalizations.of(context).placeRemovedFromFavorites,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.primaryContainer,
+              duration: const Duration(seconds: 2),
             ),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.primaryContainer
-                : Theme.of(context).colorScheme.primaryContainer,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+          );
+        }
       } catch (e) {
         setState(() {
           _isLoading = false;
         });
 
         // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context).errorSavingPlace,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Theme.of(context).colorScheme.onPrimary
-                    : Theme.of(context).colorScheme.onPrimaryContainer,
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context).errorSavingPlace,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onPrimaryContainer,
+                ),
               ),
+              backgroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.primaryContainer,
+              duration: const Duration(seconds: 3),
             ),
-            backgroundColor: Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.primaryContainer
-                : Theme.of(context).colorScheme.primaryContainer,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+          );
+        }
       }
     } catch (e) {
       // Firebase might not be initialized in tests
@@ -211,42 +208,6 @@ class _PlaceDetailPageState extends ConsumerState<PlaceDetailPage> {
       setState(() {
         _isSaved = !_isSaved;
       });
-    }
-  }
-
-
-  void _onNavItemTapped(int index) {
-    if (index != _selectedNavIndex) {
-      setState(() {
-        _selectedNavIndex = index;
-      });
-
-      // Pop to root and then navigate to the selected tab
-      while (context.canPop()) {
-        context.pop();
-      }
-
-      // Navigate using go_router
-      switch (index) {
-        case 0:
-          // Navigate to Home
-          context.go('/');
-          break;
-        case 1:
-          // Navigate to Explore
-          final uri = GoRouterState.of(context).uri;
-          final query = uri.queryParameters['query'] ?? '';
-          context.go('/explore${query.isNotEmpty ? "?query=$query" : ""}');
-          break;
-        case 2:
-          // Navigate to Trips
-          context.go('/trips');
-          break;
-        case 3:
-          // Navigate to Groups
-          context.go('/groups');
-          break;
-      }
     }
   }
 

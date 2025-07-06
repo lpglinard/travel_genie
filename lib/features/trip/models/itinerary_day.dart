@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ItineraryDay {
-  ItineraryDay({
-    required this.id,
-    required this.dayNumber,
-    this.notes,
-  });
+  ItineraryDay({required this.id, required this.dayNumber, this.notes});
 
   final String id;
   final int dayNumber;
@@ -23,17 +19,10 @@ class ItineraryDay {
   }
 
   Map<String, dynamic> toFirestore() {
-    return {
-      'dayNumber': dayNumber,
-      if (notes != null) 'notes': notes,
-    };
+    return {'dayNumber': dayNumber, if (notes != null) 'notes': notes};
   }
 
-  ItineraryDay copyWith({
-    String? id,
-    int? dayNumber,
-    String? notes,
-  }) {
+  ItineraryDay copyWith({String? id, int? dayNumber, String? notes}) {
     return ItineraryDay(
       id: id ?? this.id,
       dayNumber: dayNumber ?? this.dayNumber,

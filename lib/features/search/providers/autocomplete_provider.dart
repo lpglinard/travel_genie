@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../services/places_service.dart';
-import './user_providers.dart';
+import 'package:travel_genie/features/place/services/places_service.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 class AutocompleteNotifier extends StateNotifier<AsyncValue<List<String>>> {
   AutocompleteNotifier(this._service)

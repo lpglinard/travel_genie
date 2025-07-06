@@ -14,9 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'core/config/config.dart';
-import 'firebase_options.dart';
-import 'features/user/providers/user_providers.dart';
 import 'core/services/preferences_service.dart';
+import 'features/user/providers/user_providers.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

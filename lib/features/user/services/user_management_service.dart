@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:travel_genie/models/user_deletion_response.dart';
-import 'package:travel_genie/services/user_deletion_service.dart';
+import 'package:travel_genie/features/user/models/user_deletion_response.dart';
+import 'package:travel_genie/features/user/services/user_deletion_service.dart';
 
 class UserManagementService {
   UserManagementService({UserDeletionService? userDeletionService})

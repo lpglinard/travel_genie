@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:travel_genie/features/place/models/place.dart';
 
 import '../models/itinerary_day.dart';
-import '../models/place.dart';
-import 'trip_service_provider.dart';
+import 'trip_providers.dart';
 
 // StreamProvider para listar os dias da viagem
 final itineraryDaysProvider = StreamProvider.family<List<ItineraryDay>, String>(

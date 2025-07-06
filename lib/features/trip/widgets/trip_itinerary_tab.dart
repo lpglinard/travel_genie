@@ -2,19 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/trip/models/itinerary_day.dart';
+import 'package:travel_genie/features/trip/providers/itinerary_providers.dart';
+import 'package:travel_genie/features/trip/providers/trip_providers.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 import 'package:travel_genie/l10n/app_localizations.dart';
-import 'package:travel_genie/models/itinerary_day.dart';
-import 'package:travel_genie/models/place.dart';
-import 'package:travel_genie/providers/itinerary_providers.dart';
-import 'package:travel_genie/providers/user_providers.dart';
-import 'package:travel_genie/trip/providers/trip_providers.dart';
 
 /// Widget that displays the itinerary tab content as a simple list of itinerary days
 class TripItineraryTab extends ConsumerWidget {
-  const TripItineraryTab({
-    super.key,
-    required this.tripId,
-  });
+  const TripItineraryTab({super.key, required this.tripId});
 
   final String tripId;
 
@@ -50,7 +47,9 @@ class TripItineraryTab extends ConsumerWidget {
                 Icon(
                   Icons.calendar_today_outlined,
                   size: 64,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.5),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -61,7 +60,9 @@ class TripItineraryTab extends ConsumerWidget {
                 Text(
                   AppLocalizations.of(context)!.noItineraryDescription,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -81,10 +82,7 @@ class TripItineraryTab extends ConsumerWidget {
             final day = sortedDays[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 8),
-              child: ExpandableDayTile(
-                day: day,
-                tripId: tripId,
-              ),
+              child: ExpandableDayTile(day: day, tripId: tripId),
             );
           },
         );
@@ -95,21 +93,16 @@ class TripItineraryTab extends ConsumerWidget {
 
 /// Expandable widget that displays a single itinerary day with places
 class ExpandableDayTile extends ConsumerWidget {
-  const ExpandableDayTile({
-    super.key,
-    required this.day,
-    required this.tripId,
-  });
+  const ExpandableDayTile({super.key, required this.day, required this.tripId});
 
   final ItineraryDay day;
   final String tripId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final placesAsync = ref.watch(placesForDayProvider((
-      tripId: tripId,
-      dayId: day.id,
-    )));
+    final placesAsync = ref.watch(
+      placesForDayProvider((tripId: tripId, dayId: day.id)),
+    );
     final tripAsync = ref.watch(tripDetailsProvider(tripId));
 
     return Card(
@@ -134,8 +127,12 @@ class ExpandableDayTile extends ConsumerWidget {
             }
 
             // Calculate the actual date for this day
-            final dayDate = trip.startDate.add(Duration(days: day.dayNumber - 1));
-            final weekdayFormatter = DateFormat('E'); // Short weekday (Mon, Tue, etc.)
+            final dayDate = trip.startDate.add(
+              Duration(days: day.dayNumber - 1),
+            );
+            final weekdayFormatter = DateFormat(
+              'E',
+            ); // Short weekday (Mon, Tue, etc.)
             final dateFormatter = DateFormat('d/M'); // Day/Month format
 
             return Text(
@@ -151,7 +148,9 @@ class ExpandableDayTile extends ConsumerWidget {
               loading: () => Text(
                 AppLocalizations.of(context)!.noResults,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
               error: (_, __) => Text(
@@ -165,7 +164,9 @@ class ExpandableDayTile extends ConsumerWidget {
                     ? AppLocalizations.of(context)!.noPlacesForDay
                     : AppLocalizations.of(context)!.placesCount(places.length),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
             ),
@@ -193,16 +194,16 @@ class ExpandableDayTile extends ConsumerWidget {
           children: [
             IconButton(
               icon: Icon(
-                day.notes != null && day.notes!.isNotEmpty 
-                    ? Icons.note 
+                day.notes != null && day.notes!.isNotEmpty
+                    ? Icons.note
                     : Icons.note_add,
-                color: day.notes != null && day.notes!.isNotEmpty 
-                    ? Theme.of(context).colorScheme.primary 
+                color: day.notes != null && day.notes!.isNotEmpty
+                    ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
               ),
               onPressed: () => _showNotesDialog(context, ref),
-              tooltip: day.notes != null && day.notes!.isNotEmpty 
-                  ? AppLocalizations.of(context)!.editNote 
+              tooltip: day.notes != null && day.notes!.isNotEmpty
+                  ? AppLocalizations.of(context)!.editNote
                   : AppLocalizations.of(context)!.addNote,
             ),
             IconButton(
@@ -251,14 +252,19 @@ class ExpandableDayTile extends ConsumerWidget {
                         Icon(
                           Icons.place_outlined,
                           size: 48,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withOpacity(0.5),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'No places yet',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                          ),
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.7),
+                              ),
                         ),
                       ],
                     ),
@@ -271,7 +277,9 @@ class ExpandableDayTile extends ConsumerWidget {
                 ..sort((a, b) => a.orderInDay.compareTo(b.orderInDay));
 
               return Column(
-                children: sortedPlaces.map((place) => PlaceTile(place: place)).toList(),
+                children: sortedPlaces
+                    .map((place) => PlaceTile(place: place))
+                    .toList(),
               );
             },
           ),
@@ -320,7 +328,9 @@ class ExpandableDayTile extends ConsumerWidget {
           ElevatedButton(
             onPressed: () async {
               final tripService = ref.read(tripServiceProvider);
-              final updatedDay = day.copyWith(notes: textController.text.trim());
+              final updatedDay = day.copyWith(
+                notes: textController.text.trim(),
+              );
               await tripService.updateItineraryDay(tripId, updatedDay);
               if (context.mounted) {
                 Navigator.of(context).pop();
@@ -342,20 +352,14 @@ class ExpandableDayTile extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (context) => AddPlaceBottomSheet(
-        tripId: tripId,
-        dayId: day.id,
-      ),
+      builder: (context) => AddPlaceBottomSheet(tripId: tripId, dayId: day.id),
     );
   }
 }
 
 /// Widget that displays a single place in the itinerary
 class PlaceTile extends StatelessWidget {
-  const PlaceTile({
-    super.key,
-    required this.place,
-  });
+  const PlaceTile({super.key, required this.place});
 
   final Place place;
 
@@ -391,16 +395,14 @@ class PlaceTile extends StatelessWidget {
           Row(
             children: [
               if (place.rating != null) ...[
-                Icon(
-                  Icons.star,
-                  size: 16,
-                  color: Colors.amber,
-                ),
+                Icon(Icons.star, size: 16, color: Colors.amber),
                 const SizedBox(width: 4),
                 Text(
                   '${place.rating!.toStringAsFixed(1)}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 if (place.userRatingCount != null) ...[
@@ -408,24 +410,31 @@ class PlaceTile extends StatelessWidget {
                   Text(
                     '(${place.userRatingCount})',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.onSurface.withOpacity(0.5),
                     ),
                   ),
                 ],
               ],
-              if (place.rating != null && place.estimatedDurationMinutes != null)
+              if (place.rating != null &&
+                  place.estimatedDurationMinutes != null)
                 const SizedBox(width: 12),
               if (place.estimatedDurationMinutes != null) ...[
                 Icon(
                   Icons.access_time,
                   size: 14,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.5),
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '${place.estimatedDurationMinutes}min',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withOpacity(0.5),
                   ),
                 ),
               ],
@@ -476,7 +485,8 @@ class AddPlaceBottomSheet extends ConsumerStatefulWidget {
   final String dayId;
 
   @override
-  ConsumerState<AddPlaceBottomSheet> createState() => _AddPlaceBottomSheetState();
+  ConsumerState<AddPlaceBottomSheet> createState() =>
+      _AddPlaceBottomSheetState();
 }
 
 class _AddPlaceBottomSheetState extends ConsumerState<AddPlaceBottomSheet> {
@@ -601,7 +611,9 @@ class _AddPlaceBottomSheetState extends ConsumerState<AddPlaceBottomSheet> {
                 height: 4,
                 margin: const EdgeInsets.symmetric(vertical: 8),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -632,31 +644,36 @@ class _AddPlaceBottomSheetState extends ConsumerState<AddPlaceBottomSheet> {
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : _searchResults.isEmpty
-                        ? Center(
-                            child: Text(
-                              _searchController.text.trim().isEmpty
-                                  ? AppLocalizations.of(context)!.searchPlacesHint
-                                  : AppLocalizations.of(context)!.noPlacesFound,
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    ? Center(
+                        child: Text(
+                          _searchController.text.trim().isEmpty
+                              ? AppLocalizations.of(context)!.searchPlacesHint
+                              : AppLocalizations.of(context)!.noPlacesFound,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.7),
+                              ),
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: scrollController,
+                        itemCount: _searchResults.length,
+                        itemBuilder: (context, index) {
+                          final placeName = _searchResults[index];
+                          return ListTile(
+                            leading: const Icon(Icons.place),
+                            title: Text(placeName),
+                            trailing: ElevatedButton(
+                              onPressed: () => _addPlaceToDay(placeName),
+                              child: Text(
+                                AppLocalizations.of(context)!.addToDay,
                               ),
                             ),
-                          )
-                        : ListView.builder(
-                            controller: scrollController,
-                            itemCount: _searchResults.length,
-                            itemBuilder: (context, index) {
-                              final placeName = _searchResults[index];
-                              return ListTile(
-                                leading: const Icon(Icons.place),
-                                title: Text(placeName),
-                                trailing: ElevatedButton(
-                                  onPressed: () => _addPlaceToDay(placeName),
-                                  child: Text(AppLocalizations.of(context)!.addToDay),
-                                ),
-                              );
-                            },
-                          ),
+                          );
+                        },
+                      ),
               ),
             ],
           ),
@@ -673,16 +690,16 @@ class _AddPlaceBottomSheetState extends ConsumerState<AddPlaceBottomSheet> {
       if (mounted) {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(AppLocalizations.of(context)!.placeAdded),
-          ),
+          SnackBar(content: Text(AppLocalizations.of(context)!.placeAdded)),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.errorGeneric(e.toString())),
+            content: Text(
+              AppLocalizations.of(context)!.errorGeneric(e.toString()),
+            ),
             backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );

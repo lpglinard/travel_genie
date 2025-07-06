@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../l10n/app_localizations.dart';
-import '../../models/destination.dart';
-import '../../providers/autocomplete_provider.dart';
-import '../../providers/user_providers.dart';
+import 'package:travel_genie/features/search/providers/autocomplete_provider.dart';
+import 'package:travel_genie/features/trip/models/destination.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
 
 class PopularDestinationsSection extends StatelessWidget {
   const PopularDestinationsSection({super.key, required this.destinations});

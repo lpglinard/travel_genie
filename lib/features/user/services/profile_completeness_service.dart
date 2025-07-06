@@ -29,7 +29,9 @@ class ProfileCompletenessInfo {
 class ProfileCompletenessService {
   /// Calculate profile completeness based on TravelerProfile
   /// This is the unified logic that should be used by all widgets
-  static ProfileCompletenessInfo calculateCompleteness(TravelerProfile? profile) {
+  static ProfileCompletenessInfo calculateCompleteness(
+    TravelerProfile? profile,
+  ) {
     if (profile == null) {
       return const ProfileCompletenessInfo(
         percentage: 0.0,

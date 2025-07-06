@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../l10n/app_localizations.dart';
-import '../../user_providers.dart';
+import 'package:travel_genie/l10n/app_localizations.dart';
+import 'package:travel_genie/features/user/providers/user_providers.dart';
 
 class DeleteAccountTile extends ConsumerWidget {
   const DeleteAccountTile({super.key});
@@ -106,8 +106,11 @@ class DeleteAccountTile extends ConsumerWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(AppLocalizations.of(context)!.deleteAccountError(
-                deletionResponse.errorMessage?.toString() ?? 'Unknown error')),
+              content: Text(
+                AppLocalizations.of(context)!.deleteAccountError(
+                  deletionResponse.errorMessage?.toString() ?? 'Unknown error',
+                ),
+              ),
               backgroundColor: Colors.red,
             ),
           );
@@ -120,7 +123,9 @@ class DeleteAccountTile extends ConsumerWidget {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(AppLocalizations.of(context)!.deleteAccountError(e.toString())),
+            content: Text(
+              AppLocalizations.of(context)!.deleteAccountError(e.toString()),
+            ),
             backgroundColor: Colors.red,
           ),
         );

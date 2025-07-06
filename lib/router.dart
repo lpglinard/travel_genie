@@ -5,23 +5,22 @@ import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:travel_genie/core/services/analytics_service.dart';
+import 'package:travel_genie/features/challenge/models/predefined_challenges.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/place/pages/place_detail_page.dart';
+import 'package:travel_genie/features/search/pages/search_results_page.dart';
 
 import 'core/config/config.dart';
-import 'l10n/app_localizations.dart';
-import 'features/challenge/models/challenge.dart';
-import 'features/place/models/place.dart';
-import 'features/social/pages/groups_page.dart';
 import 'core/pages/home_page.dart';
+import 'features/social/pages/groups_page.dart';
 import 'features/trip/pages/my_trips_page.dart';
-import 'features/place/pages/place_detail_page.dart';
-import 'features/user/pages/profile_screen.dart' as app_profile;
-import 'features/search/pages/search_results_page.dart';
-import 'features/user/pages/traveler_profile_page.dart';
-import 'features/challenge/providers/challenge_providers.dart';
-import 'core/services/analytics_service.dart';
 import 'features/trip/pages/new_trip_screen.dart';
 import 'features/trip/pages/trip_details_page.dart';
+import 'features/user/pages/profile_screen.dart' as app_profile;
+import 'features/user/pages/traveler_profile_page.dart';
 import 'features/user/providers/user_providers.dart';
+import 'l10n/app_localizations.dart';
 
 // Navigation destinations
 enum AppRoute { home, explore, trips, groups }
@@ -190,7 +189,6 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-
       // Trip Details screen route (outside the shell)
       GoRoute(
         path: '/trip/:id',
@@ -221,7 +219,6 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
-
 
       // Plan New Trip screen route (outside the shell)
       GoRoute(
@@ -293,7 +290,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   );
                 },
                 actions: [
-                  firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((
+                    context,
+                    state,
+                  ) {
                     final analyticsService = ref.read(analyticsServiceProvider);
                     analyticsService.logError(
                       errorType: 'auth_failed',
@@ -301,12 +301,18 @@ final routerProvider = Provider<GoRouter>((ref) {
                       screenName: 'signin_screen',
                     );
                   }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((context, firebase_ui.SignedIn state) async {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((
+                    context,
+                    firebase_ui.SignedIn state,
+                  ) async {
                     // Track login analytics
                     try {
-                      final analyticsService = ref.read(analyticsServiceProvider);
+                      final analyticsService = ref.read(
+                        analyticsServiceProvider,
+                      );
                       final user = state.user;
-                      final method = user != null && user.providerData.isNotEmpty
+                      final method =
+                          user != null && user.providerData.isNotEmpty
                           ? user.providerData.first.providerId
                           : 'unknown';
                       await analyticsService.logSignUp(method: method);
@@ -318,8 +324,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     try {
                       final user = state.user;
                       if (user != null) {
-                        final challengeActions = ref.read(challengeActionsProvider);
-                        await challengeActions.markCompleted(user.uid, 'create_account');
+                        final challengeActions = ref.read(
+                          challengeActionsProvider,
+                        );
+                        await challengeActions.markCompleted(
+                          user.uid,
+                          'create_account',
+                        );
                       }
                     } catch (e) {
                       // Log error but don't prevent navigation
@@ -329,12 +340,18 @@ final routerProvider = Provider<GoRouter>((ref) {
                     context.go('/');
                   }),
 
-                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((BuildContext context, firebase_ui.UserCreated state) async {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((
+                    BuildContext context,
+                    firebase_ui.UserCreated state,
+                  ) async {
                     // Track sign-up analytics
                     try {
-                      final analyticsService = ref.read(analyticsServiceProvider);
+                      final analyticsService = ref.read(
+                        analyticsServiceProvider,
+                      );
                       final user = state.credential.user;
-                      final method = user != null && user.providerData.isNotEmpty
+                      final method =
+                          user != null && user.providerData.isNotEmpty
                           ? user.providerData.first.providerId
                           : 'unknown';
                       await analyticsService.logSignUp(method: method);
@@ -346,11 +363,17 @@ final routerProvider = Provider<GoRouter>((ref) {
                     try {
                       final user = state.credential.user;
                       if (user != null) {
-                        final challengeActions = ref.read(challengeActionsProvider);
-                        final challengeIds = PredefinedChallenges.getActiveChallenges()
-                            .map((challenge) => challenge.id)
-                            .toList();
-                        await challengeActions.initializeUserProgress(user.uid, challengeIds);
+                        final challengeActions = ref.read(
+                          challengeActionsProvider,
+                        );
+                        final challengeIds =
+                            PredefinedChallenges.getActiveChallenges()
+                                .map((challenge) => challenge.id)
+                                .toList();
+                        await challengeActions.initializeUserProgress(
+                          user.uid,
+                          challengeIds,
+                        );
                       }
                     } catch (e) {
                       // Log error but don't prevent navigation
@@ -361,8 +384,13 @@ final routerProvider = Provider<GoRouter>((ref) {
                     try {
                       final user = state.credential.user;
                       if (user != null) {
-                        final challengeActions = ref.read(challengeActionsProvider);
-                        await challengeActions.markCompleted(user.uid, 'create_account');
+                        final challengeActions = ref.read(
+                          challengeActionsProvider,
+                        );
+                        await challengeActions.markCompleted(
+                          user.uid,
+                          'create_account',
+                        );
                       }
                     } catch (e) {
                       // Log error but don't prevent navigation
@@ -371,10 +399,11 @@ final routerProvider = Provider<GoRouter>((ref) {
 
                     context.go('/');
                   }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((context, state) {
+                  firebase_ui.AuthStateChangeAction<
+                    firebase_ui.CredentialLinked
+                  >((context, state) {
                     context.go('/');
                   }),
-
                 ],
               ),
             ),

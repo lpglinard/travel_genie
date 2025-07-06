@@ -1,5 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:travel_genie/models/user_deletion_response.dart';
+import 'package:travel_genie/features/user/models/user_deletion_response.dart';
 
 class UserDeletionService {
   UserDeletionService();
