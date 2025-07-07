@@ -1,0 +1,1 @@
+enum ItineraryStyle { detailed, spontaneous }

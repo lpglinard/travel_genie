@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/providers/infrastructure_providers.dart';
 import 'core/theme/theme.dart';
+import 'features/user/providers/user_providers.dart';
 import 'l10n/app_localizations.dart';
-import 'providers/user_providers.dart';
 import 'router.dart';
 
 class MyApp extends ConsumerWidget {
@@ -16,43 +17,56 @@ class MyApp extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
 
     ref.listen(userDataProvider, (_, next) async {
-      final prefs = await ref.read(preferencesServiceProvider.future);
-      final userData = next.valueOrNull;
-      if (userData != null) {
-        if (userData.locale != null) {
-          ref.read(localeProvider.notifier).state = Locale(userData.locale!);
-        }
-        if (userData.darkMode != null) {
-          ref.read(themeModeProvider.notifier).state = userData.darkMode!
-              ? ThemeMode.dark
-              : ThemeMode.light;
-        }
-        prefs.saveUserData(userData.name, userData.email);
-        await prefs.setLocale(
-          userData.locale != null ? Locale(userData.locale!) : null,
-        );
-        if (userData.darkMode != null) {
-          await prefs.setThemeMode(
-            userData.darkMode! ? ThemeMode.dark : ThemeMode.light,
+      try {
+        final prefs = await ref.read(preferencesServiceProvider.future);
+        final userData = next.valueOrNull;
+        if (userData != null) {
+          if (userData.locale != null) {
+            ref.read(localeProvider.notifier).state = Locale(userData.locale!);
+          }
+          if (userData.darkMode != null) {
+            ref.read(themeModeProvider.notifier).state = userData.darkMode!
+                ? ThemeMode.dark
+                : ThemeMode.light;
+          }
+          await prefs.saveUserData(userData.name, userData.email);
+          await prefs.setLocale(
+            userData.locale != null ? Locale(userData.locale!) : null,
           );
+          if (userData.darkMode != null) {
+            await prefs.setThemeMode(
+              userData.darkMode! ? ThemeMode.dark : ThemeMode.light,
+            );
+          }
+        } else {
+          await prefs.clearAll();
         }
-      } else {
-        await prefs.clearAll();
+      } catch (e) {
+        // Handle preferences service errors gracefully
+        debugPrint('Error updating user preferences: $e');
       }
     });
 
     ref.listen<Locale?>(localeProvider, (_, next) async {
-      final prefs = await ref.read(preferencesServiceProvider.future);
-      await prefs.setLocale(next);
-      if (next != null) {
-        ref.read(analyticsServiceProvider).logLanguageChange(next.languageCode);
+      try {
+        final prefs = await ref.read(preferencesServiceProvider.future);
+        await prefs.setLocale(next);
+        if (next != null) {
+          ref.read(analyticsServiceProvider).logLanguageChange(next.languageCode);
+        }
+      } catch (e) {
+        debugPrint('Error updating locale preferences: $e');
       }
     });
 
     ref.listen<ThemeMode>(themeModeProvider, (_, next) async {
-      final prefs = await ref.read(preferencesServiceProvider.future);
-      await prefs.setThemeMode(next);
-      ref.read(analyticsServiceProvider).logThemeChange(next.name);
+      try {
+        final prefs = await ref.read(preferencesServiceProvider.future);
+        await prefs.setThemeMode(next);
+        ref.read(analyticsServiceProvider).logThemeChange(next.name);
+      } catch (e) {
+        debugPrint('Error updating theme preferences: $e');
+      }
     });
 
     ref.listen(authStateChangesProvider, (_, next) {

@@ -4,6 +4,85 @@ A new Flutter project.
 
 This project now includes state management using [Riverpod](https://riverpod.dev).
 
+## Project Structure
+
+The project follows a feature-based architecture for better organization and maintainability:
+
+```
+lib/
+├── app.dart                 # Main app configuration
+├── main.dart               # Entry point
+├── router.dart             # App routing configuration
+├── core/                   # Core functionality and shared components
+│   ├── config/             # Configuration settings
+│   ├── extensions/         # Dart extensions
+│   ├── models/             # Shared data models (Location, Photo, etc.)
+│   ├── pages/              # Core UI screens (home page, etc.)
+│   ├── services/           # Core business logic services
+│   ├── theme/              # App theming
+│   ├── utils/              # Utility functions
+│   └── widgets/            # Shared reusable UI components
+├── features/               # Feature-specific code organized by domain
+│   ├── authentication/     # Authentication feature
+│   │   ├── models/         # Authentication-specific models
+│   │   ├── pages/          # Authentication UI screens
+│   │   └── widgets/        # Authentication-specific widgets
+│   ├── challenge/          # Challenges and badges feature
+│   │   ├── models/         # Challenge and badge models
+│   │   ├── providers/      # Challenge state management
+│   │   └── services/       # Challenge business logic
+│   ├── place/              # Places and location feature
+│   │   ├── models/         # Place-related models
+│   │   ├── pages/          # Place detail pages
+│   │   ├── services/       # Place services (search, recommendations)
+│   │   └── widgets/        # Place-specific widgets
+│   ├── search/             # Search functionality
+│   │   ├── models/         # Search-related models
+│   │   ├── pages/          # Search results pages
+│   │   ├── providers/      # Search state management
+│   │   ├── services/       # Search business logic
+│   │   └── widgets/        # Search-specific widgets
+│   ├── social/             # Social features
+│   │   ├── models/         # Social-related models
+│   │   ├── pages/          # Social pages (groups, etc.)
+│   │   ├── services/       # Social business logic
+│   │   └── widgets/        # Social-specific widgets
+│   ├── trip/               # Trip planning and management
+│   │   ├── models/         # Trip, itinerary, and related models
+│   │   ├── pages/          # Trip management pages
+│   │   ├── providers/      # Trip state management
+│   │   ├── services/       # Trip business logic
+│   │   └── widgets/        # Trip-specific widgets
+│   │       ├── profile_completeness/  # Profile completeness widgets (one per file)
+│   │       │   ├── profile_completeness_widget.dart
+│   │       │   ├── loading_profile_completeness.dart
+│   │       │   ├── error_profile_completeness.dart
+│   │       │   └── profile_completeness_content.dart
+│   │       └── travel_partner/        # Travel partner widgets (one per file)
+│   │           ├── travel_partner_invite_widget.dart
+│   │           ├── travel_partner_invite_modal.dart
+│   │           ├── tab_button.dart
+│   │           ├── friends_list_tab.dart
+│   │           ├── friend_list_item.dart
+│   │           └── email_invite_tab.dart
+│   └── user/               # User management
+│       ├── models/         # User data and profile models
+│       ├── pages/          # User profile pages
+│       ├── providers/      # User state management
+│       ├── services/       # User business logic
+│       └── widgets/        # User-specific widgets
+└── l10n/                   # Localization files
+```
+
+### Architecture Guidelines
+
+- **Feature-based organization**: Each feature has its own models, pages, services, and widgets
+- **Single Responsibility**: Each file contains at most one widget or model class
+- **SOLID Principles**: All code must adhere to SOLID principles
+- **Internationalization**: All user-facing text must use localization keys
+
+For detailed development guidelines, see `.junie/guidelines.md` and `codex-guidelines.md`.
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

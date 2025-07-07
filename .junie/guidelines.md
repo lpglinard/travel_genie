@@ -1,58 +1,47 @@
 # Travel Genie Development Guidelines
 
-## Build/Configuration Instructions
-
-### Prerequisites
-- Flutter SDK 3.8.1 or higher
-- Firebase CLI (for Firebase integration)
-- Android Studio/Xcode for platform-specific builds
+## Quick Setup
 
 ### Initial Setup
-1. **Dependencies Installation**:
+1. **Install Dependencies**
    ```bash
    flutter pub get
    ```
 
-2. **Firebase Configuration**:
-   - The project uses Firebase for authentication, Firestore, analytics, performance monitoring, and crashlytics
-   - Firebase configuration is already set up in `lib/firebase_options.dart`
-   - Ensure you have proper Firebase project access for development
+2. **Firebase Configuration**
+   - Firebase handles authentication, Firestore, analytics, performance monitoring, and crashlytics
+   - Configuration: `lib/firebase_options.dart`
 
-3. **Localization Setup**:
-   - The project supports English and Portuguese localization
-   - Localization files are in `lib/l10n/`
-   - Generate localization files after changes:
-   ```bash
-   flutter gen-l10n
-   ```
+3. **Localization**
+   - Supports English and Portuguese
+   - Files: `lib/l10n/`
+   - After changes: `flutter gen-l10n`
 
-4. **Custom Fonts**:
-   - The project uses Nunito font family with multiple weights
-   - Font files are located in the `fonts/` directory
+4. **Custom Fonts**
+   - Nunito font family (multiple weights)
+   - Location: `fonts/` directory
 
 ### Build Commands
-- **Development build**: `flutter run` (for running/launching the app)
-- **Release build**: `flutter build apk --release` (Android) or `flutter build ios --release` (iOS)
-- **Web build**: `flutter build web`
+- **Development:** `flutter run`
+- **Release (Android):** `flutter build apk --release`
+- **Release (iOS):** `flutter build ios --release`
+- **Web:** `flutter build web`
+- **Testing:** `flutter test`
 
-**Important**: Use `flutter run` to launch and run the app for development. To test implementations, use `flutter test` instead (see Testing Information section below).
+## Testing
 
-## Testing Information
-
-### Test Configuration
-- The project uses `flutter_test` for unit testing and `integration_test` for integration testing
-- Mock support is available via `network_image_mock` for network image testing
-- SharedPreferences mocking is built-in for testing services that use local storage
+### Configuration
+- Unit tests: `flutter_test`
+- Integration tests: `integration_test`
+- Network image mocking: `network_image_mock`
+- SharedPreferences mocking available
 
 ### Running Tests
-- **All tests**: `flutter test`
-- **Specific test file**: `flutter test test/filename_test.dart`
-- **Integration tests**: `flutter test integration_test/`
+- All tests: `flutter test`
+- Specific file: `flutter test test/filename_test.dart`
+- Integration tests: `flutter test integration_test/`
 
-### Adding New Tests
-1. Create test files in the `test/` directory with `_test.dart` suffix
-2. Use the following structure for service tests:
-
+### Test Structure Template
 ```dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,7 +52,6 @@ void main() {
     late YourService service;
 
     setUp(() async {
-      // Setup mock dependencies
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
       service = YourService(prefs);
@@ -76,253 +64,177 @@ void main() {
 }
 ```
 
-### Test Example
-A working test example is available in `test/preferences_service_test.dart` demonstrating:
-- Service testing with mocked dependencies
-- Async operation testing
-- State verification
-- Setup and teardown patterns
+## Project Architecture
 
-## Code Style and Architecture Guidelines
-
-### Project Structure
-The project follows a feature-based architecture:
+### Structure Overview
 ```
 lib/
 ├── app.dart                 # Main app configuration
-├── main.dart               # Entry point
-├── config.dart             # Configuration settings
-├── core/                   # Core functionality
-├── features/               # Feature-specific code
-├── l10n/                   # Localization files
-├── models/                 # Data models
-├── pages/                  # UI screens/pages
-├── providers/              # Riverpod state management
-├── services/               # Business logic services
-├── utils/                  # Utility functions
-└── widgets/                # Reusable UI components
+├── main.dart                # Entry point
+├── router.dart              # App routing
+├── providers/               # Global providers
+├── core/                    # Shared functionality
+│   ├── config/              # Configuration
+│   ├── extensions/          # Dart extensions
+│   ├── models/              # Shared data models
+│   ├── pages/               # Core UI screens
+│   ├── providers/           # Core providers
+│   ├── services/            # Core services
+│   ├── theme/               # Theming
+│   ├── utils/               # Utility functions
+│   └── widgets/             # Shared UI components
+├── features/                # Feature-specific code
+│   ├── authentication/      # User authentication
+│   ├── challenge/           # Challenges and badges
+│   ├── place/               # Places and locations
+│   ├── search/              # Search functionality
+│   ├── social/              # Social features
+│   ├── trip/                # Trip management
+│   └── user/                # User management
+└── l10n/                    # Localization files
 ```
 
-### SOLID Principles (MANDATORY)
+### Feature Structure
 
-**CRITICAL REQUIREMENT**: All source code in this project MUST adhere to SOLID principles as a fundamental standard. These principles are not optional and must be followed in every class, service, and component.
+📦 **New Standard Organization Pattern**
 
-#### S - Single Responsibility Principle (SRP)
-- **Rule**: Each class should have only one reason to change and should be responsible for only one part of the functionality
-- **Implementation**: 
-  - Services should handle only one specific domain (e.g., `ChallengeProgressService` only handles challenge progress, not user authentication)
-  - Models should only represent data structure, not business logic
-  - Widgets should focus on a single UI concern
-- **Example**: 
-  ```dart
-  // GOOD - Single responsibility
-  class UserAuthenticationService {
-    Future<User?> signIn(String email, String password) { /* ... */ }
-    Future<void> signOut() { /* ... */ }
-  }
+Each feature should follow this recommended structure for better separation of concerns and maintainability:
 
-  class UserProfileService {
-    Future<UserProfile> getProfile(String userId) { /* ... */ }
-    Future<void> updateProfile(UserProfile profile) { /* ... */ }
-  }
-
-  // BAD - Multiple responsibilities
-  class UserService {
-    Future<User?> signIn(String email, String password) { /* ... */ }
-    Future<UserProfile> getProfile(String userId) { /* ... */ }
-    Future<void> sendNotification(String message) { /* ... */ }
-  }
-  ```
-
-#### O - Open/Closed Principle (OCP)
-- **Rule**: Classes should be open for extension but closed for modification
-- **Implementation**:
-  - Use abstract classes and interfaces for extensibility
-  - Prefer composition over inheritance
-  - Use strategy pattern for varying behaviors
-- **Example**:
-  ```dart
-  // GOOD - Open for extension, closed for modification
-  abstract class PaymentProcessor {
-    Future<PaymentResult> processPayment(double amount);
-  }
-
-  class CreditCardProcessor extends PaymentProcessor {
-    @override
-    Future<PaymentResult> processPayment(double amount) { /* ... */ }
-  }
-
-  class PayPalProcessor extends PaymentProcessor {
-    @override
-    Future<PaymentResult> processPayment(double amount) { /* ... */ }
-  }
-  ```
-
-#### L - Liskov Substitution Principle (LSP)
-- **Rule**: Objects of a superclass should be replaceable with objects of a subclass without breaking the application
-- **Implementation**:
-  - Subclasses must honor the contract of their parent class
-  - Don't strengthen preconditions or weaken postconditions
-  - Ensure behavioral compatibility
-- **Example**:
-  ```dart
-  // GOOD - Proper substitution
-  abstract class DataRepository {
-    Future<List<T>> getAll<T>();
-    Future<T?> getById<T>(String id);
-  }
-
-  class FirestoreRepository extends DataRepository {
-    @override
-    Future<List<T>> getAll<T>() {
-      // Implementation that maintains the contract
-    }
-
-    @override
-    Future<T?> getById<T>(String id) {
-      // Implementation that maintains the contract
-    }
-  }
-  ```
-
-#### I - Interface Segregation Principle (ISP)
-- **Rule**: Clients should not be forced to depend on interfaces they don't use
-- **Implementation**:
-  - Create specific, focused interfaces rather than large, general-purpose ones
-  - Split large interfaces into smaller, more specific ones
-  - Use mixins for optional functionality
-- **Example**:
-  ```dart
-  // GOOD - Segregated interfaces
-  abstract class Readable {
-    Future<String> read();
-  }
-
-  abstract class Writable {
-    Future<void> write(String data);
-  }
-
-  abstract class Cacheable {
-    Future<void> cache(String key, dynamic data);
-  }
-
-  // Classes implement only what they need
-  class FileReader implements Readable {
-    @override
-    Future<String> read() { /* ... */ }
-  }
-
-  class CachedFileManager implements Readable, Writable, Cacheable {
-    // Implements all interfaces because it needs all functionality
-  }
-
-  // BAD - Fat interface
-  abstract class FileManager {
-    Future<String> read();
-    Future<void> write(String data);
-    Future<void> cache(String key, dynamic data);
-    Future<void> compress(); // Not all implementations need this
-  }
-  ```
-
-#### D - Dependency Inversion Principle (DIP)
-- **Rule**: High-level modules should not depend on low-level modules. Both should depend on abstractions
-- **Implementation**:
-  - Use dependency injection through constructors
-  - Depend on abstractions (interfaces/abstract classes), not concrete implementations
-  - Use providers for dependency management (Riverpod in this project)
-- **Example**:
-  ```dart
-  // GOOD - Depends on abstraction
-  abstract class DatabaseService {
-    Future<Map<String, dynamic>?> getData(String id);
-  }
-
-  class UserService {
-    UserService(this._database); // Dependency injection
-
-    final DatabaseService _database; // Depends on abstraction
-
-    Future<User?> getUser(String id) async {
-      final data = await _database.getData(id);
-      return data != null ? User.fromJson(data) : null;
-    }
-  }
-
-  // BAD - Depends on concrete implementation
-  class UserService {
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance; // Direct dependency
-
-    Future<User?> getUser(String id) async {
-      // Tightly coupled to Firestore
-    }
-  }
-  ```
-
-### SOLID Principles Enforcement
-- **Code Reviews**: All code must be reviewed for SOLID compliance before merging
-- **Refactoring**: Existing code that violates SOLID principles should be refactored when touched
-- **Architecture Decisions**: All architectural decisions must consider SOLID principles
-- **Testing**: SOLID-compliant code is easier to test - use this as a quality indicator
-
-### Code Conventions
-
-#### Data Models
-- Use immutable classes with `final` fields
-- Implement comprehensive JSON serialization with fallback field names
-- Handle null safety with proper defaults
-- Use factory constructors for JSON parsing
-- Example pattern from `Place` model:
-```dart
-class Place {
-  const Place({
-    required this.placeId,
-    required this.displayName,
-    // ... other required fields
-    this.optionalField,
-    PlaceCategory? category,
-  }) : category = category ?? PlaceCategories.determineCategoryFromTypes(types);
-
-  final String placeId;
-  final String displayName;
-  final PlaceCategory? optionalField;
-  final PlaceCategory category;
-
-  factory Place.fromJson(Map<String, dynamic> json) {
-    // Robust JSON parsing with fallbacks
-    return Place(
-      placeId: (json['placeId'] ?? json['id'] ?? json['place_id']) as String? ?? '',
-      // ... handle all fields with null safety
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'placeId': placeId,
-      // ... include all fields
-    };
-  }
-}
+```
+lib/
+└── features/
+    └── [feature_name]/          # Example: itinerary/
+        ├── presentation/        # 🎨 UI layer - screens, widgets, UI state providers
+        │   ├── screens/         # Main screens/pages
+        │   │   └── trip_destination_screen.dart
+        │   ├── widgets/         # Feature-specific UI components
+        │   └── trip_planning_provider.dart  # UI state management (Riverpod providers)
+        ├── data/                # 📊 Data layer - models, DTOs, repositories
+        │   ├── models/          # Data models and DTOs
+        │   │   └── trip_plan.dart
+        │   └── repositories/    # Data access abstractions
+        │       └── trip_repository.dart
+        ├── service/             # 🔌 External integrations - Firebase, HTTP, APIs
+        │   └── trip_agent_service.dart
+        └── utils/               # 🛠️ Feature-specific helpers and formatters
 ```
 
-#### Services
-- Use dependency injection through constructors
-- Implement clean APIs with getters for synchronous operations and async methods for state changes
-- Handle errors gracefully with proper null checks
-- Example pattern from `PreferencesService`:
+🧠 **Component Roles and Placement:**
+
+| Component Type | Location | Example | Purpose |
+|---------------|----------|---------|---------|
+| **Provider** | `presentation/` | `trip_planning_provider.dart` | UI state management (AsyncNotifier, StateNotifier) |
+| **Repository** | `data/repositories/` | `TripRepository` with optional `ITripRepository` interface | Data access abstraction layer |
+| **Model/DTO** | `data/models/` | `TripPlan`, `DestinationOption` | Data structures and transfer objects |
+| **Service** | `service/` | `TripAgentService` | External API calls, Firebase Callable functions |
+| **Screen/Page** | `presentation/screens/` | `TripDestinationScreen` | Main UI screens |
+| **Widget** | `presentation/widgets/` | `TripCard`, `DestinationSelector` | Reusable UI components |
+| **Utils** | `utils/` | `DateFormatter`, `TripValidator` | Feature-specific helpers |
+
+💡 **Key Principles:**
+
+- **Providers stay close to UI**: Even with Riverpod, keep providers in `presentation/` near the UI that consumes them
+- **Repositories in data layer**: Abstract data access in `data/repositories/` following the repository pattern
+- **Services for external calls**: Place Firebase, REST API, and external service calls in `service/`
+- **Respect SOLID principles**: This structure supports Single Responsibility Principle without excessive complexity
+
+**Legacy Structure Support:**
+For existing features not yet migrated, the previous structure is still supported:
+```
+features/[feature_name]/
+├── models/          # Feature-specific data models
+├── pages/           # Feature UI screens  
+├── providers/       # Feature state management
+├── services/        # Feature business logic
+└── widgets/         # Feature-specific widgets
+```
+
+### Key Architectural Rules
+
+1. **One Widget/Model Per File** - Strictly enforced
+2. **Feature-Based Organization** - Group related functionality
+3. **Separation of Concerns** - Abstract classes and implementations in separate files
+
+**Example:**
+```
+services/
+├── trip_repository.dart            # Abstract class
+├── firestore_trip_repository.dart  # Implementation
+```
+
+## Coding Standards
+
+### SOLID Principles (Mandatory)
+
+**All code must follow SOLID principles:**
+
+- **Single Responsibility:** Each class has one reason to change
+- **Open/Closed:** Open for extension, closed for modification
+- **Liskov Substitution:** Subclasses must be substitutable for base classes
+- **Interface Segregation:** Prefer small, focused interfaces
+- **Dependency Inversion:** Depend on abstractions, not implementations
+
+### File Naming Conventions (Mandatory)
+
+**File names must be significant to their classes and roles:**
+
+- File names should clearly indicate the purpose and type of the contained class
+- Use descriptive names that reflect the class's responsibility
+- Include the component type in the filename for clarity
+- Follow snake_case convention for Dart files
+
+**Examples of Good File Names:**
+
+```
+✅ Good Examples:
+├── trip_planning_provider.dart      # Provider for trip planning state
+├── firestore_trip_repository.dart   # Firestore implementation of trip repository
+├── trip_destination_screen.dart     # Screen for trip destination selection
+├── trip_card_widget.dart           # Widget for displaying trip cards
+├── date_formatter_util.dart        # Utility for date formatting
+├── trip_validation_service.dart    # Service for trip validation
+├── user_profile_model.dart         # Model for user profile data
+├── authentication_exception.dart   # Exception for authentication errors
+```
+
+**Examples of Poor File Names:**
+
+```
+❌ Poor Examples:
+├── provider.dart                   # Too generic, unclear purpose
+├── repository.dart                 # Doesn't specify which repository
+├── screen.dart                     # Doesn't indicate which screen
+├── widget.dart                     # Too vague, no context
+├── utils.dart                      # Should be specific utility
+├── service.dart                    # Doesn't specify service type
+├── model.dart                      # Doesn't indicate data type
+├── helper.dart                     # Too generic
+```
+
+**Naming Pattern Guidelines:**
+
+| Component Type | Naming Pattern | Example |
+|---------------|----------------|---------|
+| **Provider** | `[feature]_[purpose]_provider.dart` | `trip_planning_provider.dart` |
+| **Repository** | `[implementation]_[entity]_repository.dart` | `firestore_trip_repository.dart` |
+| **Service** | `[purpose]_service.dart` | `trip_validation_service.dart` |
+| **Model/DTO** | `[entity]_model.dart` or `[entity].dart` | `user_profile_model.dart`, `trip.dart` |
+| **Screen/Page** | `[feature]_[purpose]_screen.dart` | `trip_destination_screen.dart` |
+| **Widget** | `[purpose]_widget.dart` or `[purpose].dart` | `trip_card_widget.dart`, `trip_card.dart` |
+| **Utility** | `[purpose]_util.dart` | `date_formatter_util.dart` |
+| **Exception** | `[context]_exception.dart` | `authentication_exception.dart` |
+
+### Services Pattern
 ```dart
 class PreferencesService {
   PreferencesService(this._prefs);
-
   final SharedPreferences _prefs;
 
-  // Synchronous getters for cached values
   Locale? get locale {
     final code = _prefs.getString('locale');
     return code != null ? Locale(code) : null;
   }
 
-  // Async methods for state changes
   Future<void> setLocale(Locale? locale) async {
     if (locale == null) {
       await _prefs.remove('locale');
@@ -333,142 +245,127 @@ class PreferencesService {
 }
 ```
 
-#### Widget Builder Methods
-- **Important**: Builder methods like `_buildDraggablePlace` should be **mostly avoided**
-- Instead of creating private builder methods that return Widgets, create proper Flutter widgets when recommended and possible
-- This improves code reusability, testability, and follows Flutter best practices
-- Only use builder methods for very simple, one-off UI components that don't warrant their own widget class
+### Data Models
+- Use immutable classes with `final` fields
+- Implement robust JSON serialization
+- Handle null safety properly
 
-**Discouraged Pattern** (avoid this):
 ```dart
-/// Builds a single draggable place item - AVOID THIS PATTERN
-Widget _buildDraggablePlace(BuildContext context, Place place) {
-  return LongPressDraggable<DraggedPlaceData>(
-    data: DraggedPlaceData(place: place, fromDayId: null),
-    feedback: _buildDragFeedback(context, place),
-    child: _buildPlaceChip(context, place),
-  );
+class Place {
+  const Place({
+    required this.placeId,
+    required this.displayName,
+    this.category,
+  });
+
+  final String placeId;
+  final String displayName;
+  final PlaceCategory? category;
+
+  factory Place.fromJson(Map<String, dynamic> json) {
+    return Place(
+      placeId: json['placeId'] as String? ?? '',
+      displayName: json['displayName'] as String? ?? '',
+      category: json['category'] != null 
+          ? PlaceCategory.fromString(json['category']) 
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'placeId': placeId,
+    'displayName': displayName,
+    if (category != null) 'category': category!.name,
+  };
 }
 ```
 
-**Recommended Pattern** (use this instead):
-```dart
-/// A draggable place widget that can be reused across the app
-class DraggablePlace extends StatelessWidget {
-  const DraggablePlace({
-    super.key,
-    required this.place,
-    this.fromDayId,
-  });
+### Widget Guidelines
+- **Avoid** private builder methods
+- **Prefer** reusable widget classes
+- Use builder methods only for trivial UI elements
 
+**Discouraged:**
+```dart
+Widget _buildDraggablePlace(BuildContext context, Place place) {
+  return LongPressDraggable<DraggedPlaceData>(/* ... */);
+}
+```
+
+**Recommended:**
+```dart
+class DraggablePlace extends StatelessWidget {
+  const DraggablePlace({super.key, required this.place});
   final Place place;
-  final String? fromDayId;
 
   @override
   Widget build(BuildContext context) {
-    return LongPressDraggable<DraggedPlaceData>(
-      data: DraggedPlaceData(place: place, fromDayId: fromDayId),
-      feedback: DragFeedback(place: place),
-      child: PlaceChip(place: place),
-    );
+    return LongPressDraggable<DraggedPlaceData>(/* ... */);
   }
 }
 ```
 
-**Benefits of proper Flutter widgets:**
-- Better code organization and reusability
-- Easier to test in isolation
-- Clearer widget tree structure
-- Better performance through widget caching
-- Follows Flutter framework conventions
+## Internationalization
 
-#### Widget Text and Internationalization
-- **CRITICAL REQUIREMENT**: No widget should EVER display fixed/hardcoded text strings
-- **ALL text displayed in widgets MUST use the project's internationalization strategy**
-- Always use `AppLocalizations.of(context)` or equivalent localization methods for any user-facing text
-- This applies to ALL text including: labels, buttons, error messages, placeholders, tooltips, and any other user-visible strings
-- Even temporary or debug text should use localization keys to maintain consistency
+### Rules (Mandatory)
+- **ALL user-facing text must use internationalization**
+- **NO hardcoded strings in widgets**
+- Support: English (`en`) and Portuguese (`pt`)
+- Use `AppLocalizations.of(context)!` for all user-visible strings
 
-**Prohibited Pattern** (NEVER do this):
+**Required:**
 ```dart
-// WRONG - Fixed text strings are FORBIDDEN
-Text('Welcome to Travel Genie'),
-ElevatedButton(
-  onPressed: () {},
-  child: Text('Search Places'),
-),
-TextField(
-  decoration: InputDecoration(
-    hintText: 'Enter destination',
-  ),
-),
+Text(AppLocalizations.of(context)!.welcomeMessage)
 ```
 
-**Required Pattern** (ALWAYS do this):
+**Prohibited:**
 ```dart
-// CORRECT - Always use localization
-Text(AppLocalizations.of(context)!.welcomeMessage),
-ElevatedButton(
-  onPressed: () {},
-  child: Text(AppLocalizations.of(context)!.searchPlaces),
-),
-TextField(
-  decoration: InputDecoration(
-    hintText: AppLocalizations.of(context)!.enterDestination,
-  ),
-),
+Text('Welcome to Travel Genie')  // Never do this
 ```
 
-**Exception Handling:**
-- If `AppLocalizations.of(context)` might be null, use null-aware operators or provide fallbacks
-- For debugging purposes, you may use fixed strings in `debugPrint()` or similar debug-only functions
-- API keys, URLs, and other non-user-facing configuration strings are exempt from this rule
+## Import Guidelines
 
-#### State Management
-- The project uses Riverpod for state management
-- Providers are organized in the `providers/` directory
-- Follow Riverpod best practices for provider composition and dependency injection
+- Use `package:` imports for files outside current directory
+- Use relative imports only for files in same directory
+- Never use `../../../` imports
 
-#### Firebase Integration
-- Firebase is initialized in `main.dart` with proper error handling
-- Anonymous authentication is used as fallback
-- Crashlytics integration is configured for error reporting
-- Analytics and performance monitoring are enabled
+**Correct:**
+```dart
+import 'package:travel_genie/features/trip/models/trip.dart';
+import 'trip_cover_image.dart';  // Same directory only
+```
 
-### Linting and Analysis
-- The project uses `flutter_lints` with standard Flutter lint rules
-- Analysis options are configured in `analysis_options.yaml`
-- Follow the existing lint rules; avoid disabling lints unless absolutely necessary
-
-### Internationalization
-- **MANDATORY**: ALL user-facing text in widgets MUST use internationalization - NO EXCEPTIONS
-- **ZERO TOLERANCE** for hardcoded/fixed text strings in any widget
-- Support for English (`en`) and Portuguese (`pt`) locales
-- Locale detection with device locale fallback to English
-- Use `flutter gen-l10n` to regenerate localization files after changes
-- Localization files are in ARB format in `lib/l10n/`
-- Always use `AppLocalizations.of(context)` for any text displayed to users
-- This requirement applies to ALL text: buttons, labels, hints, error messages, tooltips, etc.
-- Refer to the "Widget Text and Internationalization" section in Code Conventions for detailed examples
-
-## Development Best Practices
+## Best Practices
 
 ### Error Handling
-- Implement comprehensive error handling, especially for Firebase operations
-- Use try-catch blocks for async operations
-- Provide meaningful error messages and fallback behaviors
+- Use try-catch for async operations
+- Provide meaningful error messages
+- Implement fallback behavior
 
 ### Performance
-- Use `cached_network_image` for network images
-- Implement proper widget disposal and cleanup
-- Consider using `const` constructors where possible
+- Use `cached_network_image` for images
+- Dispose resources properly
+- Prefer `const` constructors
 
 ### Security
-- Firebase security rules are configured in `firestore.rules`
-- Sensitive configuration is handled through Firebase configuration
-- User authentication is properly managed through Firebase Auth
+- Firebase security rules: `firestore.rules`
+- Firebase Auth handles authentication
+- Sensitive config via Firebase
 
 ### Debugging
-- Firebase Crashlytics is configured for production error tracking
-- Use proper logging practices with the `logging` package
-- Test thoroughly on both platforms (iOS/Android) before deployment
+- Firebase Crashlytics for error tracking
+- Use `logging` package
+- Test on both iOS and Android
+
+## Current Features
+
+The app currently includes these features:
+- **Authentication:** User login/registration
+- **Challenge:** Badges and achievements
+- **Place:** Location management and discovery
+- **Search:** Place and trip search
+- **Social:** User interactions and sharing
+- **Trip:** Trip planning and management
+- **User:** Profile and preferences management
+
+Each feature follows the established architecture patterns and maintains the "one widget/model per file" rule.

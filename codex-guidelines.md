@@ -86,21 +86,89 @@ A working test example is available in `test/preferences_service_test.dart` demo
 ## Code Style and Architecture Guidelines
 
 ### Project Structure
-The project follows a feature-based architecture:
+The project follows a feature-based architecture with strict adherence to the "one widget/model per file" rule:
 ```
 lib/
 ├── app.dart                 # Main app configuration
 ├── main.dart               # Entry point
-├── config.dart             # Configuration settings
-├── core/                   # Core functionality
-├── features/               # Feature-specific code
-├── l10n/                   # Localization files
-├── models/                 # Data models
-├── pages/                  # UI screens/pages
-├── providers/              # Riverpod state management
-├── services/               # Business logic services
-├── utils/                  # Utility functions
-└── widgets/                # Reusable UI components
+├── router.dart             # App routing configuration
+├── core/                   # Core functionality and shared components
+│   ├── config/             # Configuration settings
+│   ├── extensions/         # Dart extensions
+│   ├── models/             # Shared data models (Location, Photo, etc.)
+│   ├── pages/              # Core UI screens (home page, etc.)
+│   ├── services/           # Core business logic services
+│   ├── theme/              # App theming
+│   ├── utils/              # Utility functions
+│   └── widgets/            # Shared reusable UI components
+├── features/               # Feature-specific code organized by domain
+│   ├── authentication/     # Authentication feature
+│   │   ├── models/         # Authentication-specific models
+│   │   ├── pages/          # Authentication UI screens
+│   │   └── widgets/        # Authentication-specific widgets
+│   ├── challenge/          # Challenges and badges feature
+│   │   ├── models/         # Challenge and badge models
+│   │   ├── providers/      # Challenge state management
+│   │   └── services/       # Challenge business logic
+│   ├── place/              # Places and location feature
+│   │   ├── models/         # Place-related models
+│   │   ├── pages/          # Place detail pages
+│   │   ├── services/       # Place services (search, recommendations)
+│   │   └── widgets/        # Place-specific widgets
+│   ├── search/             # Search functionality
+│   │   ├── models/         # Search-related models
+│   │   ├── pages/          # Search results pages
+│   │   ├── providers/      # Search state management
+│   │   ├── services/       # Search business logic
+│   │   └── widgets/        # Search-specific widgets
+│   ├── social/             # Social features
+│   │   ├── models/         # Social-related models
+│   │   ├── pages/          # Social pages (groups, etc.)
+│   │   ├── services/       # Social business logic
+│   │   └── widgets/        # Social-specific widgets
+│   ├── trip/               # Trip planning and management
+│   │   ├── models/         # Trip, itinerary, and related models
+│   │   ├── pages/          # Trip management pages
+│   │   ├── providers/      # Trip state management
+│   │   ├── services/       # Trip business logic
+│   │   └── widgets/        # Trip-specific widgets
+│   │       ├── profile_completeness/  # Profile completeness widgets (one per file)
+│   │       │   ├── profile_completeness_widget.dart
+│   │       │   ├── loading_profile_completeness.dart
+│   │       │   ├── error_profile_completeness.dart
+│   │       │   └── profile_completeness_content.dart
+│   │       └── travel_partner/        # Travel partner widgets (one per file)
+│   │           ├── travel_partner_invite_widget.dart
+│   │           ├── travel_partner_invite_modal.dart
+│   │           ├── tab_button.dart
+│   │           ├── friends_list_tab.dart
+│   │           ├── friend_list_item.dart
+│   │           └── email_invite_tab.dart
+│   └── user/               # User management
+│       ├── models/         # User data and profile models (one per file)
+│       │   ├── traveler_profile.dart
+│       │   ├── traveler_profile_enums.dart  # Export file
+│       │   ├── travel_company.dart
+│       │   ├── travel_budget.dart
+│       │   ├── accommodation_type.dart
+│       │   ├── travel_interest.dart
+│       │   ├── gastronomic_preference.dart
+│       │   └── itinerary_style.dart
+│       ├── pages/          # User profile pages
+│       ├── providers/      # User state management
+│       ├── services/       # User business logic
+│       └── widgets/        # User-specific widgets
+│           └── profile/    # Profile-related widgets (one per file)
+│               ├── introduction_card.dart
+│               ├── section_card.dart
+│               ├── travel_company_section.dart
+│               ├── budget_section.dart
+│               ├── accommodation_section.dart
+│               ├── interests_section.dart
+│               ├── gastronomic_section.dart
+│               ├── itinerary_style_section.dart
+│               └── action_buttons.dart
+└── l10n/                   # Localization files
 ```
 
 ### SOLID Principles (MANDATORY)
