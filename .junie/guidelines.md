@@ -95,11 +95,55 @@ lib/
 ```
 
 ### Feature Structure
-Each feature follows this pattern:
+
+📦 **New Standard Organization Pattern**
+
+Each feature should follow this recommended structure for better separation of concerns and maintainability:
+
+```
+lib/
+└── features/
+    └── [feature_name]/          # Example: itinerary/
+        ├── presentation/        # 🎨 UI layer - screens, widgets, UI state providers
+        │   ├── screens/         # Main screens/pages
+        │   │   └── trip_destination_screen.dart
+        │   ├── widgets/         # Feature-specific UI components
+        │   └── trip_planning_provider.dart  # UI state management (Riverpod providers)
+        ├── data/                # 📊 Data layer - models, DTOs, repositories
+        │   ├── models/          # Data models and DTOs
+        │   │   └── trip_plan.dart
+        │   └── repositories/    # Data access abstractions
+        │       └── trip_repository.dart
+        ├── service/             # 🔌 External integrations - Firebase, HTTP, APIs
+        │   └── trip_agent_service.dart
+        └── utils/               # 🛠️ Feature-specific helpers and formatters
+```
+
+🧠 **Component Roles and Placement:**
+
+| Component Type | Location | Example | Purpose |
+|---------------|----------|---------|---------|
+| **Provider** | `presentation/` | `trip_planning_provider.dart` | UI state management (AsyncNotifier, StateNotifier) |
+| **Repository** | `data/repositories/` | `TripRepository` with optional `ITripRepository` interface | Data access abstraction layer |
+| **Model/DTO** | `data/models/` | `TripPlan`, `DestinationOption` | Data structures and transfer objects |
+| **Service** | `service/` | `TripAgentService` | External API calls, Firebase Callable functions |
+| **Screen/Page** | `presentation/screens/` | `TripDestinationScreen` | Main UI screens |
+| **Widget** | `presentation/widgets/` | `TripCard`, `DestinationSelector` | Reusable UI components |
+| **Utils** | `utils/` | `DateFormatter`, `TripValidator` | Feature-specific helpers |
+
+💡 **Key Principles:**
+
+- **Providers stay close to UI**: Even with Riverpod, keep providers in `presentation/` near the UI that consumes them
+- **Repositories in data layer**: Abstract data access in `data/repositories/` following the repository pattern
+- **Services for external calls**: Place Firebase, REST API, and external service calls in `service/`
+- **Respect SOLID principles**: This structure supports Single Responsibility Principle without excessive complexity
+
+**Legacy Structure Support:**
+For existing features not yet migrated, the previous structure is still supported:
 ```
 features/[feature_name]/
 ├── models/          # Feature-specific data models
-├── pages/           # Feature UI screens
+├── pages/           # Feature UI screens  
 ├── providers/       # Feature state management
 ├── services/        # Feature business logic
 └── widgets/         # Feature-specific widgets
@@ -129,6 +173,56 @@ services/
 - **Liskov Substitution:** Subclasses must be substitutable for base classes
 - **Interface Segregation:** Prefer small, focused interfaces
 - **Dependency Inversion:** Depend on abstractions, not implementations
+
+### File Naming Conventions (Mandatory)
+
+**File names must be significant to their classes and roles:**
+
+- File names should clearly indicate the purpose and type of the contained class
+- Use descriptive names that reflect the class's responsibility
+- Include the component type in the filename for clarity
+- Follow snake_case convention for Dart files
+
+**Examples of Good File Names:**
+
+```
+✅ Good Examples:
+├── trip_planning_provider.dart      # Provider for trip planning state
+├── firestore_trip_repository.dart   # Firestore implementation of trip repository
+├── trip_destination_screen.dart     # Screen for trip destination selection
+├── trip_card_widget.dart           # Widget for displaying trip cards
+├── date_formatter_util.dart        # Utility for date formatting
+├── trip_validation_service.dart    # Service for trip validation
+├── user_profile_model.dart         # Model for user profile data
+├── authentication_exception.dart   # Exception for authentication errors
+```
+
+**Examples of Poor File Names:**
+
+```
+❌ Poor Examples:
+├── provider.dart                   # Too generic, unclear purpose
+├── repository.dart                 # Doesn't specify which repository
+├── screen.dart                     # Doesn't indicate which screen
+├── widget.dart                     # Too vague, no context
+├── utils.dart                      # Should be specific utility
+├── service.dart                    # Doesn't specify service type
+├── model.dart                      # Doesn't indicate data type
+├── helper.dart                     # Too generic
+```
+
+**Naming Pattern Guidelines:**
+
+| Component Type | Naming Pattern | Example |
+|---------------|----------------|---------|
+| **Provider** | `[feature]_[purpose]_provider.dart` | `trip_planning_provider.dart` |
+| **Repository** | `[implementation]_[entity]_repository.dart` | `firestore_trip_repository.dart` |
+| **Service** | `[purpose]_service.dart` | `trip_validation_service.dart` |
+| **Model/DTO** | `[entity]_model.dart` or `[entity].dart` | `user_profile_model.dart`, `trip.dart` |
+| **Screen/Page** | `[feature]_[purpose]_screen.dart` | `trip_destination_screen.dart` |
+| **Widget** | `[purpose]_widget.dart` or `[purpose].dart` | `trip_card_widget.dart`, `trip_card.dart` |
+| **Utility** | `[purpose]_util.dart` | `date_formatter_util.dart` |
+| **Exception** | `[context]_exception.dart` | `authentication_exception.dart` |
 
 ### Services Pattern
 ```dart
