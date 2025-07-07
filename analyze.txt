@@ -1,0 +1,290 @@
+Analyzing features...                                           
+
+   info • Dangling library doc comment • lib/features/place/models/drag_drop_models.dart:2:1 • dangling_library_doc_comments
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:150:30 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:154:41 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:155:41 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:156:31 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:157:33 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:158:32 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:159:32 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:162:39 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:163:28 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:164:28 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:174:30 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:177:35 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:178:31 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:179:33 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:180:32 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:181:32 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:184:39 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:185:28 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/place/pages/place_detail_page.dart:186:28 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/place/widgets/place_detail/action_buttons.dart:25:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/place/widgets/place_detail/action_buttons.dart:61:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/place/widgets/place_detail/action_buttons.dart:64:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/place/widgets/place_detail/image_carousel.dart:92:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/place/widgets/place_detail/photo_gallery.dart:94:37 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/pages/search_results_page.dart:67:55 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/search/widgets/search_field.dart:66:38 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/category_filter_section.dart:16:35 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/category_filter_section.dart:17:35 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/category_filter_section.dart:18:35 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/category_filter_section.dart:19:35 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/search/widgets/search_results/photo_attribution.dart:22:29 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/photo_attribution.dart:24:39 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/search/widgets/search_results/photo_attribution_new.dart:22:29 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/photo_attribution_new.dart:24:39 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/results_list.dart:76:39 • unnecessary_non_null_assertion
+   info • Don't invoke 'print' in production code • lib/features/search/widgets/search_results/search_result_card.dart:58:11 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/search/widgets/search_results/search_result_card.dart:63:7 • avoid_print
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/search_result_card.dart:142:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/search/widgets/search_results/search_result_card.dart:143:51 • unnecessary_non_null_assertion
+warning • The value of the local variable 'placeType' isn't used • lib/features/search/widgets/search_results/search_result_card.dart:198:12 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/search/widgets/search_results/search_result_card.dart:284:55 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/search/widgets/search_results/search_result_card.dart:332:55 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/example_row.dart:21:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_card.dart:61:52 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_card.dart:72:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_card.dart:75:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_card.dart:130:60 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/social/widgets/groups/feedback_card.dart:131:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_stat_card.dart:28:32 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_stat_card.dart:30:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_stat_card.dart:46:28 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_stat_card.dart:54:50 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_summary.dart:34:50 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_summary.dart:40:54 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_summary.dart:91:62 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/social/widgets/groups/feedback_summary.dart:107:42 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/social/widgets/groups/feedback_summary.dart:135:52 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_summary.dart:135:67 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/social/widgets/groups/feedback_summary.dart:178:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/social/widgets/groups/feedback_summary.dart:190:60 • deprecated_member_use
+   info • Dangling library doc comment • lib/features/trip/models/autocomplete_response.dart:1:1 • dangling_library_doc_comments
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/my_trips_page.dart:22:62 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/my_trips_page.dart:49:43 • unnecessary_non_null_assertion
+   info • Don't use 'BuildContext's across async gaps • lib/features/trip/pages/my_trips_page.dart:72:11 • use_build_context_synchronously
+   info • The 'child' argument should be last in widget constructor invocations • lib/features/trip/pages/my_trips_page.dart:74:9 • sort_child_properties_last
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/my_trips_page.dart:75:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/new_trip_screen.dart:71:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/new_trip_screen.dart:114:20 • unnecessary_non_null_assertion
+warning • The receiver can't be null, so the null-aware operator '?.' is unnecessary • lib/features/trip/pages/new_trip_screen.dart:132:34 • invalid_null_aware_operator
+warning • The receiver can't be null, so the null-aware operator '?.' is unnecessary • lib/features/trip/pages/new_trip_screen.dart:134:42 • invalid_null_aware_operator
+warning • The receiver can't be null, so the null-aware operator '?.' is unnecessary • lib/features/trip/pages/new_trip_screen.dart:144:36 • invalid_null_aware_operator
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/new_trip_screen.dart:177:43 • unnecessary_non_null_assertion
+warning • The value of the local variable 'selectedSuggestion' isn't used • lib/features/trip/pages/new_trip_screen.dart:195:11 • unused_local_variable
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/new_trip_screen.dart:199:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/new_trip_screen.dart:275:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:28:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:32:48 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:39:50 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:56:45 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/pages/trip_details_page.dart:79:45 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:83:49 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/pages/trip_details_page.dart:112:51 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:131:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:147:59 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:148:59 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:149:59 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:171:28 • unnecessary_non_null_assertion
+   info • The 'child' argument should be last in widget constructor invocations • lib/features/trip/pages/trip_details_page.dart:185:9 • sort_child_properties_last
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:186:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:208:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/pages/trip_details_page.dart:215:58 • unnecessary_non_null_assertion
+   info • Unnecessary use of multiple underscores • lib/features/trip/providers/trip_providers.dart:206:16 • unnecessary_underscores
+   info • Don't invoke 'print' in production code • lib/features/trip/services/city_autocomplete_service.dart:58:9 • avoid_print
+   info • Don't invoke 'print' in production code • lib/features/trip/services/city_autocomplete_service.dart:65:7 • avoid_print
+   info • 'ProviderRef' is deprecated and shouldn't be used. will be removed in 3.0.0. Use Ref instead • lib/features/trip/services/itinerary_drag_drop_service.dart:14:9 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/date_range_picker_field.dart:33:43 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/date_range_picker_field.dart:95:57 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/date_range_picker_field.dart:103:51 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/date_range_picker_field.dart:109:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/date_range_picker_field.dart:122:43 • deprecated_member_use
+warning • The value of the field '_lastSuggestions' isn't used • lib/features/trip/widgets/destination_autocomplete_field.dart:29:25 • unused_field
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/destination_autocomplete_field.dart:84:56 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/destination_autocomplete_field.dart:85:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/destination_autocomplete_field.dart:93:54 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/destination_autocomplete_field.dart:122:45 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/destination_autocomplete_field.dart:129:57 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/destination_autocomplete_field.dart:134:59 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/destination_autocomplete_field.dart:154:57 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/my_trips/explore_button.dart:17:47 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/my_trips/trip_placeholder_image.dart:18:20 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/participant_list_item.dart:21:60 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/participant_list_item.dart:63:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/participant_list_item.dart:64:43 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/participant_list_item.dart:68:57 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/profile_completeness_widget.dart:21:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/profile_completeness_widget.dart:21:61 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/profile_completeness_widget.dart:24:56 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/profile_completeness_widget.dart:32:41 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/profile_completeness_widget.dart:34:62 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/profile_completeness_widget.dart:67:50 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/profile_completeness_widget.dart:77:50 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/profile_completeness_widget.dart:87:50 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/profile_completeness_widget.dart:110:58 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/profile_completeness_widget.dart:115:39 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/profile_completeness_widget.dart:117:60 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/profile_completeness_widget.dart:124:51 • unnecessary_non_null_assertion
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/profile_completeness_widget.dart:154:58 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/profile_completeness_widget.dart:163:12 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/profile_completeness_widget.dart:165:60 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/profile_completeness_widget.dart:177:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/profile_completeness_widget.dart:178:47 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:15:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:24:58 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:27:39 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:29:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:82:62 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:94:49 • unnecessary_non_null_assertion
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/travel_partner_invite_widget.dart:114:29 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:114:44 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:121:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:128:55 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:182:59 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:211:62 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:215:43 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:217:64 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:222:43 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:224:64 • deprecated_member_use
+warning • Unnecessary cast • lib/features/trip/widgets/travel_partner_invite_widget.dart:241:22 • unnecessary_cast
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:253:39 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:292:56 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:293:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:301:54 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:308:20 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:327:45 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:346:53 • unnecessary_non_null_assertion
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/travel_partner_invite_widget.dart:372:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/travel_partner_invite_widget.dart:395:58 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/travel_partner_invite_widget.dart:407:49 • unnecessary_non_null_assertion
+   info • Use a 'SizedBox' to add whitespace to a layout • lib/features/trip/widgets/trip_cover_image.dart:12:12 • sized_box_for_whitespace
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_cover_image.dart:21:56 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_cover_image.dart:29:58 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_cover_image.dart:33:58 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_cover_image.dart:42:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_cover_image.dart:56:59 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_cover_image.dart:80:45 • deprecated_member_use
+  error • The method 'itineraryDaysProvider' isn't defined for the type 'TripItineraryTab' • lib/features/trip/widgets/trip_itinerary_tab.dart:15:42 • undefined_method
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:30:43 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:47:43 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:51:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:56:47 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:60:45 • deprecated_member_use
+  error • The name 'ItineraryDay' isn't a type, so it can't be used as a type argument • lib/features/trip/widgets/trip_itinerary_tab.dart:70:33 • non_type_as_type_argument
+  error • The property 'dayNumber' can't be unconditionally accessed because the receiver can be 'null' • lib/features/trip/widgets/trip_itinerary_tab.dart:71:30 • unchecked_use_of_nullable_value
+  error • The property 'dayNumber' can't be unconditionally accessed because the receiver can be 'null' • lib/features/trip/widgets/trip_itinerary_tab.dart:71:52 • unchecked_use_of_nullable_value
+  error • Undefined class 'ItineraryDay' • lib/features/trip/widgets/trip_itinerary_tab.dart:93:9 • undefined_class
+  error • The method 'placesForDayProvider' isn't defined for the type 'ExpandableDayTile' • lib/features/trip/widgets/trip_itinerary_tab.dart:99:7 • undefined_method
+  error • The method 'tripDetailsProvider' isn't defined for the type 'ExpandableDayTile' • lib/features/trip/widgets/trip_itinerary_tab.dart:101:33 • undefined_method
+   info • Unnecessary use of multiple underscores • lib/features/trip/widgets/trip_itinerary_tab.dart:112:22 • unnecessary_underscores
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:144:45 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:148:43 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/features/trip/widgets/trip_itinerary_tab.dart:151:26 • unnecessary_underscores
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:152:45 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:159:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:160:51 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:164:43 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:178:49 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:197:63 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:201:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:202:49 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:207:64 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:210:52 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:252:51 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:261:57 • deprecated_member_use
+  error • The name 'Place' isn't a type, so it can't be used as a type argument • lib/features/trip/widgets/trip_itinerary_tab.dart:271:41 • non_type_as_type_argument
+  error • The property 'orderInDay' can't be unconditionally accessed because the receiver can be 'null' • lib/features/trip/widgets/trip_itinerary_tab.dart:272:36 • unchecked_use_of_nullable_value
+  error • The property 'orderInDay' can't be unconditionally accessed because the receiver can be 'null' • lib/features/trip/widgets/trip_itinerary_tab.dart:272:59 • unchecked_use_of_nullable_value
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:292:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:297:51 • unnecessary_non_null_assertion
+  error • Undefined name 'tripServiceProvider' • lib/features/trip/widgets/trip_itinerary_tab.dart:305:46 • undefined_identifier
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:312:65 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:317:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:321:53 • unnecessary_non_null_assertion
+  error • Undefined name 'tripServiceProvider' • lib/features/trip/widgets/trip_itinerary_tab.dart:325:44 • undefined_identifier
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:334:63 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:339:53 • unnecessary_non_null_assertion
+  error • Undefined class 'Place' • lib/features/trip/widgets/trip_itinerary_tab.dart:359:9 • undefined_class
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:387:64 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:400:45 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:410:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:424:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:432:45 • deprecated_member_use
+  error • Undefined name 'placesServiceProvider' • lib/features/trip/widgets/trip_itinerary_tab.dart:512:38 • undefined_identifier
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:535:55 • unnecessary_non_null_assertion
+  error • Undefined name 'tripServiceProvider' • lib/features/trip/widgets/trip_itinerary_tab.dart:547:36 • undefined_identifier
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:611:43 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:619:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:629:59 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:645:61 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:646:61 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_itinerary_tab.dart:651:57 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:666:61 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:688:62 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_itinerary_tab.dart:696:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_overview_content.dart:50:39 • unnecessary_non_null_assertion
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_overview_content.dart:62:27 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:62:42 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:65:60 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_overview_content.dart:78:53 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:83:45 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_overview_content.dart:103:39 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:122:44 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:125:60 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_overview_content.dart:137:47 • unnecessary_non_null_assertion
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_overview_content.dart:154:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:154:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:159:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:169:47 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/trip/widgets/trip_overview_content.dart:173:51 • unnecessary_non_null_assertion
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:177:49 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_overview_content.dart:189:31 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:189:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/trip/widgets/trip_overview_content.dart:192:64 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_participants_avatars.dart:53:58 • deprecated_member_use
+   info • 'surfaceVariant' is deprecated and shouldn't be used. Use surfaceContainerHighest instead. This feature was deprecated after v3.18.0-0.1.pre • lib/features/trip/widgets/trip_participants_avatars.dart:111:54 • deprecated_member_use
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:31:49 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:100:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:106:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:122:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:172:53 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:214:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:235:51 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:267:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/profile_screen.dart:294:55 • unnecessary_non_null_assertion
+warning • The declaration '_getIconFromName' isn't referenced • lib/features/user/pages/profile_screen.dart:398:12 • unused_element
+warning • The declaration '_getRewardTypeDisplayName' isn't referenced • lib/features/user/pages/profile_screen.dart:429:10 • unused_element
+warning • The declaration '_getTimeRemainingText' isn't referenced • lib/features/user/pages/profile_screen.dart:442:10 • unused_element
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/traveler_profile_page.dart:121:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/traveler_profile_page.dart:132:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/pages/traveler_profile_page.dart:153:46 • unnecessary_non_null_assertion
+   info • Dangling library doc comment • lib/features/user/services/profile_completeness_service.dart:1:1 • dangling_library_doc_comments
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/accommodation_section.dart:19:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/accommodation_section.dart:46:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/action_buttons.dart:18:46 • unnecessary_non_null_assertion
+   info • The 'child' argument should be last in widget constructor invocations • lib/features/user/widgets/profile/action_buttons.dart:44:13 • sort_child_properties_last
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/budget_section.dart:19:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/budget_section.dart:42:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/dark_mode_toggle_tile.dart:20:47 • unnecessary_non_null_assertion
+   info • Unnecessary use of multiple underscores • lib/features/user/widgets/profile/delete_account_tile.dart:26:18 • unnecessary_underscores
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/delete_account_tile.dart:38:37 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/delete_account_tile.dart:95:57 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/delete_account_tile.dart:110:45 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/delete_account_tile.dart:127:43 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/delete_account_tile.dart:161:37 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/delete_account_tile.dart:172:55 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/gastronomic_section.dart:19:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/gastronomic_section.dart:51:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/interests_section.dart:19:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/interests_section.dart:46:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/itinerary_style_section.dart:19:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/itinerary_style_section.dart:42:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/language_settings_tile.dart:20:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/logout_tile.dart:14:47 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/profile_info_tile.dart:21:41 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/travel_company_section.dart:19:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/travel_company_section.dart:46:46 • unnecessary_non_null_assertion
+warning • The '!' will have no effect because the receiver can't be null • lib/features/user/widgets/profile/traveler_profile_summary.dart:46:46 • unnecessary_non_null_assertion
+

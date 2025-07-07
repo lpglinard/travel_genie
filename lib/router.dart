@@ -1,27 +1,27 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart' as firebase_ui;
 import 'package:firebase_ui_oauth_apple/firebase_ui_oauth_apple.dart';
 import 'package:firebase_ui_oauth_google/firebase_ui_oauth_google.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:travel_genie/pages/trip_itinerary_page.dart';
+import 'package:travel_genie/core/providers/infrastructure_providers.dart';
+import 'package:travel_genie/core/services/analytics_service.dart';
+import 'package:travel_genie/features/challenge/models/predefined_challenges.dart';
+import 'package:travel_genie/features/challenge/providers/challenge_providers.dart';
+import 'package:travel_genie/features/place/models/place.dart';
+import 'package:travel_genie/features/place/pages/place_detail_page.dart';
+import 'package:travel_genie/features/search/pages/search_results_page.dart';
 
 import 'core/config/config.dart';
+import 'core/pages/home_page.dart';
+import 'features/social/pages/groups_page.dart';
+import 'features/trip/pages/my_trips_page.dart';
+import 'features/trip/pages/new_trip_screen.dart';
+import 'features/trip/pages/trip_details_page.dart';
+import 'features/user/pages/profile_screen.dart' as app_profile;
+import 'features/user/pages/traveler_profile_page.dart';
 import 'l10n/app_localizations.dart';
-import 'models/place.dart';
-import 'pages/create_trip_page.dart';
-import 'pages/groups_page.dart';
-import 'pages/home_page.dart';
-import 'pages/my_trips_page.dart';
-import 'pages/place_detail_page.dart';
-import 'pages/profile_screen.dart' as app_profile;
-import 'pages/search_results_page.dart';
-import 'pages/traveler_profile_page.dart';
-import 'providers/challenge_providers.dart';
-import 'services/analytics_service.dart';
-import 'user_providers.dart';
 
 // Navigation destinations
 enum AppRoute { home, explore, trips, groups }
@@ -120,21 +120,9 @@ final routerProvider = Provider<GoRouter>((ref) {
           // or pass it through state.extra
           return CustomTransitionPage(
             key: state.pageKey,
-            child: PopScope(
-              canPop: false,
-              onPopInvoked: (didPop) {
-                // Navigate back to the previous screen
-                if (context.canPop()) {
-                  context.pop();
-                } else {
-                  // If can't pop, go to home
-                  context.go('/');
-                }
-              },
-              child: PlaceDetailPage(
-                place: placeObj!,
-                heroTagIndex: heroTagIndex,
-              ),
+            child: PlaceDetailPage(
+              place: placeObj!,
+              heroTagIndex: heroTagIndex,
             ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
@@ -201,44 +189,60 @@ final routerProvider = Provider<GoRouter>((ref) {
           );
         },
       ),
-      // New Trip screen route (outside the shell)
-      GoRoute(
-        path: '/new-trip',
-        pageBuilder: (context, state) {
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: const CreateTripPage(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-          );
-        },
-      ),
 
-      // Create Trip screen route (outside the shell) - Alternative path for CTA
-      GoRoute(
-        path: '/create-trip',
-        pageBuilder: (context, state) {
-          return CustomTransitionPage(
-            key: state.pageKey,
-            child: const CreateTripPage(),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-          );
-        },
-      ),
-
-      // Trip Itinerary screen route (outside the shell)
+      // Trip Details screen route (outside the shell)
       GoRoute(
         path: '/trip/:id',
         pageBuilder: (context, state) {
           final tripId = state.pathParameters['id']!;
           return CustomTransitionPage(
             key: state.pageKey,
-            child: TripItineraryPage(tripId: tripId),
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to trips page
+                    context.go('/trips');
+                  }
+                }
+              },
+              child: TripDetailsPage(tripId: tripId),
+            ),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+          );
+        },
+      ),
+
+      // Plan New Trip screen route (outside the shell)
+      GoRoute(
+        path: '/new-trip',
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: PopScope(
+              canPop: false,
+              onPopInvoked: (didPop) {
+                // Only handle navigation if the pop wasn't already processed
+                if (!didPop) {
+                  // Navigate back to the previous screen
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    // If can't pop, go to home
+                    context.go('/');
+                  }
+                }
+              },
+              child: const NewTripScreen(),
+            ),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
                   return FadeTransition(opacity: animation, child: child);
@@ -287,7 +291,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                   );
                 },
                 actions: [
-                  firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((context, state) {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.AuthFailed>((
+                    context,
+                    state,
+                  ) {
                     final analyticsService = ref.read(analyticsServiceProvider);
                     analyticsService.logError(
                       errorType: 'auth_failed',
@@ -295,16 +302,36 @@ final routerProvider = Provider<GoRouter>((ref) {
                       screenName: 'signin_screen',
                     );
                   }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((context, state) {
-                    context.go('/');
-                  }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((context, firebase_ui.UserCreated state) async {
+                  firebase_ui.AuthStateChangeAction<firebase_ui.SignedIn>((
+                    context,
+                    firebase_ui.SignedIn state,
+                  ) async {
+                    // Track login analytics
+                    try {
+                      final analyticsService = ref.read(
+                        analyticsServiceProvider,
+                      );
+                      final user = state.user;
+                      final method =
+                          user != null && user.providerData.isNotEmpty
+                          ? user.providerData.first.providerId
+                          : 'unknown';
+                      await analyticsService.logSignUp(method: method);
+                    } catch (e) {
+                      debugPrint('Error tracking sign-in analytics: $e');
+                    }
+
                     // Track challenge progress for account creation
                     try {
-                      final user = state.credential.user;
+                      final user = state.user;
                       if (user != null) {
-                        final challengeActions = ref.read(challengeActionsProvider);
-                        await challengeActions.markCompleted(user.uid, 'create_account');
+                        final challengeActions = ref.read(
+                          challengeActionsProvider,
+                        );
+                        await challengeActions.markCompleted(
+                          user.uid,
+                          'create_account',
+                        );
                       }
                     } catch (e) {
                       // Log error but don't prevent navigation
@@ -313,7 +340,69 @@ final routerProvider = Provider<GoRouter>((ref) {
 
                     context.go('/');
                   }),
-                  firebase_ui.AuthStateChangeAction<firebase_ui.CredentialLinked>((context, state) {
+
+                  firebase_ui.AuthStateChangeAction<firebase_ui.UserCreated>((
+                    BuildContext context,
+                    firebase_ui.UserCreated state,
+                  ) async {
+                    // Track sign-up analytics
+                    try {
+                      final analyticsService = ref.read(
+                        analyticsServiceProvider,
+                      );
+                      final user = state.credential.user;
+                      final method =
+                          user != null && user.providerData.isNotEmpty
+                          ? user.providerData.first.providerId
+                          : 'unknown';
+                      await analyticsService.logSignUp(method: method);
+                    } catch (e) {
+                      debugPrint('Error tracking sign-up analytics: $e');
+                    }
+
+                    // Initialize user progress for all challenges
+                    try {
+                      final user = state.credential.user;
+                      if (user != null) {
+                        final challengeActions = ref.read(
+                          challengeActionsProvider,
+                        );
+                        final challengeIds =
+                            PredefinedChallenges.getActiveChallenges()
+                                .map((challenge) => challenge.id)
+                                .toList();
+                        await challengeActions.initializeUserProgress(
+                          user.uid,
+                          challengeIds,
+                        );
+                      }
+                    } catch (e) {
+                      // Log error but don't prevent navigation
+                      debugPrint('Error initializing user progress: $e');
+                    }
+
+                    // Track challenge progress for account creation
+                    try {
+                      final user = state.credential.user;
+                      if (user != null) {
+                        final challengeActions = ref.read(
+                          challengeActionsProvider,
+                        );
+                        await challengeActions.markCompleted(
+                          user.uid,
+                          'create_account',
+                        );
+                      }
+                    } catch (e) {
+                      // Log error but don't prevent navigation
+                      debugPrint('Error tracking create_account challenge: $e');
+                    }
+
+                    context.go('/');
+                  }),
+                  firebase_ui.AuthStateChangeAction<
+                    firebase_ui.CredentialLinked
+                  >((context, state) {
                     context.go('/');
                   }),
                 ],
@@ -425,6 +514,11 @@ class ScaffoldWithNavBar extends ConsumerWidget {
     FirebaseAnalytics.instance.logScreenView(screenName: screenName);
 
     // Navigate to the destination
-    context.go(destination);
+    // Use push for profile to maintain navigation stack and show back button
+    if (index == 3) {
+      context.push(destination);
+    } else {
+      context.go(destination);
+    }
   }
 }
